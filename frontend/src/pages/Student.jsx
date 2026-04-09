@@ -28,7 +28,7 @@ function Student() {
           <div className="w-12 h-12 bg-white rounded-full border-2 border-indigo-400 flex items-center justify-center font-bold text-indigo-600">
             <img src="../../public/portal.png" alt="" className="" />
           </div>
-          <h2 className="text-2xl font-extrabold tracking-wider  text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-indigo-500 drop-shadow-sm">
+          <h2 className="text-2xl font-extrabold tracking-wider  text-transparent bg-clip-text bg-linear-to-r from-gray-800 to-indigo-500 drop-shadow-sm">
             STUDENT PORTAL
           </h2>
         </div>
