@@ -1,5 +1,6 @@
 import React from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 function Student() {
   const navigate = useNavigate();
@@ -7,6 +8,17 @@ function Student() {
 
   // Helper to check if a link is active
   const isActive = (path) => location.pathname.includes(path);
+
+  // Handle Logout Logic
+  const handleLogout = () => {
+    // 1. Remove the saved token and role from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("userRole");
+    // LOGOUT SUCCESS TOAST
+    toast.success("Logged out successfully!");
+    // 2. Redirect to the login page
+    navigate("/login");
+  };
 
   return (
     <div className="flex min-h-screen bg-[#F0F9FF]">
@@ -21,7 +33,7 @@ function Student() {
           </h2>
         </div>
 
-        <nav className="space-y-3 text-6xl font-mono  tracking-wide uppercase flex-1">
+        <nav className="space-y-3 font-mono tracking-wider uppercase flex-1">
           <NavItem
             icon="🏠"
             label="Dashboard"
@@ -48,7 +60,11 @@ function Student() {
           />
         </nav>
 
-        <button className="text-left text-2xl cursor-pointer uppercase p-3 text-gray-600 font-bold tracking-wide hover:text-red-500 transition-colors mt-auto">
+        {/* Updated Logout Button */}
+        <button 
+          onClick={handleLogout}
+          className="text-left text-2xl cursor-pointer uppercase p-3 text-gray-600 font-bold tracking-wide hover:text-red-500 transition-colors mt-auto"
+        >
           🚪 Logout
         </button>
       </aside>

@@ -1,4 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast"; // 1. IMPORT THIS
+
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import StudentDashboard from "./pages/student/StudentDashboard";
@@ -11,9 +13,23 @@ import TeacherDahboard from "./pages/teacher/TeacherDahboard";
 import AddLessons from "./pages/teacher/AddLessons";
 import Students from "./pages/teacher/Students";
 
+
 function App() {
   return (
     <div className="App">
+      
+      {/* 2. ADD THE TOASTER COMPONENT HERE */}
+      <Toaster 
+        position="top-right" 
+        toastOptions={{
+          duration: 3000,
+          style: {
+            fontSize: '16px',
+            fontWeight: 'bold',
+          },
+        }} 
+      />
+
       <Routes>
         {/* Public Routes */}
         <Route path="/register" element={<Register />} />
@@ -23,14 +39,12 @@ function App() {
         {/* TEACHER ROUTES */}
         <Route path="/teacher" element={<Teacher />}>
           {/* These will render inside the <Outlet /> of the Teacher component */}
-          <Route
-            path="dashboard"
-            element={<TeacherDahboard/>}
-          />
+          <Route path="dashboard" element={<TeacherDahboard/>} />
           <Route path="lessons" element={<AddLessons/>} />
           <Route path="students" element={<Students/>} />
         </Route>
 
+        {/* STUDENT ROUTES */}
         <Route path="/*" element={<Student />}>
           {/* Default to dashboard if just /student is visited */}
           <Route index element={<Navigate to="dashboard" />} />
@@ -42,7 +56,6 @@ function App() {
           <Route path="feedback" element={<Feedback />} />
         </Route>
 
-        {/* Home/Dashboard Route */}
       </Routes>
     </div>
   );

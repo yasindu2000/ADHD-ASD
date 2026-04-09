@@ -1,8 +1,60 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 function Login() {
+  // Navigation hook
+  const navigate = useNavigate();
+
+  // State for form inputs
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  
+  // State for UI behavior
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // Form Submit Handler
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Prevent page reload
+    setError("");
+    setLoading(true);
+
+    try {
+      // Send request to your backend
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // 1. Save token and role to localStorage so user stays logged in
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userRole", data.user.role);
+        toast.success(`Welcome back, ${data.user.fullName || 'User'}!`);
+
+        // 2. Navigate based on their role
+        if (data.user.role === "teacher") {
+          navigate("/teacher/dashboard");
+        } else if (data.user.role === "student") {
+          navigate("/student/dashboard");
+        }
+      } else {
+        // Show error (e.g., "Invalid credentials")
+       toast.error(data.message || "Invalid credentials.");
+      }
+    } catch (err) {
+      toast.error("Server error. Is the backend running?");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     // 1. Full-Screen Gradient Background
@@ -36,7 +88,16 @@ function Login() {
               Log In
             </h2>
 
-            <form className="space-y-6">
+            {/* Added onSubmit handler here */}
+            <form className="space-y-6" onSubmit={handleLogin}>
+              
+              {/* Show Error Message if it exists */}
+              {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl relative">
+                  <span className="block sm:inline font-bold text-sm">{error}</span>
+                </div>
+              )}
+
               {/* Email Field */}
               <div className="space-y-1">
                 <label className="text-xs font-bold text-gray-900 uppercase tracking-wider ml-1">
@@ -44,6 +105,9 @@ function Login() {
                 </label>
                 <input
                   type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="example@mail.com"
                   className="w-full bg-white/60 border border-white/40 rounded-xl px-4 py-3 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-400 outline-none transition-all placeholder:text-gray-500 text-gray-950 font-medium"
                 />
@@ -62,6 +126,9 @@ function Login() {
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     className="w-full bg-white/60 border border-white/40 rounded-xl px-4 py-3 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-400 outline-none transition-all placeholder:text-gray-500 text-gray-950 font-medium"
                   />
@@ -87,8 +154,12 @@ function Login() {
 
               {/* Action Section */}
               <div className="pt-4">
-                <button className="w-full bg-blue-600  transition-colors cursor-pointer tracking-wider text-white text-2xl font-bold py-4 rounded-3xl shadow-[0_10px_20px_rgba(22,163,74,0.3)]">
-                  Log In
+                <button 
+                  type="submit" 
+                  disabled={loading}
+                  className="w-full bg-blue-600 hover:bg-blue-700 transition-colors cursor-pointer tracking-wider text-white text-2xl font-bold py-4 rounded-3xl shadow-[0_10px_20px_rgba(22,163,74,0.3)] disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {loading ? "Logging in..." : "Log In"}
                 </button>
                 <p className="mt-8 text-center text-sm font-semibold font-sans text-gray-800">
                   New to the platform?

@@ -1,5 +1,6 @@
-
+import React from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 function Teacher() {
   const navigate = useNavigate();
@@ -7,6 +8,18 @@ function Teacher() {
 
   // Helper to check if a link is active
   const isActive = (path) => location.pathname.includes(path);
+
+  // Handle Logout Logic
+  const handleLogout = () => {
+    // 1. Remove the saved token and role from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("userRole");
+    // LOGOUT SUCCESS TOAST
+ toast.success("Logged out successfully!");
+    
+    // 2. Redirect to the login page
+    navigate("/login");
+  };
 
   return (
     <div className="flex min-h-screen bg-[#FDF2F8]"> {/* Slightly different background color to distinguish from Student */}
@@ -19,7 +32,7 @@ function Teacher() {
             <img src="../../public/portal.png" alt="" className="" />
           </div>
            <h2 className="text-2xl font-extrabold tracking-wider  text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-indigo-500 drop-shadow-sm">
-            TEACHER PORTAL
+             TEACHER PORTAL
           </h2>
         </div>
 
@@ -41,7 +54,11 @@ function Teacher() {
           />
         </nav>
         
-        <button className="text-left text-2xl cursor-pointer uppercase p-3 text-gray-600 font-bold tracking-wide hover:text-red-500 transition-colors mt-auto">
+        {/* Updated Logout Button */}
+        <button 
+          onClick={handleLogout}
+          className="text-left text-2xl cursor-pointer uppercase p-3 text-gray-600 font-bold tracking-wide hover:text-red-500 transition-colors mt-auto"
+        >
           🚪 Logout
         </button>
       </aside>
