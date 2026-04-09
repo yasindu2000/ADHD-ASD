@@ -1,0 +1,80 @@
+import React from "react";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
+
+function Student() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Helper to check if a link is active
+  const isActive = (path) => location.pathname.includes(path);
+
+  return (
+    <div className="flex min-h-screen bg-[#F0F9FF]">
+      {/* LEFT SIDEBAR - Fixed */}
+      <aside className="w-90 bg-[#CCF2FF] p-6 hidden md:flex flex-col shadow-lg fixed h-full">
+        <div className="flex items-center gap-3 mb-10">
+          <div className="w-12 h-12 bg-white rounded-full border-2 border-indigo-400 flex items-center justify-center font-bold text-indigo-600">
+            <img src="../../public/portal.png" alt="" className="" />
+          </div>
+          <h2 className="text-2xl font-extrabold tracking-wider  text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-indigo-500 drop-shadow-sm">
+            STUDENT PORTAL
+          </h2>
+        </div>
+
+        <nav className="space-y-3 text-6xl font-mono  tracking-wide uppercase flex-1">
+          <NavItem
+            icon="🏠"
+            label="Dashboard"
+            active={isActive("/dashboard")}
+            onClick={() => navigate("/dashboard")}
+          />
+          <NavItem
+            icon="📖"
+            label="Lessons"
+            active={isActive("/lessons")}
+            onClick={() => navigate("/lessons")}
+          />
+          <NavItem
+            icon="🎮"
+            label="Games"
+            active={isActive("/games")}
+            onClick={() => navigate("/games")}
+          />
+          <NavItem
+            icon="💬"
+            label="FeedBacks"
+            active={isActive("/feedback")}
+            onClick={() => navigate("/feedback")}
+          />
+        </nav>
+
+        <button className="text-left text-2xl cursor-pointer uppercase p-3 text-gray-600 font-bold tracking-wide hover:text-red-500 transition-colors mt-auto">
+          🚪 Logout
+        </button>
+      </aside>
+
+      {/* RIGHT SIDE CONTENT - Changes based on Route */}
+      <main className="flex-1 ml-90 p-8">
+        {/* The <Outlet /> is where the sub-pages (Dashboard, Lessons, etc.) will appear */}
+        <Outlet />
+      </main>
+    </div>
+  );
+}
+
+// Sidebar Button Component
+const NavItem = ({ icon, label, active, onClick }) => (
+  <div
+    onClick={onClick}
+    className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all ${
+      active
+        ? "bg-[#0EA5E9] text-white shadow-md"
+        : "text-gray-700 hover:bg-[#B3E5F5]"
+    }`}
+  >
+    <span className="text-xl">{icon}</span>
+    <span className="text-lg font-extrabold">{label}</span>
+  </div>
+);
+
+export default Student;
