@@ -14,6 +14,7 @@ function Student() {
     // 1. Remove the saved token and role from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("userRole");
+    localStorage.clear();
     // LOGOUT SUCCESS TOAST
     toast.success("Logged out successfully!");
     // 2. Redirect to the login page

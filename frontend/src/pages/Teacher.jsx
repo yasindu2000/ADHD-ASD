@@ -43,7 +43,7 @@ function Teacher() {
             onClick={() => navigate('/teacher/dashboard')} 
           />
           <NavItem 
-            icon="📚" label="Lessons" 
+            icon="📚" label="Add Lessons" 
             active={isActive('/teacher/lessons')} 
             onClick={() => navigate('/teacher/lessons')} 
           />

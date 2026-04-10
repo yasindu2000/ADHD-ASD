@@ -34,20 +34,39 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // 1. Save token and role to localStorage so user stays logged in
+        // 1. Save basic user info
         localStorage.setItem("token", data.token);
         localStorage.setItem("userRole", data.user.role);
+        localStorage.setItem("userName", data.user.fullName);
+        
+        // 🌟 MEKA GODAK WADAGATH: Progress save karanna ID eka oni 🌟
+        localStorage.setItem("userId", data.user._id);
+
+        // 🌟 GRADE EKA SAVE KARANA KALLA 🌟
+        if (data.user.role === "student") {
+           // Backend eken grade eka aawe nathnam '1' kiyala gannawa
+           const rawGrade = data.user.grade || "1"; 
+           const g = rawGrade.toString();
+           
+           // '1' thibboth 'Grade 01' kiyala hadanawa, nathnam thiyena ekama danawa
+           const formattedGrade = g.length === 1 ? `Grade 0${g}` : (g.includes("Grade") ? g : `Grade ${g}`);
+           
+           localStorage.setItem("studentGrade", formattedGrade);
+           console.log("Logged in Student Grade:", formattedGrade);
+        }
+        
         toast.success(`Welcome back, ${data.user.fullName || 'User'}!`);
 
         // 2. Navigate based on their role
         if (data.user.role === "teacher") {
           navigate("/teacher/dashboard");
         } else if (data.user.role === "student") {
-          navigate("/student/dashboard");
+          // Dashboard layout ekata yanawa
+          navigate("/dashboard"); 
         }
       } else {
-        // Show error (e.g., "Invalid credentials")
-       toast.error(data.message || "Invalid credentials.");
+        // Show error
+        toast.error(data.message || "Invalid credentials.");
       }
     } catch (err) {
       toast.error("Server error. Is the backend running?");
@@ -57,19 +76,17 @@ function Login() {
   };
 
   return (
-    // 1. Full-Screen Gradient Background
     <div className="min-h-screen bg-linear-to-br from-indigo-50 to-blue-100 flex items-center justify-center p-6">
       
-      {/* 2. Main Container with full background image */}
       <div
         className="relative flex flex-col md:flex-row rounded-4xl shadow-[0_30px_80px_rgba(0,0,0,0.50)] overflow-hidden max-w-6xl w-full border border-white/40 min-h-[85vh]"
         style={{
-          backgroundImage: "url('/login.jpg')", // Using the same image for consistency
+          backgroundImage: "url('/login.jpg')", 
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        {/* 3. Dark Overlay */}
+        {/* Dark Overlay */}
         <div className="absolute inset-0 bg-gray-950/40 z-0"></div>
 
         {/* Left Side: Heading */}
@@ -80,15 +97,13 @@ function Login() {
           </h1>
         </div>
 
-        {/* 4. Right Side: Login Form */}
+        {/* Right Side: Login Form */}
         <div className="md:w-6/12 p-8 md:p-14 z-20 flex items-center justify-center">
-          {/* Glass Card */}
           <div className="max-w-md w-full mx-auto bg-white/40 backdrop-blur-xl rounded-3xl p-10 shadow-xl border border-white/40">
             <h2 className="text-4xl font-bold text-center text-gray-950 mb-10 font-mono">
               Log In
             </h2>
 
-            {/* Added onSubmit handler here */}
             <form className="space-y-6" onSubmit={handleLogin}>
               
               {/* Show Error Message if it exists */}

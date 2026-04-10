@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../model/User");
+const User = require("../model/User"); // Path eka oyage widiyatama thiyaganna
 
 const router = express.Router();
 
@@ -25,7 +25,7 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
       role,
       phone: role === "teacher" ? phone : null,
-      grade: role === "student" ? grade : null,
+      grade: role === "student" ? grade : null, // Grade eka lassanata save wenawa
     });
 
     await user.save();
@@ -51,21 +51,23 @@ router.post("/login", async (req, res) => {
     // Create JWT Token
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "fallback_secret_key", // JWT secret eka add karanna
       { expiresIn: "1d" }
     );
 
-    // Send back token and user info (especially the role for navigation)
+    // Send back token and user info
     res.json({
       token,
       user: {
-        id: user._id,
+        _id: user._id,         // 🌟 FIX: Frontend eka hoyanne _id kiyala. Eka nisa _id dammamai
         fullName: user.fullName,
         email: user.email,
         role: user.role,
+        grade: user.grade,     // 🌟 FIX: MEKA THAMAI ADU WELA THIBBE! Dan grade eka yanawa.
       },
     });
   } catch (error) {
+    console.error("Login error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
