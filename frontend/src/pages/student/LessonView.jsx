@@ -19,6 +19,9 @@ function LessonView() {
   const [quizAttempted, setQuizAttempted] = useState(false);
   const [previousScore, setPreviousScore] = useState(0);
 
+  // 🌟 NEW: Pop-up Modal State
+  const [showFinishModal, setShowFinishModal] = useState(false);
+
   const playerRef = useRef(null);
 
   useEffect(() => {
@@ -46,7 +49,6 @@ function LessonView() {
               const progressData = await progressRes.json();
               
               if (progressData.success) {
-                // Backend eken ewana progress object eka gannawa
                 const progObj = progressData.progress || progressData;
 
                 if (progObj.completedParts) {
@@ -63,7 +65,6 @@ function LessonView() {
                   }
                 }
 
-                // 🌟 FIX: Quiz eka kalin karala nam eke details gannawa
                 if (progObj.isQuizCompleted) {
                   setQuizAttempted(true);
                   setPreviousScore(progObj.quizScore || 0);
@@ -154,7 +155,9 @@ function LessonView() {
         toast.success("Great job! Next part unlocked. 🌟");
         setActivePartIndex(activePartIndex + 1); 
       } else {
-        toast.success("Lesson Completed! You can now take the Quiz. 🎉", { duration: 4000 });
+        // 🌟 LESSON COMPLETED! Show the Modal
+        toast.success("Lesson Completed! 🎉", { duration: 4000 });
+        setShowFinishModal(true);
       }
     } else {
       if (activePartIndex + 1 < totalParts) {
@@ -167,6 +170,68 @@ function LessonView() {
 
   return (
     <div className="min-h-screen bg-[#EAF8FC] pb-10 font-sans">
+      
+      {/* 🌟 FINISH MODAL (Pop-up) 🌟 */}
+      {showFinishModal && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+          <div className="bg-white rounded-[3rem] shadow-2xl w-full max-w-lg overflow-hidden relative animate-in zoom-in duration-300 border-4 border-white">
+            
+            <button 
+              onClick={() => setShowFinishModal(false)}
+              className="absolute top-6 right-8 text-3xl font-black text-gray-300 hover:text-gray-800 transition-colors"
+            >
+              ✕
+            </button>
+
+            <div className="p-10 text-center">
+              <h2 className="text-4xl font-black text-gray-800 mb-8 border-b-4 border-blue-400 pb-2 inline-block">
+                How are you feeling?
+              </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+                
+                {/* 1. HAPPY - Continue */}
+                <div className="bg-green-50 p-6 rounded-[2rem] border-2 border-green-100 hover:border-green-400 transition-all group">
+                  <span className="text-7xl block mb-4 group-hover:scale-110 transition-transform">🤩</span>
+                  <button 
+                    onClick={() => setShowFinishModal(false)}
+                    className="w-full bg-green-500 text-white py-3 rounded-2xl font-black shadow-lg shadow-green-200 hover:bg-green-600 active:scale-95 transition-all"
+                  >
+                    Continue
+                  </button>
+                </div>
+
+                {/* 2. BORED - Play Games */}
+                <div className="bg-blue-50 p-6 rounded-[2rem] border-2 border-blue-100 hover:border-blue-400 transition-all group">
+                  <span className="text-7xl block mb-4 group-hover:scale-110 transition-transform">😐</span>
+                  <button 
+                    onClick={() => navigate('/games')}
+                    className="w-full bg-blue-500 text-white py-3 rounded-2xl font-black shadow-lg shadow-blue-200 hover:bg-blue-600 active:scale-95 transition-all"
+                  >
+                    Play Game
+                  </button>
+                </div>
+
+                {/* 3. TIRED - Break */}
+                <div className="bg-orange-50 p-6 rounded-[2rem] border-2 border-orange-100 hover:border-orange-400 transition-all group">
+                  <span className="text-7xl block mb-4 group-hover:scale-110 transition-transform">🥱</span>
+                  <button 
+                    onClick={() => navigate('/break-timer')}
+                    className="w-full bg-orange-500 text-white py-3 rounded-2xl font-black shadow-lg shadow-orange-200 hover:bg-orange-600 active:scale-95 transition-all"
+                  >
+                    Short Break
+                  </button>
+                </div>
+
+              </div>
+
+              <p className="font-black text-gray-400 text-2xl italic tracking-widest">Pick One!</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* HEADER */}
       <div className="bg-[#CBEBFA] py-4 px-6 flex items-center shadow-sm relative sticky top-0 z-50">
         <button 
           onClick={() => navigate(-1)} 
@@ -202,9 +267,9 @@ function LessonView() {
           )}
           
           <div className="absolute top-0 left-0 w-full p-4 bg-gradient-to-b from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-             <h2 className="text-white font-bold text-lg drop-shadow-md">
-               Part {activePartIndex + 1}: {lesson.parts[activePartIndex]?.title}
-             </h2>
+              <h2 className="text-white font-bold text-lg drop-shadow-md">
+                Part {activePartIndex + 1}: {lesson.parts[activePartIndex]?.title}
+              </h2>
           </div>
         </div>
 
@@ -279,16 +344,12 @@ function LessonView() {
           })}
         </div>
 
-        {/* 🌟 🏆 QUIZ SECTION (Updated with Re-attempt UI) 🏆 🌟 */}
+        {/* 🏆 QUIZ SECTION 🏆 */}
         <div className="bg-gradient-to-br from-[#E4F2F7] to-white rounded-[2rem] p-8 md:p-10 text-center border-2 border-[#CDE5EF] shadow-lg relative overflow-hidden mb-12">
           <div className="absolute top-0 right-0 -mt-10 -mr-10 text-9xl opacity-5">🏆</div>
-          
           <h2 className="text-3xl md:text-4xl font-black text-gray-800 mb-4 relative z-10">Knowledge Check!</h2>
-          
           {quiz ? (
             <div className="relative z-10">
-              
-              {/* 🌟 FIX: Quiz eka karala nam eke result eka pennanawa */}
               {quizAttempted ? (
                 <div className="mb-8 animate-in zoom-in duration-300">
                   <div className="inline-block bg-green-100 border-2 border-green-500 text-green-700 font-black px-6 py-2 rounded-full mb-4 shadow-sm">
@@ -303,13 +364,11 @@ function LessonView() {
                   Test what you've learned in this lesson. Complete all videos to unlock the quiz.
                 </p>
               )}
-              
               <div className="flex justify-center items-center gap-6 text-gray-700 font-bold mb-8 bg-white/60 w-fit mx-auto px-6 py-3 rounded-2xl border border-white">
                 <span className="flex items-center gap-2">📝 {quiz.questions?.length || 0} Questions</span>
                 <span className="text-gray-300">|</span>
                 <span className="flex items-center gap-2">⏳ {parseInt(quiz.duration) || 5} mins</span>
               </div>
-
               <button 
                 disabled={!isQuizUnlocked}
                 onClick={() => navigate(`/quiz/${quiz._id || quiz.id}`)}
@@ -332,7 +391,6 @@ function LessonView() {
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

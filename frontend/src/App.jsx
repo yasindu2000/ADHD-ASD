@@ -16,6 +16,11 @@ import SubjectLessons from "./pages/student/SubjectLessons";
 import LessonView from "./pages/student/LessonView";
 import AddQuiz from "./pages/teacher/AddQuiz";
 import TakeQuiz from "./pages/student/TakeQuiz";
+import MemoryMatch from "./pages/student/MemoryMatch";
+import BalloonPop from "./pages/student/BalloonPop";
+import PatternPuzzle from "./pages/student/PatternPuzzle";
+import MathCatch from "./pages/student/MathCatch";
+import BreakTimer from "./pages/student/BreakTimer";
 // import TakeQuiz from "./pages/student/TakeQuiz"; // (Passe meka uncomment karanna)
 
 function App() {
@@ -61,6 +66,13 @@ function App() {
           <Route path="feedback" element={<Feedback />} />
           {/* <Route path="quiz/:quizId" element={<TakeQuiz />} /> */}
         </Route>
+
+        
+<Route path="/games/memory-match" element={<MemoryMatch />} />
+<Route path="/games/balloon-pop" element={<BalloonPop />} />
+<Route path="/games/pattern-puzzle" element={<PatternPuzzle />} />
+<Route path="/games/math-catch" element={<MathCatch />} />
+<Route path="/break-timer" element={<BreakTimer />} />
 
       </Routes>
     </div>
