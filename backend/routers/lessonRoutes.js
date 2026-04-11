@@ -237,4 +237,19 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// GET STUDENT DASHBOARD STATS
+router.get('/dashboard-stats/:studentId', async (req, res) => {
+  try {
+    // Lamayage progress okkoma gannawa, eka ekka Lesson eke title ekath gannawa (populate)
+    const progressData = await StudentProgress.find({ studentId: req.params.studentId })
+      .populate('lessonId', 'title subjectName')
+      .sort({ updatedAt: 1 }); // Parana eke idan aluth ekata sort karanawa graph eke pennanna
+
+    res.status(200).json({ success: true, progress: progressData });
+  } catch (error) {
+    console.error("Error fetching dashboard stats:", error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 module.exports = router;
