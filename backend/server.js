@@ -7,6 +7,7 @@ const authRoutes = require("./routers/auth");
 const lessonRoutes = require('./routers/lessonRoutes')
 const quizRoutes = require('./routers/quizRoutes');
 const gameRoutes = require('./routers/gameRoutes');
+const feedbackRoutes = require('./routers/feedbackRoutes');
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/api/auth", authRoutes);
 app.use('/api/lessons', lessonRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/games', gameRoutes);
-
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/teacher', require('./routers/teacherRoutes'));
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

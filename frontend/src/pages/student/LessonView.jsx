@@ -15,11 +15,10 @@ function LessonView() {
   const [completedPartsArray, setCompletedPartsArray] = useState([]); 
   const [activePartIndex, setActivePartIndex] = useState(0); 
   
-  // 🌟 FIX: Aluth states deka (Quiz eka kalin karalada? Marks keeyada?)
   const [quizAttempted, setQuizAttempted] = useState(false);
   const [previousScore, setPreviousScore] = useState(0);
 
-  // 🌟 NEW: Pop-up Modal State
+  // 🌟 Pop-up Modal State
   const [showFinishModal, setShowFinishModal] = useState(false);
 
   const playerRef = useRef(null);
@@ -155,7 +154,6 @@ function LessonView() {
         toast.success("Great job! Next part unlocked. 🌟");
         setActivePartIndex(activePartIndex + 1); 
       } else {
-        // 🌟 LESSON COMPLETED! Show the Modal
         toast.success("Lesson Completed! 🎉", { duration: 4000 });
         setShowFinishModal(true);
       }
@@ -171,61 +169,69 @@ function LessonView() {
   return (
     <div className="min-h-screen bg-[#EAF8FC] pb-10 font-sans">
       
-      {/* 🌟 FINISH MODAL (Pop-up) 🌟 */}
+      {/* 🌟 REDESIGNED FINISH MODAL 🌟 */}
       {showFinishModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-          <div className="bg-white rounded-[3rem] shadow-2xl w-full max-w-lg overflow-hidden relative animate-in zoom-in duration-300 border-4 border-white">
+        <div className="fixed inset-0 bg-[#1E3A8A]/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-white rounded-[3rem] shadow-2xl w-full max-w-4xl overflow-hidden relative animate-in zoom-in duration-300 border-[6px] border-white">
             
-            <button 
-              onClick={() => setShowFinishModal(false)}
-              className="absolute top-6 right-8 text-3xl font-black text-gray-300 hover:text-gray-800 transition-colors"
-            >
-              ✕
-            </button>
-
-            <div className="p-10 text-center">
-              <h2 className="text-4xl font-black text-gray-800 mb-8 border-b-4 border-blue-400 pb-2 inline-block">
-                How are you feeling?
+            {/* Header Section */}
+            <div className="bg-[#CBEBFA] py-10 text-center relative border-b-4 border-blue-100">
+              <button 
+                onClick={() => setShowFinishModal(false)}
+                className="absolute top-6 right-8 text-4xl font-black text-blue-300 hover:text-blue-600 transition-colors"
+              >
+                ✕
+              </button>
+              <div className="text-7xl mb-4 drop-shadow-md animate-bounce">🌟</div>
+              <h2 className="text-4xl md:text-5xl font-black text-[#1E3A8A] tracking-tight">
+                Lesson Complete!
               </h2>
+              <p className="text-xl md:text-2xl font-bold text-blue-700 mt-3 opacity-90">
+                You did an amazing job. How are you feeling now?
+              </p>
+            </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+            {/* Options Section */}
+            <div className="p-8 md:p-12 bg-[#F4F8FB]">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
-                {/* 1. HAPPY - Continue */}
-                <div className="bg-green-50 p-6 rounded-[2rem] border-2 border-green-100 hover:border-green-400 transition-all group">
-                  <span className="text-7xl block mb-4 group-hover:scale-110 transition-transform">🤩</span>
-                  <button 
-                    onClick={() => setShowFinishModal(false)}
-                    className="w-full bg-green-500 text-white py-3 rounded-2xl font-black shadow-lg shadow-green-200 hover:bg-green-600 active:scale-95 transition-all"
-                  >
-                    Continue
-                  </button>
-                </div>
+                {/* 1. HAPPY */}
+                <button 
+                  onClick={() => setShowFinishModal(false)}
+                  className="flex flex-col items-center justify-center bg-white p-8 rounded-[2.5rem] border-4 border-green-100 hover:border-green-400 hover:bg-green-50 transition-all duration-300 group shadow-sm hover:shadow-xl"
+                >
+                  <span className="text-7xl group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-300 drop-shadow-sm">🤩</span>
+                  <span className="mt-6 text-2xl font-black text-green-700">I feel great!</span>
+                  <span className="mt-3 text-sm font-bold text-green-600 bg-green-100 px-6 py-2 rounded-full group-hover:bg-green-200 transition-colors">
+                    Continue ➔
+                  </span>
+                </button>
 
-                {/* 2. BORED - Play Games */}
-                <div className="bg-blue-50 p-6 rounded-[2rem] border-2 border-blue-100 hover:border-blue-400 transition-all group">
-                  <span className="text-7xl block mb-4 group-hover:scale-110 transition-transform">😐</span>
-                  <button 
-                    onClick={() => navigate('/games')}
-                    className="w-full bg-blue-500 text-white py-3 rounded-2xl font-black shadow-lg shadow-blue-200 hover:bg-blue-600 active:scale-95 transition-all"
-                  >
-                    Play Game
-                  </button>
-                </div>
+                {/* 2. BORED */}
+                <button 
+                  onClick={() => navigate('/games')}
+                  className="flex flex-col items-center justify-center bg-white p-8 rounded-[2.5rem] border-4 border-blue-100 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 group shadow-sm hover:shadow-xl"
+                >
+                  <span className="text-7xl group-hover:scale-110 transition-transform duration-300 drop-shadow-sm">😐</span>
+                  <span className="mt-6 text-2xl font-black text-blue-700">I want to play</span>
+                  <span className="mt-3 text-sm font-bold text-blue-600 bg-blue-100 px-6 py-2 rounded-full group-hover:bg-blue-200 transition-colors">
+                    Games 🎮
+                  </span>
+                </button>
 
-                {/* 3. TIRED - Break */}
-                <div className="bg-orange-50 p-6 rounded-[2rem] border-2 border-orange-100 hover:border-orange-400 transition-all group">
-                  <span className="text-7xl block mb-4 group-hover:scale-110 transition-transform">🥱</span>
-                  <button 
-                    onClick={() => navigate('/break-timer')}
-                    className="w-full bg-orange-500 text-white py-3 rounded-2xl font-black shadow-lg shadow-orange-200 hover:bg-orange-600 active:scale-95 transition-all"
-                  >
-                    Short Break
-                  </button>
-                </div>
+                {/* 3. TIRED */}
+                <button 
+                  onClick={() => navigate('/break-timer')}
+                  className="flex flex-col items-center justify-center bg-white p-8 rounded-[2.5rem] border-4 border-orange-100 hover:border-orange-400 hover:bg-orange-50 transition-all duration-300 group shadow-sm hover:shadow-xl"
+                >
+                  <span className="text-7xl group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 drop-shadow-sm">🥱</span>
+                  <span className="mt-6 text-2xl font-black text-orange-700">I'm tired</span>
+                  <span className="mt-3 text-sm font-bold text-orange-600 bg-orange-100 px-6 py-2 rounded-full group-hover:bg-orange-200 transition-colors">
+                    Take a Break 🌿
+                  </span>
+                </button>
 
               </div>
-
-              <p className="font-black text-gray-400 text-2xl italic tracking-widest">Pick One!</p>
             </div>
           </div>
         </div>

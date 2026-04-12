@@ -15,7 +15,7 @@ function Teacher() {
     localStorage.removeItem("token");
     localStorage.removeItem("userRole");
     // LOGOUT SUCCESS TOAST
- toast.success("Logged out successfully!");
+    toast.success("Logged out successfully!");
     
     // 2. Redirect to the login page
     navigate("/login");
@@ -31,7 +31,7 @@ function Teacher() {
             {/* Note: Ensure the path to your image is correct */}
             <img src="../../public/portal.png" alt="" className="" />
           </div>
-           <h2 className="text-2xl font-extrabold tracking-wider  text-transparent bg-clip-text bg-linear-to-r from-gray-800 to-indigo-500 drop-shadow-sm">
+           <h2 className="text-2xl font-extrabold tracking-wider  text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-indigo-500 drop-shadow-sm">
              TEACHER PORTAL
           </h2>
         </div>
@@ -51,6 +51,12 @@ function Teacher() {
             icon="👥" label="Students" 
             active={isActive('/teacher/students')} 
             onClick={() => navigate('/teacher/students')} 
+          />
+          {/* 🌟 අලුතින් Add කරපු Feedback Section එක */}
+          <NavItem 
+            icon="⭐" label="Add Feedback" 
+            active={isActive('/teacher/feedback')} 
+            onClick={() => navigate('/teacher/feedback')} 
           />
         </nav>
         

@@ -21,7 +21,34 @@ import BalloonPop from "./pages/student/BalloonPop";
 import PatternPuzzle from "./pages/student/PatternPuzzle";
 import MathCatch from "./pages/student/MathCatch";
 import BreakTimer from "./pages/student/BreakTimer";
-// import TakeQuiz from "./pages/student/TakeQuiz"; // (Passe meka uncomment karanna)
+import AddFeedback from "./pages/teacher/AddFeedback";
+
+// 🌟 1. PROTECTED ROUTE (ලොග් වෙලා නැති අයව එළවන Guard)
+const ProtectedRoute = ({ children, allowedRole }) => {
+  const currentRole = localStorage.getItem("userRole") || localStorage.getItem("role");
+
+  if (currentRole !== allowedRole) {
+    return <Navigate to="/login" replace />; 
+  }
+  return children;
+};
+
+// 🌟 2. PUBLIC ROUTE (දැනටමත් ලොග් වෙලා ඉන්න අයව Login එකෙන් එළවන Guard)
+const PublicRoute = ({ children }) => {
+  const currentRole = localStorage.getItem("userRole") || localStorage.getItem("role");
+
+  // ලොග් වෙලා ඉන්න කෙනා Teacher කෙනෙක් නම්, කෙලින්ම Dashboard එකට යවනවා
+  if (currentRole === "teacher") {
+    return <Navigate to="/teacher/dashboard" replace />;
+  }
+  // ලොග් වෙලා ඉන්න කෙනා Student කෙනෙක් නම්, කෙලින්ම Dashboard එකට යවනවා
+  else if (currentRole === "student") {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  // ලොග් වෙලා නැත්නම් විතරක් Login/Register එකට යන්න දෙනවා
+  return children;
+};
 
 function App() {
   return (
@@ -39,24 +66,50 @@ function App() {
       />
 
       <Routes>
-        {/* Public Routes */}
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        {/* 🌟 PUBLIC ROUTES (PublicRoute Guard එක දාලා තියෙන්නේ) */}
+        <Route 
+          path="/register" 
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          } 
+        />
+        <Route 
+          path="/login" 
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          } 
+        />
 
-        {/* TEACHER ROUTES */}
-        <Route path="/teacher" element={<Teacher />}>
+        {/* 🌟 TEACHER ROUTES */}
+        <Route 
+          path="/teacher" 
+          element={
+            <ProtectedRoute allowedRole="teacher">
+              <Teacher />
+            </ProtectedRoute>
+          }
+        >
           <Route path="dashboard" element={<TeacherDahboard/>} />
           <Route path="add-quiz/:lessonId" element={<AddQuiz />} />
           <Route path="lessons" element={<AddLessons/>} />
           <Route path="students" element={<Students/>} />
+          <Route path="feedback" element={<AddFeedback/>} />
         </Route>
 
-        {/* STUDENT ROUTES (Wrapped inside Student Layout) */}
-        <Route path="/*" element={<Student />}>
-          {/* Default Route */}
+        {/* 🌟 STUDENT ROUTES */}
+        <Route 
+          path="/*" 
+          element={
+            <ProtectedRoute allowedRole="student">
+              <Student />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Navigate to="dashboard" />} />
-
-          {/* Child Routes - Mewa okkoma <Outlet /> eke load wenne */}
           <Route path="dashboard" element={<StudentDashboard />} />
           <Route path="lessons" element={<Lessons />} />
           <Route path="lessons/:subjectName" element={<SubjectLessons />} />
@@ -64,15 +117,14 @@ function App() {
           <Route path="quiz/:quizId" element={<TakeQuiz/>} />
           <Route path="games" element={<Games />} />
           <Route path="feedback" element={<Feedback />} />
-          {/* <Route path="quiz/:quizId" element={<TakeQuiz />} /> */}
         </Route>
 
-        
-<Route path="/games/memory-match" element={<MemoryMatch />} />
-<Route path="/games/balloon-pop" element={<BalloonPop />} />
-<Route path="/games/pattern-puzzle" element={<PatternPuzzle />} />
-<Route path="/games/math-catch" element={<MathCatch />} />
-<Route path="/break-timer" element={<BreakTimer />} />
+        {/* STANDALONE ROUTES */}
+        <Route path="/games/memory-match" element={<MemoryMatch />} />
+        <Route path="/games/balloon-pop" element={<BalloonPop />} />
+        <Route path="/games/pattern-puzzle" element={<PatternPuzzle />} />
+        <Route path="/games/math-catch" element={<MathCatch />} />
+        <Route path="/break-timer" element={<BreakTimer />} />
 
       </Routes>
     </div>
