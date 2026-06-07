@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-// Game eke use karana sathunge emojis (ASD lamayi animals lata asai)
+
 const ANIMAL_EMOJIS = ['🐶', '🐱', '🦊', '🐻', '🐼', '🐸'];
 
 function MemoryMatch() {
