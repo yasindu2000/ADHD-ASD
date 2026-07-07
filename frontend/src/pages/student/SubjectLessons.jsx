@@ -13,24 +13,24 @@ function SubjectLessons() {
 
   const themeColors = {
     'maths': {
-      cardBg: 'bg-gradient-to-b from-[#FFD1D1] to-[#FFBABA]',
-      textColor: 'text-gray-800',
-      titleColor: 'text-pink-600'
+      cardBg: 'bg-rose-50 border border-rose-100',
+      textColor: 'text-slate-800',
+      titleColor: 'text-rose-700'
     },
     'english': {
-      cardBg: 'bg-gradient-to-b from-[#FEF0A5] to-[#FCE679]',
-      textColor: 'text-gray-800',
-      titleColor: 'text-yellow-600'
+      cardBg: 'bg-amber-50 border border-amber-100',
+      textColor: 'text-slate-800',
+      titleColor: 'text-amber-700'
     },
     'tamil': {
-      cardBg: 'bg-gradient-to-b from-[#B4F8C8] to-[#91F3AD]',
-      textColor: 'text-gray-800',
-      titleColor: 'text-green-600'
+      cardBg: 'bg-emerald-50 border border-emerald-100',
+      textColor: 'text-slate-800',
+      titleColor: 'text-emerald-700'
     },
     'environment': {
-      cardBg: 'bg-gradient-to-b from-[#CBEBFA] to-[#A8E1FA]',
-      textColor: 'text-gray-800',
-      titleColor: 'text-sky-600'
+      cardBg: 'bg-sky-50 border border-sky-100',
+      textColor: 'text-slate-800',
+      titleColor: 'text-sky-700'
     }
   };
 
@@ -105,11 +105,11 @@ function SubjectLessons() {
       <div className="mb-10 flex flex-col gap-4">
         <button 
           onClick={() => navigate('/lessons')}
-          className="w-max flex items-center gap-2 cursor-pointer text-2xl text-gray-500 hover:text-gray-800 font-bold transition-colors"
+          className="w-max flex items-center gap-2 cursor-pointer text-2xl text-slate-500 hover:text-slate-700 font-bold transition-colors"
         >
           <span className="text-3xl cursor-pointer ">⬅</span> Back to Subjects
         </button>
-        <h1 className={`text-4xl mt-8 font-bold tracking-wide `}>
+        <h1 className="text-4xl md:text-5xl mt-8 font-black text-slate-700 tracking-tight">
           {displayTitle} Lessons 📖
         </h1>
       </div>
@@ -122,7 +122,7 @@ function SubjectLessons() {
         </div>
       ) : isLoading ? (
         <div className="flex justify-center items-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-sky-400"></div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -130,13 +130,13 @@ function SubjectLessons() {
             lessons.map((lesson) => (
               <div 
                 key={lesson.id} 
-                className={`${theme.cardBg} border border-white/40 rounded-[2.5rem] p-8 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group`}
+                className={`${theme.cardBg} rounded-[2.5rem] p-8 shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-300 group`}
               >
-                <div className="flex justify-between items-start mb-4 border-b border-black/10 pb-4">
+                <div className="flex justify-between items-start mb-4 border-b border-black/5 pb-4">
                   <h3 className={`text-2xl font-black ${theme.textColor} leading-tight drop-shadow-sm`}>
                     {lesson.title}
                   </h3>
-                  <span className="text-xs font-bold text-gray-700 whitespace-nowrap bg-white/50 px-2 py-1 rounded-lg backdrop-blur-sm">
+                  <span className="text-xs font-bold text-slate-600 whitespace-nowrap bg-white/60 px-2 py-1 rounded-lg backdrop-blur-sm">
                     🎬 {lesson.duration}
                   </span>
                 </div>
@@ -144,7 +144,7 @@ function SubjectLessons() {
                 <div className="mt-8">
                   <div className="flex justify-between items-center mb-2">
                     <span className={`text-sm font-extrabold ${theme.textColor} opacity-80`}>Progress</span>
-                    <span className={`text-sm font-black ${lesson.progress >= 100 ? 'text-green-700' : 'text-blue-700'}`}>
+                    <span className={`text-sm font-black ${lesson.progress >= 100 ? 'text-emerald-600' : 'text-sky-600'}`}>
                       {lesson.progress}%
                     </span>
                   </div>
@@ -152,7 +152,7 @@ function SubjectLessons() {
                   <div className="w-full bg-white/50 h-4 rounded-full overflow-hidden shadow-inner border border-white/30 backdrop-blur-sm relative">
                     <div 
                       className={`h-full transition-all duration-700 ease-out ${
-                        lesson.progress >= 100 ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.6)]' : 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.6)]'
+                        lesson.progress >= 100 ? 'bg-emerald-400' : 'bg-sky-400'
                       }`} 
                       style={{ width: `${lesson.progress}%` }}
                     ></div>
@@ -163,8 +163,8 @@ function SubjectLessons() {
                   onClick={() => navigate(`/lesson-view/${lesson.id}`)} 
                   className={`mt-10 w-full py-4 rounded-3xl font-bold cursor-pointer text-xl transition-all shadow-md active:scale-95 ${
                     lesson.progress >= 100 
-                    ? 'bg-white/60 text-gray-700 hover:bg-white/80 border border-white/50' 
-                    : 'bg-white text-gray-800 hover:bg-gray-50 shadow-[0_8px_20px_rgba(0,0,0,0.1)]'
+                    ? 'bg-white/60 text-slate-600 hover:bg-white/80 border border-white/50' 
+                    : 'bg-white text-slate-700 hover:bg-slate-50 shadow-[0_8px_20px_rgba(0,0,0,0.05)]'
                   }`}
                 >
                   {lesson.progress >= 100 ? 'Review Lesson' : (lesson.progress > 0 ? 'Continue Lesson' : 'Start Lesson')}
@@ -172,8 +172,8 @@ function SubjectLessons() {
               </div>
             ))
           ) : (
-            <div className="col-span-full py-20 text-center bg-gray-50 rounded-[3rem] border-2 border-dashed border-gray-200">
-              <h3 className="text-2xl font-bold text-gray-400">Lessons coming soon! 🚀</h3>
+            <div className="col-span-full py-20 text-center bg-slate-50 rounded-[3rem] border-2 border-dashed border-slate-200">
+              <h3 className="text-2xl font-bold text-slate-400">Lessons coming soon! 🚀</h3>
             </div>
           )}
         </div>

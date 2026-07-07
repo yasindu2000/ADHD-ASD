@@ -7,6 +7,7 @@ function StudentDashboard() {
   const [userName, setUserName] = useState('Student');
   const [selectedFeeling, setSelectedFeeling] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   // Simple Stats for Gamification & Simple Chart
   const [stats, setStats] = useState({
@@ -24,6 +25,18 @@ function StudentDashboard() {
   const currentDateString = today.toLocaleDateString('en-US', {
     weekday: 'long', month: 'short', day: 'numeric'
   });
+
+  const timeString = currentTime.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const storedName = localStorage.getItem('userName');
@@ -118,22 +131,22 @@ function StudentDashboard() {
     <div className="min-h-screen bg-[#F4F8FB] pb-12 px-4 md:px-8 font-sans">
       
       {/* 1. CALM & CLEAR HEADER */}
-      <div className="max-w-5xl mx-auto pt-8 mb-8 flex justify-between items-center">
+      <div className="max-w-5xl mx-auto pt-2 mb-8 flex justify-between items-center">
         <div>
-          <h1 className="text-4xl md:text-5xl font-black text-[#1E3A8A] tracking-tight">
+          <h1 className="text-4xl md:text-5xl font-black text-slate-700 tracking-tight">
             Hi, {userName}! 👋
           </h1>
-          <p className="text-[#64748B] font-bold mt-2 text-xl">{currentDateString}</p>
+          <p className="text-slate-600 font-bold mt-2 text-xl">{currentDateString}</p>
         </div>
-        <div className="w-16 h-16 rounded-full bg-white shadow-sm border-4 border-blue-100 flex items-center justify-center text-3xl">
-          🧑‍🚀
+        <div className="flex items-center">
+          <span className="text-3xl md:text-4xl font-black text-slate-700 tracking-wide">{timeString}</span>
         </div>
       </div>
 
       {/* 🌟 2. FEELINGS TRACKER (Moved to top, full width for balance) 🌟 */}
       <div className="max-w-5xl mx-auto mb-8">
-        <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6">How are you feeling right now?</h3>
+        <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100">
+          <h3 className="text-2xl font-bold text-slate-700 mb-6">How are you feeling right now?</h3>
           <div className="flex flex-wrap gap-4">
             {['🤩', '😊', '🙂', '😐', '🥱', '😟'].map((emoji, index) => {
               const isSelected = selectedFeeling === index;
@@ -142,7 +155,7 @@ function StudentDashboard() {
                 <button
                   key={index} onClick={() => setSelectedFeeling(index)}
                   className={`text-5xl cursor-pointer transition-all duration-300 p-4 rounded-3xl
-                    ${isSelected ? 'bg-blue-50 border-4 border-blue-400 scale-110 shadow-md' : 'bg-gray-50 border-4 border-transparent hover:scale-105 hover:bg-gray-100'} 
+                    ${isSelected ? 'bg-sky-50 border-4 border-sky-200 scale-110 shadow-md' : 'bg-slate-50 border-4 border-transparent hover:scale-105 hover:bg-slate-100'} 
                     ${hasSelection && !isSelected ? 'opacity-40 grayscale-[50%]' : 'opacity-100'}
                   `}
                 >
@@ -152,7 +165,7 @@ function StudentDashboard() {
             })}
           </div>
           {selectedFeeling !== null && (
-            <div className="mt-6 text-blue-600 font-bold text-lg animate-in fade-in">
+            <div className="mt-6 text-sky-700 font-bold text-lg animate-in fade-in">
               {selectedFeeling <= 2 ? "Awesome! You're ready to learn! 🚀" : "Take a deep breath. You're doing great! 💙"}
             </div>
           )}
@@ -166,31 +179,31 @@ function StudentDashboard() {
         <div className="md:col-span-7 flex flex-col gap-8">
           
           {/* FOCUS ZONE */}
-          <div className="bg-gradient-to-br from-[#3B82F6] to-[#60A5FA] rounded-[2rem] p-8 shadow-md relative overflow-hidden flex-1">
+          <div className="bg-sky-50 rounded-[2rem] p-8 shadow-md border border-sky-100 relative overflow-hidden flex-1">
             <div className="absolute -right-10 -bottom-10 text-9xl opacity-20">🎯</div>
             <div className="relative z-10">
-              <h2 className="text-white font-bold text-xl mb-2 opacity-90">YOUR NEXT MISSION</h2>
+              <h2 className="text-sky-800 font-bold text-xl mb-2 opacity-90">YOUR NEXT MISSION</h2>
               
               {stats.nextLesson ? (
                 <>
-                  <h3 className="text-4xl font-black text-white mb-6 leading-tight">
+                  <h3 className="text-4xl font-black text-slate-800 mb-6 leading-tight">
                     {stats.nextLesson.title}
                   </h3>
                   <button 
                     onClick={() => navigate(`/lesson-view/${stats.nextLesson.id}`)}
-                    className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-black text-xl shadow-lg hover:scale-105 transition-transform flex items-center gap-3 w-fit"
+                    className="bg-white text-sky-700 border border-sky-100 px-8 py-4 rounded-2xl font-black text-xl shadow-lg hover:scale-105 transition-transform flex items-center gap-3 w-fit"
                   >
                     ▶ Continue Learning
                   </button>
                 </>
               ) : (
                 <>
-                  <h3 className="text-4xl font-black text-white mb-6 leading-tight">
+                  <h3 className="text-4xl font-black text-slate-800 mb-6 leading-tight">
                     Start a New Adventure!
                   </h3>
                   <button 
                     onClick={() => navigate('/lessons')}
-                    className="bg-white text-blue-600 px-8 py-4 rounded-2xl font-black text-xl shadow-lg hover:scale-105 transition-transform flex items-center gap-3 w-fit"
+                    className="bg-white text-sky-700 border border-sky-100 px-8 py-4 rounded-2xl font-black text-xl shadow-lg hover:scale-105 transition-transform flex items-center gap-3 w-fit"
                   >
                     📚 Open Library
                   </button>
@@ -200,26 +213,26 @@ function StudentDashboard() {
           </div>
 
           {/* SIMPLE DAILY SCORE CHART */}
-          <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100">
-            <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100">
+            <h3 className="text-xl font-bold text-slate-700 mb-6 flex items-center gap-2">
               📊 My Daily Scores
             </h3>
             
             <div className="flex justify-between items-end h-40 gap-2">
               {stats.weeklyScores.map((item, idx) => (
                 <div key={idx} className="flex flex-col items-center justify-end h-full w-full group">
-                  <span className={`text-sm font-black mb-1 ${item.score > 0 ? 'text-blue-600' : 'text-transparent'}`}>
+                  <span className={`text-sm font-black mb-1 ${item.score > 0 ? 'text-sky-700' : 'text-transparent'}`}>
                     {item.score}%
                   </span>
                   
-                  <div className="w-full max-w-[40px] bg-blue-50 rounded-t-xl relative h-[120px] flex items-end overflow-hidden">
+                  <div className="w-full max-w-[40px] bg-slate-50 rounded-t-xl relative h-[120px] flex items-end overflow-hidden border border-slate-100 border-b-0">
                     <div
-                      className={`w-full rounded-t-xl transition-all duration-1000 ease-out ${item.score === 100 ? 'bg-green-400' : 'bg-blue-400'}`}
+                      className={`w-full rounded-t-xl transition-all duration-1000 ease-out ${item.score === 100 ? 'bg-emerald-200' : 'bg-sky-200'}`}
                       style={{ height: `${item.score}%` }}
                     ></div>
                   </div>
                   
-                  <span className="text-sm font-bold text-gray-500 mt-2">{item.day}</span>
+                  <span className="text-sm font-bold text-slate-600 mt-2">{item.day}</span>
                 </div>
               ))}
             </div>
@@ -231,27 +244,27 @@ function StudentDashboard() {
         <div className="md:col-span-5 flex flex-col gap-8">
           
           {/* MY ACHIEVEMENTS */}
-          <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 flex flex-col items-center justify-center text-center">
-            <h3 className="text-xl font-bold text-gray-500 uppercase tracking-widest mb-6">My Rewards</h3>
+          <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+            <h3 className="text-xl font-bold text-slate-600 uppercase tracking-widest mb-6">My Rewards</h3>
             
             <div className="flex gap-4 w-full mb-6">
               <div className="flex-1 bg-[#FEF3C7] rounded-3xl p-6 border-2 border-[#FDE68A]">
                 <div className="text-4xl mb-2">⭐</div>
-                <div className="text-3xl font-black text-yellow-600">{stats.totalStars}</div>
-                <div className="text-sm font-bold text-yellow-700 mt-1">Stars</div>
+                <div className="text-3xl font-black text-amber-700">{stats.totalStars}</div>
+                <div className="text-sm font-bold text-amber-800 mt-1">Stars</div>
               </div>
               <div className="flex-1 bg-[#D1FAE5] rounded-3xl p-6 border-2 border-[#A7F3D0]">
                 <div className="text-4xl mb-2">🏆</div>
-                <div className="text-3xl font-black text-green-600">{stats.totalTrophies}</div>
-                <div className="text-sm font-bold text-green-700 mt-1">Trophies</div>
+                <div className="text-3xl font-black text-emerald-700">{stats.totalTrophies}</div>
+                <div className="text-sm font-bold text-emerald-800 mt-1">Trophies</div>
               </div>
             </div>
-            <p className="text-gray-500 font-bold text-sm">You earn stars for correct answers!</p>
+            <p className="text-slate-600 font-bold text-sm">You earn stars for correct answers!</p>
           </div>
 
           {/* WEEKLY STREAK */}
-          <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 flex-1">
-            <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 flex-1">
+            <h3 className="text-xl font-bold text-slate-700 mb-6 flex items-center gap-2">
               🔥 My Weekly Streak
             </h3>
             
@@ -259,11 +272,11 @@ function StudentDashboard() {
               {stats.weeklyStreak.map((isDone, index) => (
                 <div key={index} className="flex items-center gap-4">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg border-2 
-                    ${isDone ? 'bg-green-500 border-green-500 text-white shadow-sm' : 'bg-gray-100 border-gray-200 text-gray-300'}`}
+                    ${isDone ? 'bg-emerald-100 border-emerald-200 text-emerald-700 shadow-sm' : 'bg-slate-50 border-slate-100 text-slate-400'}`}
                   >
                     {isDone ? '✓' : ''}
                   </div>
-                  <div className={`font-bold text-lg ${isDone ? 'text-gray-800' : 'text-gray-400'}`}>
+                  <div className={`font-bold text-lg ${isDone ? 'text-slate-800' : 'text-slate-500'}`}>
                     {weekdays[index]}
                   </div>
                 </div>

@@ -13,10 +13,10 @@ function TakeQuiz() {
   const [isStarted, setIsStarted] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState({}); 
+  const [selectedAnswers, setSelectedAnswers] = useState({});
   const [score, setScore] = useState(0);
   const [stats, setStats] = useState({ correct: 0, incorrect: 0, timeSpent: "0.00" });
-  
+
   // Timer State
   const [timeLeft, setTimeLeft] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
@@ -34,9 +34,9 @@ function TakeQuiz() {
 
         if (data.success) {
           setQuiz(data.quiz);
-          const durationNumber = parseInt(data.quiz.duration) || 5; 
+          const durationNumber = parseInt(data.quiz.duration) || 5;
           const totalSeconds = durationNumber * 60;
-          
+
           setTimeLeft(totalSeconds);
           setTotalTime(totalSeconds);
         } else {
@@ -60,7 +60,7 @@ function TakeQuiz() {
       }, 1000);
     } else if (timeLeft === 0 && isStarted && !isFinished) {
       toast.error("⏳ Time is up!");
-      handleSubmitQuiz(); 
+      handleSubmitQuiz();
     }
     return () => clearInterval(timer);
   }, [isStarted, isFinished, timeLeft]);
@@ -103,7 +103,7 @@ function TakeQuiz() {
 
     const incorrectCount = quiz.questions.length - correctCount;
     const finalScore = Math.round((correctCount / quiz.questions.length) * 100);
-    
+
     const secondsSpent = totalTime - timeLeft;
     const mSpent = Math.floor(secondsSpent / 60);
     const sSpent = secondsSpent % 60;
@@ -113,7 +113,7 @@ function TakeQuiz() {
     setStats({ correct: correctCount, incorrect: incorrectCount, timeSpent: formattedTimeSpent });
 
     const studentId = localStorage.getItem('userId');
-    
+
     // Save to Database
     if (studentId) {
       try {
@@ -154,112 +154,125 @@ function TakeQuiz() {
 
   // Fallback function incase AI server is down
   const getFallbackFeedback = (s) => {
-    if (s > 70) return { action: "NEXT_LESSON", message: "Great job! Keep it up.", buttonText: "Next Lesson →", color: "#009933" };
-    if (s >= 40) return { action: "REVISE_QUIZ", message: "Good effort, but try again to improve.", buttonText: "Revise Quiz →", color: "#CCFF00" };
-    return { action: "REVISE_LESSON", message: "You should review the lesson again.", buttonText: "Revise Lesson →", color: "#FF4D4D" };
+    if (s > 70) return { action: "NEXT_LESSON", message: "Great job! Keep it up.", buttonText: "Next Lesson ➔", color: "#34D399" };
+    if (s >= 40) return { action: "REVISE_QUIZ", message: "Good effort, but try again to improve.", buttonText: "Revise Quiz ➔", color: "#FBBF24" };
+    return { action: "REVISE_LESSON", message: "You should review the lesson again.", buttonText: "Revise Lesson ➔", color: "#FB7185" };
   };
 
 
-  if (loading) return <div className="min-h-screen bg-white flex items-center justify-center text-xl font-bold">Loading your Quiz... ⏳</div>;
-  if (!quiz) return <div className="min-h-screen flex items-center justify-center text-red-500 font-bold">Failed to load quiz.</div>;
+  if (loading) return <div className="min-h-screen bg-white flex items-center justify-center text-xl font-bold text-slate-500 animate-pulse">Loading your Quiz... ⏳</div>;
+  if (!quiz) return <div className="min-h-screen bg-white flex items-center justify-center text-rose-500 font-bold">Failed to load quiz.</div>;
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
   const optionLetters = ['A.', 'B.', 'C.', 'D.', 'E.', 'F.'];
 
-  // UI Theming based on Score (Matches your screenshot)
+  // UI Theming based on Score
   const getTheme = () => {
     if (aiFeedback?.color) return aiFeedback.color; // Use AI color if available
-    if (score > 70) return "#009933"; // Green
-    if (score >= 40) return "#CCFF00"; // Yellow
-    return "#FF4D4D"; // Red
+    if (score > 70) return "#34D399"; // emerald-400
+    if (score >= 40) return "#FBBF24"; // amber-400
+    return "#FB7185"; // rose-400
   };
-  
+
   const themeColor = getTheme();
-  const textColor = score >= 40 && score <= 70 ? "#000000" : "#FFFFFF"; // Yellow button needs black text
+  // We'll keep text white for buttons, or dark if it's yellow/amber
+  const textColor = score >= 40 && score <= 70 ? "#334155" : "#FFFFFF";
 
   return (
-    <div className="min-h-screen bg-white font-sans pb-10 flex flex-col">
-      
+    <div className={`bg-white font-sans flex flex-col -mt-8 -mx-8 -mb-8 px-8 pt-8 ${isStarted && !isFinished ? 'h-[calc(100vh)] overflow-hidden pb-4' : 'min-h-screen pb-18'}`}>
+
       {!isFinished && (
-        <div className="bg-[#CBEBFA] py-4 px-6 flex items-center sticky top-0 z-50 shadow-sm">
-          <button onClick={() => navigate(-1)} className="text-black font-extrabold text-xl flex items-center gap-2">
-            <span>←</span> Back
+        <div className="w-full shrink-0 mb-2">
+          <button onClick={() => navigate(-1)} className="text-slate-500 hover:text-slate-700 font-extrabold text-base md:text-lg flex items-center gap-2 hover:scale-105 transition-all cursor-pointer bg-white hover:bg-slate-50 px-5 py-2 rounded-full border-2 border-slate-100 shadow-sm w-max">
+            <span>⬅</span> Back
           </button>
         </div>
       )}
 
-      <div className="w-full max-w-3xl mx-auto mt-6 px-4">
-        
+      <div className={`w-full max-w-3xl mx-auto px-4 flex flex-col ${isStarted && !isFinished ? 'flex-1 overflow-hidden' : 'mt-6'}`}>
+
         {!isStarted && !isFinished && (
-          <div className="bg-[#EAF8FC] rounded-2xl p-10 text-center mt-10 shadow-sm border border-blue-50">
-            <h2 className="text-4xl font-black text-gray-800 mb-4">{quiz.quizTitle || "Quiz Time!"}</h2>
-            <p className="text-xl text-gray-700 mb-8 font-medium">
-              You have <b>{parseInt(quiz.duration) || 5} minutes</b> to complete <b>{quiz.questions.length} questions</b>.
+          <div className="bg-sky-50 rounded-[2.5rem] p-10 text-center mt-10 shadow-sm border border-sky-100">
+            <h2 className="text-4xl md:text-5xl font-black text-slate-700 mb-4 tracking-tight drop-shadow-sm">{quiz.quizTitle || "Quiz Time!"}</h2>
+            <p className="text-xl text-slate-500 mb-10 font-bold tracking-wide">
+              You have <b className="text-slate-700">{parseInt(quiz.duration) || 5} minutes</b> to complete <b className="text-slate-700">{quiz.questions.length} questions</b>.
             </p>
-            <button 
+            <button
               onClick={() => setIsStarted(true)}
-              className="bg-[#2B6CB0] text-white font-bold text-xl px-12 py-4 rounded-md hover:bg-blue-800 transition-colors"
+              className="bg-sky-500 text-white font-black text-xl px-12 py-4 rounded-2xl hover:bg-sky-600 transition-all hover:-translate-y-1 hover:shadow-md cursor-pointer border border-white/50 inline-block"
             >
-              Start Quiz
+              Start Quiz 🚀
             </button>
           </div>
         )}
 
         {isStarted && !isFinished && (
-          <div className="animate-in fade-in duration-300">
-            <div className="flex justify-between font-bold text-black mb-2 px-1 text-sm md:text-base">
+          <div className="animate-in fade-in duration-300 flex flex-col h-full pb-4">
+            <div className="flex justify-between font-extrabold text-slate-400 mb-2 px-1 text-sm md:text-base tracking-widest uppercase shrink-0">
               <span>Question {currentQuestionIndex + 1} of {quiz.questions.length}</span>
-              <span>Time Left: {formatTime(timeLeft)}</span>
+              <span className="text-sky-500">Time Left: {formatTime(timeLeft)}</span>
             </div>
             
-            <div className="w-full bg-white h-4 rounded-full overflow-hidden mb-8 border border-gray-300">
+            <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden mb-4 shadow-inner border border-slate-200 shrink-0">
               <div 
-                className="bg-[#3B82F6] h-full transition-all duration-300 rounded-full"
+                className="bg-emerald-400 h-full transition-all duration-300 rounded-full"
                 style={{ width: `${((currentQuestionIndex + 1) / quiz.questions.length) * 100}%` }}
               ></div>
             </div>
 
-            <div className="bg-[#F0FDF4] md:bg-[#EAF8FC] rounded-xl p-6 md:p-10 mb-8">
-              <div className="mb-8">
-                <span className="text-xl md:text-3xl font-extrabold text-black border-b-4 border-[#3B82F6] pb-1 inline-block leading-snug">
+            <div className="bg-sky-50 rounded-[2rem] p-5 md:p-6 mb-4 border border-sky-100 shadow-sm shrink-0">
+              <div className="mb-2">
+                <span className="text-xl md:text-2xl font-black text-slate-700 border-b-4 border-sky-300 pb-1 inline-block leading-snug">
                   {currentQuestionIndex + 1}. {currentQuestion?.questionText || "Question loading..."}
                 </span>
               </div>
-
-              <div className="flex flex-col gap-3">
-                {currentQuestion.options.map((option, index) => {
-                  const isSelected = selectedAnswers[currentQuestionIndex] === index;
-                  return (
-                    <button
-                      key={index}
-                      onClick={() => handleSelectOption(index)}
-                      className={`w-full text-left p-4 border transition-colors flex items-center text-lg md:text-xl font-bold
-                        ${isSelected ? 'bg-[#00FF00] border-gray-400 text-black shadow-sm' : 'bg-white border-gray-400 text-black hover:bg-gray-50'}
-                      `}
-                    >
-                      <span className="w-8 shrink-0">{optionLetters[index]}</span>
-                      <span>{option}</span>
-                    </button>
-                  );
-                })}
-              </div>
             </div>
 
-            <div className="flex justify-between items-center mt-6">
+            <div className="flex flex-col gap-2 overflow-y-auto px-2 pt-1 pb-2 -mx-2 flex-1 scrollbar-thin scrollbar-thumb-sky-200 scrollbar-track-transparent custom-scrollbar">
+              {currentQuestion.options.map((option, index) => {
+                const isSelected = selectedAnswers[currentQuestionIndex] === index;
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleSelectOption(index)}
+                    className={`w-full text-left p-4 border-2 transition-all duration-300 flex items-center text-lg font-bold rounded-2xl cursor-pointer shrink-0
+                      ${isSelected ? 'bg-emerald-100 border-emerald-300 text-emerald-800 shadow-sm' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'}
+                    `}
+                  >
+                    <span className="w-10 shrink-0 opacity-70">{optionLetters[index]}</span>
+                    <span>{option}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-100 shrink-0">
               <button 
                 onClick={handlePrev} disabled={currentQuestionIndex === 0}
-                className="px-6 py-3 font-bold text-black bg-[#EAF8FC] border border-gray-300 shadow-sm disabled:opacity-50 flex items-center gap-2"
+                className="px-6 py-3 font-bold text-slate-600 bg-white rounded-xl border-2 border-slate-200 shadow-sm disabled:opacity-40 flex items-center gap-2 hover:bg-slate-50 transition-colors cursor-pointer"
               >
-                <span>←</span> Previous
+                <span>⬅</span> Previous
               </button>
 
               {currentQuestionIndex === quiz.questions.length - 1 ? (
-                <button onClick={handleSubmitQuiz} className="px-8 py-3 font-bold text-white bg-[#3B82F6] hover:bg-blue-700 shadow-sm flex items-center gap-2">
-                  Submit <span>→</span>
+                <button 
+                  onClick={handleSubmitQuiz} 
+                  disabled={selectedAnswers[currentQuestionIndex] === undefined}
+                  className={`px-8 py-3 font-bold text-white rounded-xl shadow-sm flex items-center gap-2 transition-all border border-white/50
+                    ${selectedAnswers[currentQuestionIndex] !== undefined ? 'bg-sky-500 hover:bg-sky-600 hover:scale-105 cursor-pointer' : 'bg-slate-300 cursor-not-allowed opacity-70'}
+                  `}
+                >
+                  Submit <span>➔</span>
                 </button>
               ) : (
-                <button onClick={handleNext} className="px-8 py-3 font-bold text-white bg-[#3B82F6] hover:bg-blue-700 shadow-sm flex items-center gap-2">
-                  Next <span>→</span>
+                <button 
+                  onClick={handleNext} 
+                  disabled={selectedAnswers[currentQuestionIndex] === undefined}
+                  className={`px-8 py-3 font-bold text-white rounded-xl shadow-sm flex items-center gap-2 transition-all border border-white/50
+                    ${selectedAnswers[currentQuestionIndex] !== undefined ? 'bg-sky-500 hover:bg-sky-600 hover:scale-105 cursor-pointer' : 'bg-slate-300 cursor-not-allowed opacity-70'}
+                  `}
+                >
+                  Next <span>➔</span>
                 </button>
               )}
             </div>
@@ -268,47 +281,47 @@ function TakeQuiz() {
       </div>
 
       {isFinished && (
-        <div className="flex-1 w-full flex flex-col items-center bg-white animate-in zoom-in duration-500">
-          
+        <div className="flex-1 w-full flex flex-col items-center bg-white animate-in zoom-in duration-500 ">
+
           {isAnalyzing ? (
             // 🌟 AI LOADING SCREEN
-            <div className="mt-32 flex flex-col items-center justify-center">
+            <div className="mt-20 flex flex-col items-center justify-center">
               <div className="text-6xl mb-6 animate-bounce">🤖</div>
-              <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-              <h2 className="text-2xl font-black text-blue-600">AI is analyzing your performance...</h2>
-              <p className="text-gray-500 font-bold mt-2">Please wait a moment.</p>
+              <div className="w-12 h-12 border-4 border-sky-100 border-t-sky-500 rounded-full animate-spin mb-6"></div>
+              <h2 className="text-3xl font-black text-slate-700 tracking-tight">AI is analyzing your performance...</h2>
+              <p className="text-slate-500 font-bold mt-3 text-lg">Please wait a moment.</p>
             </div>
           ) : (
-            // 🌟 RESULTS SCREEN (Matches your screenshot layout)
+            // 🌟 RESULTS SCREEN
             <>
-              <div className="w-full bg-[#EAF8FC] pt-6 pb-16 relative border-b border-gray-100">
+              <div className="w-full bg-sky-50 -mt-8 pt-10 pb-24 relative border-b-4 border-sky-100 -mx-8 px-8 rounded-b-[3rem] mb-20 shadow-sm max-w-5xl self-center">
                 <div className="max-w-4xl mx-auto px-4">
-                  <button onClick={() => navigate('/dashboard')} className="bg-[#CBEBFA] border border-blue-200 text-black font-bold px-4 py-2 rounded-md flex items-center gap-2 w-max shadow-sm">
-                    <span>←</span> Dashboard
+                  <button onClick={() => navigate('/dashboard')} className="bg-white border-2 border-sky-100 text-slate-500 hover:text-slate-700 font-bold px-6 py-3 rounded-full flex items-center gap-2 w-max shadow-sm transition-all hover:shadow-md cursor-pointer">
+                    <span>⬅</span> Dashboard
                   </button>
-                  
+
                   <div className="text-center mt-6">
-                    <h2 className="text-lg font-bold text-gray-800 mb-6">Quiz Completed!</h2>
-                    <p className="text-sm font-bold text-gray-600 mb-1">Your Score</p>
-                    <h1 className="text-4xl font-black text-black">
-                      {stats.correct} out of {quiz.questions.length}
+                    <h2 className="text-xl font-extrabold text-slate-500 mb-6 uppercase tracking-widest">Quiz Completed!</h2>
+                    <p className="text-sm font-extrabold text-slate-400 mb-2 uppercase tracking-widest">Your Score</p>
+                    <h1 className="text-6xl font-black text-slate-700 drop-shadow-sm">
+                      {stats.correct} <span className="text-3xl text-slate-400">out of</span> {quiz.questions.length}
                     </h1>
                   </div>
                 </div>
               </div>
 
-              <div className="w-full bg-white flex flex-col items-center relative -mt-24">
-                
+              <div className="w-full bg-white flex flex-col items-center relative -mt-32 max-w-4xl mx-auto">
+
                 {/* 🌟 Dynamic Progress Circle */}
-                <div className="bg-white p-2 rounded-full shadow-sm mb-6 z-10 border border-gray-100">
+                <div className="bg-white p-3 rounded-full shadow-lg mb-10 z-10 border border-slate-100">
                   <div className="relative w-48 h-48 flex items-center justify-center bg-white rounded-full">
                     <svg className="w-full h-full transform -rotate-90">
-                      <circle cx="96" cy="96" r="80" fill="none" stroke="#E5E7EB" strokeWidth="16" />
-                      <circle 
-                        cx="96" cy="96" r="80" fill="none" 
-                        stroke={themeColor} 
-                        strokeWidth="16" strokeLinecap="round" 
-                        strokeDasharray={`${(score / 100) * 502} 502`} 
+                      <circle cx="96" cy="96" r="80" fill="none" stroke="#F1F5F9" strokeWidth="16" />
+                      <circle
+                        cx="96" cy="96" r="80" fill="none"
+                        stroke={themeColor}
+                        strokeWidth="16" strokeLinecap="round"
+                        strokeDasharray={`${(score / 100) * 502} 502`}
                         className="transition-all duration-1000 ease-out"
                       />
                     </svg>
@@ -320,40 +333,43 @@ function TakeQuiz() {
 
                 {/* 🌟 AI Feedback Message */}
                 {aiFeedback?.message && (
-                  <p className="text-lg font-bold text-gray-600 italic mb-8 px-4 text-center">
-                    "{aiFeedback.message}"
-                  </p>
+                  <div className="max-w-2xl px-6 mb-12">
+                    <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100 relative">
+                      <span className="absolute -top-4 -left-2 text-4xl text-slate-200 font-serif">"</span>
+                      <p className="text-xl font-bold text-slate-600 italic text-center leading-relaxed">
+                        {aiFeedback.message}
+                      </p>
+                      <span className="absolute -bottom-6 right-2 text-4xl text-slate-200 font-serif rotate-180">"</span>
+                    </div>
+                  </div>
                 )}
 
                 {/* Metrics Row */}
-                <div className="flex justify-center items-center gap-4 md:gap-12 mb-12 text-center w-full px-2">
-                  <div className="flex flex-col items-center border-r border-gray-200 pr-4 md:pr-12">
-                    <p className="text-xs font-bold text-gray-800 flex items-center gap-1 mb-2">
-                      <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                      Duration
+                <div className="flex justify-center items-center gap-4 md:gap-16 mb-12 text-center w-full px-2 border-t border-b border-slate-100 py-8 max-w-3xl">
+                  <div className="flex flex-col items-center border-r border-slate-200 pr-4 md:pr-16">
+                    <p className="text-xs font-extrabold text-slate-400 flex items-center gap-1 mb-2 uppercase tracking-widest">
+                      ⏱ Duration
                     </p>
-                    <p className="text-xl font-black text-black">{stats.timeSpent}</p>
+                    <p className="text-3xl font-black text-slate-700">{stats.timeSpent}</p>
                   </div>
 
-                  <div className="flex flex-col items-center border-r border-gray-200 pr-4 md:pr-12">
-                    <p className="text-xs font-bold text-gray-800 flex items-center gap-1 mb-2">
-                      <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                      Correct Answers
+                  <div className="flex flex-col items-center border-r border-slate-200 pr-4 md:pr-16">
+                    <p className="text-xs font-extrabold text-slate-400 flex items-center gap-1 mb-2 uppercase tracking-widest">
+                      ✅ Correct
                     </p>
-                    <p className="text-xl font-black text-black">{stats.correct}</p>
+                    <p className="text-3xl font-black text-emerald-500">{stats.correct}</p>
                   </div>
 
                   <div className="flex flex-col items-center">
-                    <p className="text-xs font-bold text-gray-800 flex items-center gap-1 mb-2">
-                      <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                      Incorrect Answers
+                    <p className="text-xs font-extrabold text-slate-400 flex items-center gap-1 mb-2 uppercase tracking-widest">
+                      ❌ Incorrect
                     </p>
-                    <p className="text-xl font-black text-black">{stats.incorrect}</p>
+                    <p className="text-3xl font-black text-rose-500">{stats.incorrect}</p>
                   </div>
                 </div>
 
                 {/* 🌟 Dynamic Action Button */}
-                <button 
+                <button
                   onClick={() => {
                     const action = aiFeedback?.action;
                     if (action === 'NEXT_LESSON') navigate('/lessons');
@@ -362,11 +378,11 @@ function TakeQuiz() {
                     else navigate('/lessons'); // Fallback
                   }}
                   style={{ backgroundColor: themeColor, color: textColor }}
-                  className="font-bold text-xl px-12 py-4 rounded-xl flex items-center gap-2 shadow-sm transition-transform hover:scale-105"
+                  className="font-black text-xl px-12 py-5 rounded-2xl flex items-center gap-2 shadow-sm transition-all hover:scale-105 hover:shadow-md cursor-pointer border border-white/30"
                 >
-                  {aiFeedback?.buttonText || "Next Lesson →"}
+                  {aiFeedback?.buttonText || "Next Lesson ➔"}
                 </button>
-                
+
               </div>
             </>
           )}

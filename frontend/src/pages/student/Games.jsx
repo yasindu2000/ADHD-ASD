@@ -11,64 +11,56 @@ function Games() {
       title: 'Memory Match',
       description: 'Find the matching animal friends!',
       icon: '🐢',
-      bgColor: 'bg-[#D1FAE5]', 
-      borderColor: 'border-[#A7F3D0]',
-      textColor: 'text-emerald-800'
+      bgColor: 'bg-emerald-50', 
+      borderColor: 'border-emerald-100',
+      textColor: 'text-emerald-700'
     },
     {
       id: 'balloon-pop',
       title: 'Balloon Pop',
       description: 'Pop the right colors in the sky!',
       icon: '🎈',
-      bgColor: 'bg-[#DBEAFE]', 
-      borderColor: 'border-[#BFDBFE]',
-      textColor: 'text-blue-800'
+      bgColor: 'bg-sky-50', 
+      borderColor: 'border-sky-100',
+      textColor: 'text-sky-700'
     },
     {
       id: 'pattern-puzzle',
       title: 'Pattern Puzzle',
       description: 'Guess what comes next!',
       icon: '🧩',
-      bgColor: 'bg-[#FEF3C7]', 
-      borderColor: 'border-[#FDE68A]',
-      textColor: 'text-amber-800'
+      bgColor: 'bg-amber-50', 
+      borderColor: 'border-amber-100',
+      textColor: 'text-amber-700'
     },
     {
       id: 'math-catch',
       title: 'Math Catch',
       description: 'Catch the correct falling numbers!',
       icon: '🍎',
-      bgColor: 'bg-[#FCE7F3]', 
-      borderColor: 'border-[#FBCFE8]',
-      textColor: 'text-pink-800'
+      bgColor: 'bg-rose-50', 
+      borderColor: 'border-rose-100',
+      textColor: 'text-rose-700'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-[#F4F8FB] font-sans pb-12 px-4 md:px-8">
+    <div className="font-sans pb-12">
       
       
-      <div className="max-w-6xl mx-auto pt-10 mb-10">
-        <button 
-          onClick={() => navigate('/dashboard')}
-          className="text-gray-500 hover:text-gray-800 font-bold flex items-center gap-2 mb-6 bg-white px-6 py-3 rounded-full shadow-sm w-fit transition-all hover:shadow-md"
-        >
-          <span className="text-xl">←</span> Back to Dashboard
-        </button>
+      <div className="max-w-6xl mx-auto pt-1 mb-10">
+        
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h1 className="text-4xl md:text-5xl font-black text-[#1E3A8A] tracking-tight">
+            <h1 className="text-4xl md:text-5xl font-black text-slate-700 tracking-tight">
               Play & Learn! 🎮
             </h1>
-            <p className="text-[#64748B] font-bold mt-2 text-xl">
+            <p className="text-slate-600 font-bold mt-2 text-xl">
               Have fun, train your brain, and earn high scores.
             </p>
           </div>
-          <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-gray-200 flex items-center gap-3">
-            <div className="text-3xl">⭐</div>
-            <div className="text-gray-700 font-black text-xl">Games Hub</div>
-          </div>
+          
         </div>
       </div>
 
@@ -96,7 +88,7 @@ function Games() {
                 </p>
               </div>
               
-              <button className={`bg-white px-8 py-4 rounded-2xl font-black text-xl shadow-sm ${game.textColor} group-hover:bg-gray-50 transition-colors w-full md:w-fit flex justify-center items-center gap-2`}>
+              <button className={`bg-white px-8 py-4 rounded-2xl font-black text-xl shadow-sm ${game.textColor} group-hover:scale-105 transition-all duration-300 w-full md:w-fit flex justify-center items-center gap-2 cursor-pointer border border-white/50`}>
                 Play Now <span>➔</span>
               </button>
             </div>

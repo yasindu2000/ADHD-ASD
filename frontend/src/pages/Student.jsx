@@ -63,9 +63,12 @@ function Student() {
         {/* Updated Logout Button */}
         <button 
           onClick={handleLogout}
-          className="text-left text-2xl cursor-pointer uppercase p-3 text-gray-600 font-bold tracking-wide hover:text-red-500 transition-colors mt-auto"
+          className="flex items-center gap-3 text-left text-2xl cursor-pointer uppercase p-3 text-gray-600 font-bold tracking-wide hover:text-red-500 transition-colors mt-auto"
         >
-          🚪 Logout
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-7 h-7">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
+          </svg>
+          Logout
         </button>
       </aside>
 

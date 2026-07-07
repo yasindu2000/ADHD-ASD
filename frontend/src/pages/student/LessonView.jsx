@@ -104,7 +104,7 @@ function LessonView() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#EAF8FC] flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-[#eaf7fa] flex flex-col items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-500 mb-4"></div>
         <p className="text-xl font-bold text-gray-500">Loading Lesson...</p>
       </div>
@@ -112,7 +112,7 @@ function LessonView() {
   }
 
   if (!lesson) {
-    return <div className="min-h-screen bg-[#EAF8FC] flex items-center justify-center text-xl font-bold text-red-500">Lesson not found!</div>;
+    return <div className="min-h-screen bg-white flex items-center justify-center text-xl font-bold text-red-500">Lesson not found!</div>;
   }
 
   const totalParts = lesson.parts?.length || 0;
@@ -167,7 +167,7 @@ function LessonView() {
   const activeVideoUrl = lesson.parts[activePartIndex]?.videoUrl;
 
   return (
-    <div className="min-h-screen bg-[#EAF8FC] pb-10 font-sans">
+    <div className="min-h-screen bg-white font-sans -mt-8 -mx-8 -mb-8 px-8 pt-8 pb-18">
       
       {/* 🌟 REDESIGNED FINISH MODAL 🌟 */}
       {showFinishModal && (
@@ -198,11 +198,11 @@ function LessonView() {
                 {/* 1. HAPPY */}
                 <button 
                   onClick={() => setShowFinishModal(false)}
-                  className="flex flex-col items-center justify-center bg-white p-8 rounded-[2.5rem] border-4 border-green-100 hover:border-green-400 hover:bg-green-50 transition-all duration-300 group shadow-sm hover:shadow-xl"
+                  className="flex flex-col items-center justify-center bg-white p-8 rounded-[2.5rem] border-4 border-emerald-100 hover:border-emerald-300 hover:bg-emerald-50 transition-all duration-300 group shadow-sm hover:shadow-xl cursor-pointer"
                 >
                   <span className="text-7xl group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-300 drop-shadow-sm">🤩</span>
-                  <span className="mt-6 text-2xl font-black text-green-700">I feel great!</span>
-                  <span className="mt-3 text-sm font-bold text-green-600 bg-green-100 px-6 py-2 rounded-full group-hover:bg-green-200 transition-colors">
+                  <span className="mt-6 text-2xl font-black text-emerald-700">I feel great!</span>
+                  <span className="mt-3 text-sm font-bold text-emerald-600 bg-emerald-100 px-6 py-2 rounded-full group-hover:bg-emerald-200 transition-colors">
                     Continue ➔
                   </span>
                 </button>
@@ -210,11 +210,11 @@ function LessonView() {
                 {/* 2. BORED */}
                 <button 
                   onClick={() => navigate('/games')}
-                  className="flex flex-col items-center justify-center bg-white p-8 rounded-[2.5rem] border-4 border-blue-100 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 group shadow-sm hover:shadow-xl"
+                  className="flex flex-col items-center justify-center bg-white p-8 rounded-[2.5rem] border-4 border-sky-100 hover:border-sky-300 hover:bg-sky-50 transition-all duration-300 group shadow-sm hover:shadow-xl cursor-pointer"
                 >
                   <span className="text-7xl group-hover:scale-110 transition-transform duration-300 drop-shadow-sm">😐</span>
-                  <span className="mt-6 text-2xl font-black text-blue-700">I want to play</span>
-                  <span className="mt-3 text-sm font-bold text-blue-600 bg-blue-100 px-6 py-2 rounded-full group-hover:bg-blue-200 transition-colors">
+                  <span className="mt-6 text-2xl font-black text-sky-700">I want to play</span>
+                  <span className="mt-3 text-sm font-bold text-sky-600 bg-sky-100 px-6 py-2 rounded-full group-hover:bg-sky-200 transition-colors">
                     Games 🎮
                   </span>
                 </button>
@@ -222,11 +222,11 @@ function LessonView() {
                 {/* 3. TIRED */}
                 <button 
                   onClick={() => navigate('/break-timer')}
-                  className="flex flex-col items-center justify-center bg-white p-8 rounded-[2.5rem] border-4 border-orange-100 hover:border-orange-400 hover:bg-orange-50 transition-all duration-300 group shadow-sm hover:shadow-xl"
+                  className="flex flex-col items-center justify-center bg-white p-8 rounded-[2.5rem] border-4 border-amber-100 hover:border-amber-300 hover:bg-amber-50 transition-all duration-300 group shadow-sm hover:shadow-xl cursor-pointer"
                 >
                   <span className="text-7xl group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 drop-shadow-sm">🥱</span>
-                  <span className="mt-6 text-2xl font-black text-orange-700">I'm tired</span>
-                  <span className="mt-3 text-sm font-bold text-orange-600 bg-orange-100 px-6 py-2 rounded-full group-hover:bg-orange-200 transition-colors">
+                  <span className="mt-6 text-2xl font-black text-amber-700">I'm tired</span>
+                  <span className="mt-3 text-sm font-bold text-amber-600 bg-amber-100 px-6 py-2 rounded-full group-hover:bg-amber-200 transition-colors">
                     Take a Break 🌿
                   </span>
                 </button>
@@ -238,14 +238,14 @@ function LessonView() {
       )}
 
       {/* HEADER */}
-      <div className="bg-[#CBEBFA] py-4 px-6 flex items-center shadow-sm relative sticky top-0 z-50">
+      <div className="bg-sky-100 py-4 px-14 flex items-center shadow-sm relative sticky top-0 z-50 -mt-8 -mx-8 mb-8">
         <button 
           onClick={() => navigate(-1)} 
-          className="text-gray-800 font-extrabold text-xl flex items-center gap-2 hover:scale-105 transition-transform z-10 bg-white/50 px-4 py-1 rounded-full backdrop-blur-sm cursor-pointer"
+          className="text-slate-700 font-extrabold text-xl flex items-center gap-2 hover:scale-105 transition-transform z-10 bg-white/50 px-4 py-1 rounded-full backdrop-blur-sm cursor-pointer"
         >
           <span>⬅</span> Back
         </button>
-        <h1 className="text-2xl md:text-3xl font-black text-gray-900 absolute w-full text-center left-0 px-24 truncate drop-shadow-sm">
+        <h1 className="text-2xl md:text-3xl font-black text-slate-700 tracking-tight absolute w-full text-center left-0 px-24 truncate drop-shadow-sm">
           {lesson.title}
         </h1>
       </div>
