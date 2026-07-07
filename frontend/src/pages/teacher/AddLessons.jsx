@@ -39,7 +39,7 @@ function AddLessons() {
   // NEW: State Persistence (sessionStorage)
   // ==========================================
   
-  // 1. Component eka load weddi kalin hitiya thana gannawa
+  
   useEffect(() => {
     const savedState = sessionStorage.getItem('teacherDashboardState');
     if (savedState) {
@@ -51,7 +51,7 @@ function AddLessons() {
     }
   }, []);
 
-  // 2. Step eka wenas weddi eka save karanawa
+
   useEffect(() => {
     sessionStorage.setItem('teacherDashboardState', JSON.stringify({
       currentStep,
@@ -61,7 +61,7 @@ function AddLessons() {
     }));
   }, [currentStep, selectedGrade, selectedSubject, selectedLesson]);
 
-  // 3. View Lesson ekata aawama auto Quiz eka check karanawa
+
   useEffect(() => {
     const checkQuizStatus = async () => {
       if (currentStep === 'viewLesson' && selectedLesson) {
@@ -127,7 +127,7 @@ function AddLessons() {
   const openViewLesson = (lesson) => {
     setSelectedLesson(lesson);
     setCurrentStep('viewLesson');
-    // Quiz check eka dan auto wena nisa methanin eka ain kala
+    
   };
 
   const openAddForm = () => {

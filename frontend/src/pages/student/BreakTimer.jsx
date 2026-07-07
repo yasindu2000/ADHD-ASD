@@ -10,8 +10,8 @@ function BreakTimer() {
       const timer = setInterval(() => setSeconds(prev => prev - 1), 1000);
       return () => clearInterval(timer);
     } else {
-      // Time zero unama lesson page ekata redirect karanawa
-      navigate(-1); // Kalin hitiya lesson ekata yanawa
+      
+      navigate(-1); 
     }
   }, [seconds, navigate]);
 

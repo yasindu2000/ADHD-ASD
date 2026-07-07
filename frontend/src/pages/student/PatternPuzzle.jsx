@@ -34,7 +34,7 @@ function PatternPuzzle() {
   const [bestScore, setBestScore] = useState(0);
   const [bestTime, setBestTime] = useState("0:00");
 
-  const TOTAL_ROUNDS = 5; // Win karanna rounds 5k oni
+  const TOTAL_ROUNDS = 5; 
 
   // 1. Fetch Best Score
   useEffect(() => {

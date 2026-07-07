@@ -62,7 +62,7 @@ function SubjectLessons() {
               const progData = await progRes.json();
               if (progData.success) {
                 progData.allProgress.forEach(p => {
-                  // lessonId ekata adala iwara karapu parts gaana map eke save karanawa
+                  
                   progressMap[p.lessonId] = p.completedParts.length;
                 });
               }
@@ -82,7 +82,7 @@ function SubjectLessons() {
               id: lesson._id,
               title: lesson.title,
               duration: `${totalParts} Parts`, 
-              progress: progressPercentage, // Hariyatama calculation wuna pattiya
+              progress: progressPercentage, 
               totalParts: totalParts,
               completedCount: completedCount
             };

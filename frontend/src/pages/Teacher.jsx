@@ -52,7 +52,7 @@ function Teacher() {
             active={isActive('/teacher/students')} 
             onClick={() => navigate('/teacher/students')} 
           />
-          {/* 🌟 අලුතින් Add කරපු Feedback Section එක */}
+          
           <NavItem 
             icon="⭐" label="Add Feedback" 
             active={isActive('/teacher/feedback')} 

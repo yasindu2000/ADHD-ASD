@@ -29,7 +29,7 @@ function Feedback() {
     fetchMyFeedbacks();
   }, []);
 
-  // ලස්සනට Date එක පෙන්නන්න හදන Function එක (උදා: "Mon, Oct 12, 2023")
+ 
   const formatDate = (dateString) => {
     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('en-US', options);

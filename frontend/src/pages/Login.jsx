@@ -38,17 +38,16 @@ function Login() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("userRole", data.user.role);
         localStorage.setItem("userName", data.user.fullName);
-        
-        // 🌟 MEKA GODAK WADAGATH: Progress save karanna ID eka oni 🌟
+    
         localStorage.setItem("userId", data.user._id);
 
-        // 🌟 GRADE EKA SAVE KARANA KALLA 🌟
+        
         if (data.user.role === "student") {
-           // Backend eken grade eka aawe nathnam '1' kiyala gannawa
+        
            const rawGrade = data.user.grade || "1"; 
            const g = rawGrade.toString();
            
-           // '1' thibboth 'Grade 01' kiyala hadanawa, nathnam thiyena ekama danawa
+         
            const formattedGrade = g.length === 1 ? `Grade 0${g}` : (g.includes("Grade") ? g : `Grade ${g}`);
            
            localStorage.setItem("studentGrade", formattedGrade);
@@ -57,11 +56,11 @@ function Login() {
         
         toast.success(`Welcome back, ${data.user.fullName || 'User'}!`);
 
-        // 2. Navigate based on their role
+       
         if (data.user.role === "teacher") {
           navigate("/teacher/dashboard");
         } else if (data.user.role === "student") {
-          // Dashboard layout ekata yanawa
+          
           navigate("/dashboard"); 
         }
       } else {

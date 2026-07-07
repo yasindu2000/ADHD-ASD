@@ -29,7 +29,7 @@ function BalloonPop() {
   const [bestScore, setBestScore] = useState(0);
   const [bestTime, setBestTime] = useState("0:00");
 
-  const TARGET_GOAL = 10; // Udin pop karanna oni balloons gaana
+  const TARGET_GOAL = 10; 
 
   // 1. Fetch Best Score
   useEffect(() => {
@@ -110,7 +110,7 @@ function BalloonPop() {
     return () => clearInterval(spawnInterval);
   }, [isGameActive, isGameOver, spawnBalloon]);
 
-  // 5. Handle Balloon Click 🌟 (UPDATE KARAPU THENA)
+  // 5. Handle Balloon Click 🌟 
   const handlePop = (id, colorObj) => {
     if (!isGameActive || isGameOver) return;
 
@@ -135,10 +135,10 @@ function BalloonPop() {
       });
 
     } else {
-      // 🌟 WARADI BALLOON EKA OBUWOTH (-5 Points, but not below 0)
+      
       setScore(s => Math.max(0, s - 5));
       
-      // Podi notification ekak pennanawa target paata mathak karanna
+      
       toast(`Oops! Catch the ${targetColor.name} ones!`, {
         icon: '🙈',
         style: {

@@ -66,7 +66,7 @@ function Register() {
       <div
         className="relative flex flex-col md:flex-row rounded-4xl shadow-[0_30px_80px_rgba(0,0,0,0.50)] overflow-hidden max-w-6xl w-full border border-white/40 min-h-[85vh]"
         style={{
-          // PAHALA RUPAYA (Source) - public folder eke thiyena picture eka
+          
           backgroundImage: "url('/rejister.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",

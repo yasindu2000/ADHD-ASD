@@ -10,7 +10,7 @@ function Students() {
   const [progressData, setProgressData] = useState([]);
   const [loadingProgress, setLoadingProgress] = useState(false);
 
-  // 1. පිටුවට ආපු ගමන් ළමයි ලිස්ට් එක ගන්නවා
+  
   useEffect(() => {
     const fetchStudents = async () => {
       try {
@@ -28,7 +28,7 @@ function Students() {
     fetchStudents();
   }, []);
 
-  // 2. View Button එක එබුවම ළමයාගේ Progress එක ගන්නවා
+  // 2. View Button 
   const handleViewStudent = async (student) => {
     setSelectedStudent(student);
     setLoadingProgress(true);
@@ -48,7 +48,7 @@ function Students() {
     }
   };
 
-  // 3. Back Button එක එබුවම ආයේ ලිස්ට් එකට යනවා
+  // 3. Back Button 
   const handleBack = () => {
     setSelectedStudent(null);
     setProgressData([]);
@@ -57,7 +57,7 @@ function Students() {
   return (
     <div className="font-sans min-h-full">
       
-      {/* 🌟 තෝරපු ළමයෙක් නැත්නම් ලිස්ට් එක පෙන්නනවා (STUDENT LIST VIEW) */}
+     
       {!selectedStudent ? (
         <>
           <div className="mb-10">
@@ -108,7 +108,7 @@ function Students() {
         </>
       ) : (
         
-        /* 🌟 ළමයෙක් තේරුවම පේන විස්තරය (TABLE VIEW - LIKE SCREENSHOT) */
+       
         <div className="animate-in slide-in-from-right-8 duration-300">
           
           {/* <- Back Button */}

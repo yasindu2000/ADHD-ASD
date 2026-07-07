@@ -11,7 +11,7 @@ function Lessons() {
       title: 'Maths', 
       topColor: 'bg-[#FFD1D1]', 
       bottomColor: 'bg-[#FFBABA]', 
-      // Emoji eka ain karala oyage image eke nama danna (public folder eke thiyena widihata)
+      
       image: '../../../public/maths.png' 
     },
     { 
@@ -56,7 +56,7 @@ function Lessons() {
           >
             {/* Top part with Image */}
             <div className={`h-48 flex items-center justify-center p-4 ${sub.topColor}`}>
-              {/* MEKA ALUTHIN DAMMA */}
+              
               <img 
                 src={sub.image} 
                 alt={sub.title} 

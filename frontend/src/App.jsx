@@ -23,7 +23,7 @@ import MathCatch from "./pages/student/MathCatch";
 import BreakTimer from "./pages/student/BreakTimer";
 import AddFeedback from "./pages/teacher/AddFeedback";
 
-// 🌟 1. PROTECTED ROUTE (ලොග් වෙලා නැති අයව එළවන Guard)
+// 🌟 1. PROTECTED ROUTE 
 const ProtectedRoute = ({ children, allowedRole }) => {
   const currentRole = localStorage.getItem("userRole") || localStorage.getItem("role");
 
@@ -33,20 +33,20 @@ const ProtectedRoute = ({ children, allowedRole }) => {
   return children;
 };
 
-// 🌟 2. PUBLIC ROUTE (දැනටමත් ලොග් වෙලා ඉන්න අයව Login එකෙන් එළවන Guard)
+// 🌟 2. PUBLIC ROUTE 
 const PublicRoute = ({ children }) => {
   const currentRole = localStorage.getItem("userRole") || localStorage.getItem("role");
 
-  // ලොග් වෙලා ඉන්න කෙනා Teacher කෙනෙක් නම්, කෙලින්ම Dashboard එකට යවනවා
+
   if (currentRole === "teacher") {
     return <Navigate to="/teacher/dashboard" replace />;
   }
-  // ලොග් වෙලා ඉන්න කෙනා Student කෙනෙක් නම්, කෙලින්ම Dashboard එකට යවනවා
+  
   else if (currentRole === "student") {
     return <Navigate to="/dashboard" replace />;
   }
 
-  // ලොග් වෙලා නැත්නම් විතරක් Login/Register එකට යන්න දෙනවා
+  
   return children;
 };
 
@@ -66,7 +66,7 @@ function App() {
       />
 
       <Routes>
-        {/* 🌟 PUBLIC ROUTES (PublicRoute Guard එක දාලා තියෙන්නේ) */}
+        {/* 🌟 PUBLIC ROUTES  */}
         <Route 
           path="/register" 
           element={

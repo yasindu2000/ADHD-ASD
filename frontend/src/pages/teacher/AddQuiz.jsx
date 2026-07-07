@@ -6,7 +6,7 @@ function AddQuiz() {
   const { lessonId } = useParams();
   const navigate = useNavigate();
 
-  const [quizId, setQuizId] = useState(null); // Edit mode ekata
+  const [quizId, setQuizId] = useState(null); 
   const [quizTitle, setQuizTitle] = useState('');
   const [date, setDate] = useState('');
   const [noOfQuestions, setNoOfQuestions] = useState(5);

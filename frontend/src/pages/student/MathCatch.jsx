@@ -8,7 +8,7 @@ function MathCatch() {
 
   // --- GAME STATES ---
   const [basketPos, setBasketPos] = useState(50); 
-  const basketPosRef = useRef(50); // 🌟 FIX: Mouse position eka loop ekata ganna ref eka
+  const basketPosRef = useRef(50); 
 
   const [apples, setApples] = useState([]);
   
@@ -133,10 +133,10 @@ function MathCatch() {
         
         for (let i = 0; i < prevApples.length; i++) {
           const apple = prevApples[i];
-          const newTop = apple.top + 1.5; // Watena Vegaya (Falling Speed)
+          const newTop = apple.top + 1.5; 
 
           const appleBottomEdge = newTop + 10;
-          const currentBasketPos = basketPosRef.current; // Mouse inna thena
+          const currentBasketPos = basketPosRef.current;
           
           // Collision Logic
           const isAtBasketHeight = appleBottomEdge >= 85 && appleBottomEdge <= 95;
@@ -144,7 +144,7 @@ function MathCatch() {
 
           if (isAtBasketHeight && isWithinBasketWidth) {
             caughtApple = apple; // Caught!
-            continue; // Bima watenna denne naha
+            continue; 
           }
 
           if (newTop > 110) {
@@ -154,7 +154,7 @@ function MathCatch() {
           updatedApples.push({ ...apple, top: newTop });
         }
 
-        // Koodeta alluwama wenna oni de
+        
         if (caughtApple) {
           setTimeout(() => handleCatch(caughtApple), 0);
         }
@@ -205,8 +205,8 @@ function MathCatch() {
     
     percentage = Math.max(0, Math.min(percentage, 100 - BASKET_WIDTH));
     
-    setBasketPos(percentage); // UI update karanawa
-    basketPosRef.current = percentage; // Loop ekata update karanawa (🌟 FIX)
+    setBasketPos(percentage);
+    basketPosRef.current = percentage; 
   };
 
   // 6. Start / Win
