@@ -21,11 +21,11 @@ function AddLessons() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const grades = [
-    { id: '1', title: 'Grade 01', bg: 'bg-[#F28482] hover:bg-[#E56B69]' },
-    { id: '2', title: 'Grade 02', bg: 'bg-[#F4F186] hover:bg-[#EAE665]' },
-    { id: '3', title: 'Grade 03', bg: 'bg-[#84F2A6] hover:bg-[#6CE492]' },
-    { id: '4', title: 'Grade 04', bg: 'bg-[#7EE8FA] hover:bg-[#5BDDF1]' },
-    { id: '5', title: 'Grade 05', bg: 'bg-[#F998D6] hover:bg-[#F27CC5]' },
+    { id: '1', title: 'Grade 01', bg: 'bg-gradient-to-br from-blue-100 to-indigo-200 text-indigo-900 border-indigo-200 hover:border-indigo-400 shadow-indigo-300/40', iconColor: 'text-indigo-600' },
+    { id: '2', title: 'Grade 02', bg: 'bg-gradient-to-br from-emerald-100 to-teal-200 text-teal-900 border-teal-200 hover:border-teal-400 shadow-teal-300/40', iconColor: 'text-teal-600' },
+    { id: '3', title: 'Grade 03', bg: 'bg-gradient-to-br from-orange-100 to-amber-200 text-amber-900 border-amber-200 hover:border-amber-400 shadow-amber-300/40', iconColor: 'text-amber-600' },
+    { id: '4', title: 'Grade 04', bg: 'bg-gradient-to-br from-sky-100 to-cyan-200 text-cyan-900 border-cyan-200 hover:border-cyan-400 shadow-cyan-300/40', iconColor: 'text-cyan-600' },
+    { id: '5', title: 'Grade 05', bg: 'bg-gradient-to-br from-violet-100 to-purple-200 text-purple-900 border-purple-200 hover:border-purple-400 shadow-purple-300/40', iconColor: 'text-purple-600' },
   ];
 
   const subjects = [
@@ -38,8 +38,8 @@ function AddLessons() {
   // ==========================================
   // NEW: State Persistence (sessionStorage)
   // ==========================================
-  
-  
+
+
   useEffect(() => {
     const savedState = sessionStorage.getItem('teacherDashboardState');
     if (savedState) {
@@ -127,7 +127,7 @@ function AddLessons() {
   const openViewLesson = (lesson) => {
     setSelectedLesson(lesson);
     setCurrentStep('viewLesson');
-    
+
   };
 
   const openAddForm = () => {
@@ -239,18 +239,32 @@ function AddLessons() {
   // ==========================================
   if (currentStep === 'grades') {
     return (
-      <div className="max-w-5xl mx-auto py-10 px-4 font-sans min-h-screen">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8 tracking-tight">Select Grade Level</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="max-w-5xl mx-auto py-12 px-4 font-sans min-h-screen">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm mb-4">
+            Select Grade Level
+          </h1>
+          <p className="text-lg text-slate-500 font-medium max-w-2xl mx-auto">
+            Choose a grade to view, edit, or add new lessons and materials.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {grades.map(grade => (
-            <div 
-              key={grade.id} 
-              onClick={() => { setSelectedGrade(grade.title); setCurrentStep('subjects'); }} 
-              className={`${grade.bg} rounded-2xl p-8 cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center justify-between border border-white/20`}
+            <div
+              key={grade.id}
+              onClick={() => { setSelectedGrade(grade.title); setCurrentStep('subjects'); }}
+              className={`${grade.bg} rounded-[2.5rem] p-8 cursor-pointer shadow-xl hover:-translate-y-2 transition-all duration-300 flex items-center justify-between border group relative overflow-hidden`}
             >
-              <h2 className="text-2xl font-bold text-gray-900 tracking-tight">{grade.title}</h2>
-              <div className="w-10 h-10 bg-white/30 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <svg className="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+              <div className="absolute -right-6 -top-6 w-32 h-32 bg-white/40 blur-2xl rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+
+              <div className="relative z-10">
+                <p className="text-sm font-extrabold uppercase tracking-[0.2em] opacity-70 mb-1 drop-shadow-sm">Classroom</p>
+                <h2 className="text-4xl font-black tracking-tight">{grade.title}</h2>
+              </div>
+              <div className="relative z-10 w-16 h-16 bg-white/50 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-sm border border-white/60 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                <svg className={`w-8 h-8 ${grade.iconColor} drop-shadow-sm`} focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"></path>
+                </svg>
               </div>
             </div>
           ))}
@@ -269,9 +283,9 @@ function AddLessons() {
         <h1 className="text-3xl font-bold text-gray-800 mb-8 tracking-tight">{selectedGrade} Subjects</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {subjects.map(sub => (
-            <div 
-              key={sub.id} 
-              onClick={() => { setSelectedSubject(sub); setCurrentStep('lessonList'); }} 
+            <div
+              key={sub.id}
+              onClick={() => { setSelectedSubject(sub); setCurrentStep('lessonList'); }}
               className="bg-white flex flex-col rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-gray-100 group"
             >
               <div className={`h-40 flex items-center justify-center text-6xl ${sub.topColor} group-hover:opacity-90 transition-opacity`}>
@@ -301,9 +315,9 @@ function AddLessons() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {existingLessons.map(lesson => (
-            <div 
-              key={lesson.id} 
-              onClick={() => openViewLesson(lesson)} 
+            <div
+              key={lesson.id}
+              onClick={() => openViewLesson(lesson)}
               className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 cursor-pointer transition-all duration-300 group flex flex-col"
             >
               <div className="h-48 overflow-hidden relative">
@@ -325,8 +339,8 @@ function AddLessons() {
           )}
         </div>
 
-        <button 
-          onClick={openAddForm} 
+        <button
+          onClick={openAddForm}
           className="fixed bottom-10 right-10 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center text-3xl shadow-lg hover:shadow-blue-500/50 hover:scale-110 transition-all duration-300 z-50"
           title="Add New Lesson"
         >
@@ -371,7 +385,7 @@ function AddLessons() {
                       <video className="w-full h-full object-cover opacity-50"><source src={part.videoUrl} type="video/mp4" /></video>
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center pl-1 border border-white/50">
-                           <span className="text-white text-xs">▶</span>
+                          <span className="text-white text-xs">▶</span>
                         </div>
                       </div>
                     </>
@@ -400,8 +414,8 @@ function AddLessons() {
 
         {/* Quiz Button */}
         <div className="flex justify-center mt-8">
-          <button 
-            onClick={() => navigate(`/teacher/add-quiz/${selectedLesson.id || selectedLesson._id}`)} 
+          <button
+            onClick={() => navigate(`/teacher/add-quiz/${selectedLesson.id || selectedLesson._id}`)}
             className={`${hasQuiz ? 'bg-green-600 hover:bg-green-700 shadow-green-500/30' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30'} text-white font-semibold py-3.5 px-8 rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-1 flex items-center gap-2`}
           >
             {hasQuiz ? (
@@ -421,18 +435,18 @@ function AddLessons() {
   return (
     <div className="max-w-4xl mx-auto py-10 px-4 font-sans min-h-screen">
       <div className="mb-8"><BackButton onClick={() => currentStep === 'editForm' ? setCurrentStep('viewLesson') : setCurrentStep('lessonList')} /></div>
-      
+
       <div className="bg-white rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-100">
         <h1 className="text-3xl font-bold text-gray-900 mb-8 tracking-tight border-b border-gray-100 pb-4">
           {currentStep === 'editForm' ? 'Edit Lesson' : 'Create New Lesson'}
         </h1>
-        
+
         <form onSubmit={handleSubmit} className="space-y-8">
-          
+
           {/* General Information Section */}
           <div className="space-y-5">
             <h3 className="text-lg font-semibold text-gray-700">General Information</h3>
-            
+
             <div className="grid grid-cols-1 gap-5">
               <div>
                 <label className="block text-sm font-semibold text-gray-600 mb-2">Lesson Title</label>
@@ -461,10 +475,10 @@ function AddLessons() {
           {/* Video Parts Section */}
           <div className="space-y-5">
             <h3 className="text-lg font-semibold text-gray-700">Lesson Parts</h3>
-            
+
             {lessonParts.map((part, index) => (
               <div key={part.id} className="bg-gray-50 rounded-2xl p-6 border border-gray-200 relative group transition-all hover:border-blue-200 hover:shadow-sm">
-                
+
                 {lessonParts.length > 1 && (
                   <button type="button" onClick={() => handleDeletePart(part.id)} className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors bg-white rounded-full p-1.5 shadow-sm border border-gray-100" title="Remove Part">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -475,7 +489,7 @@ function AddLessons() {
                   <span className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center text-xs">{index + 1}</span>
                   Video Segment
                 </h4>
-                
+
                 <div className="grid grid-cols-1 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Part Title</label>
