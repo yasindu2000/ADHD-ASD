@@ -60,8 +60,9 @@ function Login() {
         if (data.user.role === "teacher") {
           navigate("/teacher/dashboard");
         } else if (data.user.role === "student") {
-          
           navigate("/dashboard"); 
+        } else if (data.user.role === "principal") {
+          navigate("/principal/dashboard");
         }
       } else {
         // Show error

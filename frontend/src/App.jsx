@@ -22,6 +22,8 @@ import PatternPuzzle from "./pages/student/PatternPuzzle";
 import MathCatch from "./pages/student/MathCatch";
 import BreakTimer from "./pages/student/BreakTimer";
 import AddFeedback from "./pages/teacher/AddFeedback";
+import Principal from "./pages/Principal";
+import PrincipalDashboard from "./pages/principal/PrincipalDashboard";
 
 // 🌟 1. PROTECTED ROUTE 
 const ProtectedRoute = ({ children, allowedRole }) => {
@@ -44,6 +46,9 @@ const PublicRoute = ({ children }) => {
   
   else if (currentRole === "student") {
     return <Navigate to="/dashboard" replace />;
+  }
+  else if (currentRole === "principal") {
+    return <Navigate to="/principal/dashboard" replace />;
   }
 
   
@@ -117,6 +122,19 @@ function App() {
           <Route path="quiz/:quizId" element={<TakeQuiz/>} />
           <Route path="games" element={<Games />} />
           <Route path="feedback" element={<Feedback />} />
+        </Route>
+
+        {/* 🌟 PRINCIPAL ROUTES */}
+        <Route 
+          path="/principal" 
+          element={
+            <ProtectedRoute allowedRole="principal">
+              <Principal />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="dashboard" />} />
+          <Route path="dashboard" element={<PrincipalDashboard />} />
         </Route>
 
         {/* STANDALONE ROUTES */}

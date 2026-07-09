@@ -28,5 +28,6 @@ app.use('/api/quizzes', quizRoutes);
 app.use('/api/games', gameRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/teacher', require('./routers/teacherRoutes'));
+app.use('/api/principal', require('./routers/principalRoutes'));
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
