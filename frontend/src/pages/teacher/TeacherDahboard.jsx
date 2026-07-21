@@ -12,6 +12,7 @@ function TeacherDashboard() {
   // Dynamic States for DB Data
   const [stats, setStats] = useState({ totalStudents: 0, totalLessons: 0, totalQuizzes: 0 });
   const [activities, setActivities] = useState([]);
+  const [showAllActivities, setShowAllActivities] = useState(false);
 
   // Chart Data States
   const [lessonChartData, setLessonChartData] = useState([]);
@@ -204,13 +205,20 @@ function TeacherDashboard() {
               </span> 
               Recent Activity
             </h3>
-            <span className="text-xs font-bold text-slate-500 bg-white border border-slate-200 px-4 py-1.5 rounded-full uppercase tracking-widest shadow-sm">View All</span>
+            {activities.length > 5 && (
+              <button 
+                onClick={() => setShowAllActivities(!showAllActivities)}
+                className="text-xs font-bold text-slate-500 bg-white hover:bg-slate-50 hover:text-indigo-600 transition-colors border border-slate-200 px-4 py-1.5 rounded-full uppercase tracking-widest shadow-sm cursor-pointer"
+              >
+                {showAllActivities ? 'Show Less' : 'View All'}
+              </button>
+            )}
           </div>
 
           <div className="p-6 md:p-8">
             {activities.length > 0 ? (
               <div className="flex flex-col gap-4">
-                {activities.map((act, idx) => (
+                {(showAllActivities ? activities : activities.slice(0, 5)).map((act, idx) => (
                   <div key={idx} className="flex items-center justify-between p-5 bg-white hover:bg-slate-50/80 rounded-2xl transition-all duration-300 border border-slate-50 hover:border-slate-200 hover:shadow-md group">
                     <div className="flex items-center gap-5">
                       <div className={`w-14 h-14 rounded-2xl ${act.color || 'bg-blue-50 text-blue-600'} flex items-center justify-center text-2xl border border-white shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-transform`}>
@@ -249,6 +257,11 @@ function TeacherDashboard() {
                       <div>
                         <h4 className="font-bold text-slate-800 text-lg group-hover:text-indigo-600 transition-colors">{act.name}</h4>
                         <p className="text-slate-500 text-sm font-medium mt-0.5">{act.action}</p>
+                        {act.date && (
+                          <p className="text-slate-400 text-xs font-bold mt-1">
+                            {new Date(act.date).toLocaleDateString()} {new Date(act.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="opacity-0 group-hover:opacity-100 transition-opacity">

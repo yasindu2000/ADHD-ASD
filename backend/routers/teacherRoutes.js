@@ -88,30 +88,37 @@ router.get('/dashboard-stats', async (req, res) => {
     let activity = [];
     try {
         const recentLessonsRaw = await Progress.find()
-          .populate('studentId', 'fullName') // fullName එක ගන්නවා
+          .populate('studentId', 'fullName')
           .populate('lessonId', 'title')
           .sort({ updatedAt: -1 })
-          .limit(3);
+          .limit(50); // Increased limit for View All
 
         const recentGamesRaw = await GameProgress.find()
-          .populate('studentId', 'fullName') // fullName එක ගන්නවා
+          .populate('studentId', 'fullName')
           .sort({ lastPlayed: -1 })
-          .limit(2);
+          .limit(50); // Increased limit for View All
 
         activity = [
           ...recentLessonsRaw.map(l => ({
+            id: l._id,
             name: l.studentId?.fullName || 'Unknown Student',
             action: `finished a part in ${l.lessonId?.title || 'a Lesson'}`,
             icon: '📚',
-            color: 'bg-blue-100 text-blue-600'
+            color: 'bg-blue-100 text-blue-600',
+            date: l.updatedAt
           })),
           ...recentGamesRaw.map(g => ({
+            id: g._id,
             name: g.studentId?.fullName || 'Unknown Student',
             action: `played ${g.gameId} (Score: ${g.bestScore})`,
             icon: '🎮',
-            color: 'bg-purple-100 text-purple-600'
+            color: 'bg-purple-100 text-purple-600',
+            date: g.lastPlayed
           }))
         ];
+
+        // Sort combined activity by date descending
+        activity.sort((a, b) => new Date(b.date) - new Date(a.date));
     } catch (e) {
         console.log("⚠️ Activity Fetch Error:", e.message);
     }
