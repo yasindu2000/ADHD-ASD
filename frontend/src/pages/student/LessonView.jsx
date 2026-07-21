@@ -21,7 +21,21 @@ function LessonView() {
   // 🌟 Pop-up Modal State
   const [showFinishModal, setShowFinishModal] = useState(false);
 
+  // 🌟 Focus Mode State
+  const [isFocusMode, setIsFocusMode] = useState(false);
+
   const playerRef = useRef(null);
+
+  // Apply focus mode class to body and scroll to top
+  useEffect(() => {
+    if (isFocusMode) {
+      document.body.classList.add('focus-mode-active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      document.body.classList.remove('focus-mode-active');
+    }
+    return () => document.body.classList.remove('focus-mode-active');
+  }, [isFocusMode]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -167,11 +181,11 @@ function LessonView() {
   const activeVideoUrl = lesson.parts[activePartIndex]?.videoUrl;
 
   return (
-    <div className="min-h-screen bg-white font-sans -mt-8 -mx-8 -mb-8 px-8 pt-8 pb-18">
+    <div className={`min-h-screen font-sans -mt-8 -mx-8 -mb-8 px-8 pt-8 pb-18 transition-colors duration-500 ${isFocusMode ? 'bg-[#020617]' : 'bg-white'}`}>
       
       {/* 🌟 REDESIGNED FINISH MODAL 🌟 */}
       {showFinishModal && (
-        <div className="fixed inset-0 bg-[#1E3A8A]/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-[#1E3A8A]/40 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
           <div className="bg-white rounded-[3rem] shadow-2xl w-full max-w-4xl overflow-hidden relative animate-in zoom-in duration-300 border-[6px] border-white">
             
             {/* Header Section */}
@@ -238,7 +252,7 @@ function LessonView() {
       )}
 
       {/* HEADER */}
-      <div className="bg-sky-100 py-4 px-14 flex items-center shadow-sm relative sticky top-0 z-50 -mt-8 -mx-8 mb-8">
+      <div className={`py-4 px-14 flex items-center shadow-sm relative sticky top-0 z-50 -mt-8 -mx-8 mb-8 transition-colors duration-500 focus-hide ${isFocusMode ? 'bg-[#020617]' : 'bg-sky-100'}`}>
         <button 
           onClick={() => navigate(-1)} 
           className="text-slate-700 font-extrabold text-xl flex items-center gap-2 hover:scale-105 transition-transform z-10 bg-white/50 px-4 py-1 rounded-full backdrop-blur-sm cursor-pointer"
@@ -250,10 +264,26 @@ function LessonView() {
         </h1>
       </div>
 
-      <div className="max-w-4xl mx-auto mt-8 px-4">
+      <div className={`max-w-4xl mx-auto px-4 transition-all duration-500 ${isFocusMode ? 'max-w-6xl mt-2' : 'mt-8'}`}>
         
+        {/* FOCUS MODE TOGGLE */}
+        <div className="flex justify-end mb-4">
+          <button 
+            onClick={() => setIsFocusMode(!isFocusMode)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold transition-all shadow-sm ${
+              isFocusMode ? 'bg-amber-500 text-slate-900 hover:bg-amber-400' : 'bg-slate-800 text-white hover:bg-slate-700'
+            }`}
+          >
+            {isFocusMode ? (
+              <><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg> Exit Focus Mode</>
+            ) : (
+              <><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg> Focus Mode</>
+            )}
+          </button>
+        </div>
+
         {/* VIDEO PLAYER */}
-        <div className="bg-black rounded-3xl overflow-hidden shadow-2xl mb-8 aspect-video relative group border-4 border-white/50">
+        <div className={`bg-black rounded-3xl overflow-hidden shadow-2xl mb-8 aspect-video relative group ${isFocusMode ? 'border-2 border-slate-800 focus-highlight' : 'border-4 border-white/50'}`}>
           {activeVideoUrl ? (
             <video
               ref={playerRef}
@@ -280,7 +310,7 @@ function LessonView() {
         </div>
 
         {/* PROGRESS BAR */}
-        <div className="bg-white rounded-3xl p-6 mb-8 shadow-sm border border-blue-50">
+        <div className={`bg-white rounded-3xl p-6 mb-8 shadow-sm border border-blue-50 focus-hide`}>
           <div className="flex justify-between items-center mb-3">
             <h3 className="font-extrabold text-gray-800 text-lg">Your Progress</h3>
             <span className="font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-lg">
@@ -301,8 +331,8 @@ function LessonView() {
         </div>
 
         {/* COURSE CONTENT */}
-        <h3 className="text-2xl font-black text-gray-800 mb-6 px-2">Course Content</h3>
-        <div className="space-y-4 mb-12">
+        <h3 className="text-2xl font-black text-gray-800 mb-6 px-2 focus-hide">Course Content</h3>
+        <div className="space-y-4 mb-12 focus-hide">
           {lesson.parts.map((segment, index) => {
             const isCompleted = completedPartsArray.includes(index);
             const isUnlocked = isCompleted || index === completedCount;
@@ -351,7 +381,7 @@ function LessonView() {
         </div>
 
         {/* 🏆 QUIZ SECTION 🏆 */}
-        <div className="bg-gradient-to-br from-[#E4F2F7] to-white rounded-[2rem] p-8 md:p-10 text-center border-2 border-[#CDE5EF] shadow-lg relative overflow-hidden mb-12">
+        <div className="bg-gradient-to-br from-[#E4F2F7] to-white rounded-[2rem] p-8 md:p-10 text-center border-2 border-[#CDE5EF] shadow-lg relative overflow-hidden mb-12 focus-hide">
           <div className="absolute top-0 right-0 -mt-10 -mr-10 text-9xl opacity-5">🏆</div>
           <h2 className="text-3xl md:text-4xl font-black text-gray-800 mb-4 relative z-10">Knowledge Check!</h2>
           {quiz ? (

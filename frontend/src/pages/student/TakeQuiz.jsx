@@ -208,9 +208,37 @@ function TakeQuiz() {
 
         {isStarted && !isFinished && (
           <div className="animate-in fade-in duration-300 flex flex-col h-full pb-4">
-            <div className="flex justify-between font-extrabold text-slate-400 mb-2 px-1 text-sm md:text-base tracking-widest uppercase shrink-0">
+            <div className="flex justify-between items-center font-extrabold text-slate-400 mb-2 px-1 text-sm md:text-base tracking-widest uppercase shrink-0">
               <span>Question {currentQuestionIndex + 1} of {quiz.questions.length}</span>
-              <span className="text-sky-500">Time Left: {formatTime(timeLeft)}</span>
+              
+              {/* Visual Timer (Circular / Pie Chart style) */}
+              <div className="flex flex-col items-center justify-center">
+                <div className={`relative w-16 h-16 flex items-center justify-center bg-white rounded-full shadow-sm border-2 border-slate-100 ${
+                  (timeLeft / totalTime) <= 0.15 ? 'animate-pulse' : ''
+                }`}>
+                  <svg className="w-full h-full transform -rotate-90">
+                    <circle cx="32" cy="32" r="24" fill="none" stroke="#F1F5F9" strokeWidth="10" />
+                    <circle
+                      cx="32" cy="32" r="24" fill="none"
+                      stroke={
+                        (timeLeft / totalTime) > 0.4 ? '#38BDF8' : 
+                        (timeLeft / totalTime) > 0.15 ? '#FBBF24' : 
+                        '#F43F5E'
+                      }
+                      strokeWidth="10" strokeLinecap="round"
+                      strokeDasharray={`${(timeLeft / totalTime) * 150.8} 150.8`}
+                      className="transition-all duration-1000 ease-linear"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <svg className={`w-5 h-5 ${
+                      (timeLeft / totalTime) > 0.4 ? 'text-sky-400' : 
+                      (timeLeft / totalTime) > 0.15 ? 'text-amber-500' : 
+                      'text-rose-500'
+                    }`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  </div>
+                </div>
+              </div>
             </div>
             
             <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden mb-4 shadow-inner border border-slate-200 shrink-0">
