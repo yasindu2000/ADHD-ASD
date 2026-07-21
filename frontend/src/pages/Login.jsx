@@ -38,8 +38,8 @@ function Login() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("userRole", data.user.role);
         localStorage.setItem("userName", data.user.fullName);
-    
         localStorage.setItem("userId", data.user._id);
+        localStorage.setItem("user", JSON.stringify(data.user));
 
         
         if (data.user.role === "student") {

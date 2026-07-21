@@ -180,6 +180,18 @@ function LessonView() {
 
   const activeVideoUrl = lesson.parts[activePartIndex]?.videoUrl;
 
+  const handleSpeak = (text) => {
+    if ('speechSynthesis' in window) {
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9; // Slightly slower for better comprehension
+      window.speechSynthesis.speak(utterance);
+    } else {
+      toast.error("Text-to-speech not supported in this browser.");
+    }
+  };
+
   return (
     <div className={`min-h-screen font-sans -mt-8 -mx-8 -mb-8 px-8 pt-8 pb-18 transition-colors duration-500 ${isFocusMode ? 'bg-[#020617]' : 'bg-white'}`}>
       
@@ -259,9 +271,18 @@ function LessonView() {
         >
           <span>⬅</span> Back
         </button>
-        <h1 className="text-2xl md:text-3xl font-black text-slate-700 tracking-tight absolute w-full text-center left-0 px-24 truncate drop-shadow-sm">
-          {lesson.title}
-        </h1>
+        <div className="absolute w-full text-center left-0 flex items-center justify-center gap-4 px-24">
+          <h1 className="text-2xl md:text-3xl font-black text-slate-700 tracking-tight truncate drop-shadow-sm">
+            {lesson.title}
+          </h1>
+          <button 
+            onClick={() => handleSpeak(`Lesson title is: ${lesson.title}. Welcome to the lesson.`)}
+            className="w-10 h-10 rounded-full bg-white/80 border-2 border-sky-300 flex items-center justify-center text-sky-600 hover:bg-sky-100 hover:scale-110 transition-all cursor-pointer shadow-sm z-10"
+            title="Read Aloud"
+          >
+            🔊
+          </button>
+        </div>
       </div>
 
       <div className={`max-w-4xl mx-auto px-4 transition-all duration-500 ${isFocusMode ? 'max-w-6xl mt-2' : 'mt-8'}`}>

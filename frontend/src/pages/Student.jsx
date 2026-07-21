@@ -6,21 +6,6 @@ function Student() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Dyslexia Mode State
-  const [isDyslexiaMode, setIsDyslexiaMode] = useState(() => {
-    return localStorage.getItem("dyslexiaMode") === "true";
-  });
-
-  // Apply or remove the dyslexia class on the body
-  useEffect(() => {
-    if (isDyslexiaMode) {
-      document.body.classList.add("dyslexia-mode");
-    } else {
-      document.body.classList.remove("dyslexia-mode");
-    }
-    localStorage.setItem("dyslexiaMode", isDyslexiaMode);
-  }, [isDyslexiaMode]);
-
   // Helper to check if a link is active
   const isActive = (path) => location.pathname.includes(path);
 
@@ -74,48 +59,13 @@ function Student() {
             active={isActive("/feedback")}
             onClick={() => navigate("/feedback")}
           />
+          <NavItem
+            icon={<svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>}
+            label="Profile & Settings"
+            active={isActive("/settings")}
+            onClick={() => navigate("/settings")}
+          />
         </nav>
-
-        {/* Accessibility Toggles */}
-        <div className="mt-auto mb-6 pt-6 border-t-2 border-[#B3E5F5]/50">
-          <div 
-            onClick={() => setIsDyslexiaMode(!isDyslexiaMode)}
-            className={`relative overflow-hidden flex flex-col gap-3 p-4 rounded-2xl cursor-pointer transition-all duration-300 ${
-              isDyslexiaMode 
-                ? "bg-gradient-to-br from-[#0EA5E9] to-[#0284C7] shadow-lg shadow-sky-500/30 text-white translate-x-1" 
-                : "bg-white/80 hover:bg-white text-gray-700 shadow-sm border-2 border-transparent hover:border-[#0EA5E9]/20"
-            }`}
-            title="Toggle Dyslexia-friendly font"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-xl transition-colors ${
-                  isDyslexiaMode ? "bg-white/20 text-white font-[OpenDyslexic]" : "bg-[#E0F2FE] text-[#0EA5E9] font-sans"
-                }`}>
-                  Aa
-                </div>
-                <div className="flex flex-col">
-                  <span className={`font-extrabold text-sm ${isDyslexiaMode ? "text-white" : "text-gray-800"}`}>Dyslexia Font</span>
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${isDyslexiaMode ? "text-sky-100" : "text-gray-400"}`}>
-                    {isDyslexiaMode ? "Enabled" : "Disabled"}
-                  </span>
-                </div>
-              </div>
-              
-              <div className={`w-12 h-7 flex items-center rounded-full p-1 shadow-inner duration-300 ease-in-out ${isDyslexiaMode ? 'bg-white/30' : 'bg-gray-200'}`}>
-                <div className={`bg-white w-5 h-5 rounded-full shadow-sm transform duration-300 ease-in-out flex items-center justify-center ${isDyslexiaMode ? 'translate-x-5' : 'translate-x-0'}`}>
-                  {isDyslexiaMode && <svg className="w-3 h-3 text-[#0EA5E9]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7" /></svg>}
-                </div>
-              </div>
-            </div>
-            
-            {isDyslexiaMode && (
-              <div className="text-xs font-bold tracking-wide text-sky-50 bg-black/10 p-2.5 rounded-lg mt-1 font-sans">
-                Reading Mode Active
-              </div>
-            )}
-          </div>
-        </div>
 
         {/* Updated Logout Button */}
         <button 

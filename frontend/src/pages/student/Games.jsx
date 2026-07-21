@@ -10,7 +10,7 @@ function Games() {
       id: 'memory-match',
       title: 'Memory Match',
       description: 'Find the matching animal friends!',
-      icon: '🐢',
+      image: '/games/memory.png',
       bgColor: 'bg-emerald-50', 
       borderColor: 'border-emerald-100',
       textColor: 'text-emerald-700'
@@ -19,7 +19,7 @@ function Games() {
       id: 'balloon-pop',
       title: 'Balloon Pop',
       description: 'Pop the right colors in the sky!',
-      icon: '🎈',
+      image: '/games/balloon.png',
       bgColor: 'bg-sky-50', 
       borderColor: 'border-sky-100',
       textColor: 'text-sky-700'
@@ -28,7 +28,7 @@ function Games() {
       id: 'pattern-puzzle',
       title: 'Pattern Puzzle',
       description: 'Guess what comes next!',
-      icon: '🧩',
+      image: '/games/puzzle.png',
       bgColor: 'bg-amber-50', 
       borderColor: 'border-amber-100',
       textColor: 'text-amber-700'
@@ -37,7 +37,7 @@ function Games() {
       id: 'math-catch',
       title: 'Math Catch',
       description: 'Catch the correct falling numbers!',
-      icon: '🍎',
+      image: '/games/math.png',
       bgColor: 'bg-rose-50', 
       borderColor: 'border-rose-100',
       textColor: 'text-rose-700'
@@ -70,25 +70,25 @@ function Games() {
           <div 
             key={game.id}
             onClick={() => navigate(`/games/${game.id}`)}
-            className={`${game.bgColor} rounded-[2rem] p-8 md:p-10 border-4 ${game.borderColor} shadow-sm cursor-pointer transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg flex flex-col md:flex-row items-center gap-8 group`}
+            className={`${game.bgColor} rounded-[2rem] p-6 md:p-8 border-4 ${game.borderColor} shadow-sm cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg flex flex-col md:flex-row items-center gap-6 group`}
           >
           
-            <div className="w-32 h-32 md:w-40 md:h-40 shrink-0 rounded-[2rem] bg-white/60 flex items-center justify-center text-7xl md:text-8xl shadow-inner group-hover:scale-110 transition-transform duration-300 border-2 border-white/50">
-              {game.icon}
+            <div className="w-24 h-24 md:w-32 md:h-32 shrink-0 rounded-[2rem] bg-white/60 flex items-center justify-center shadow-inner border-2 border-white/50 p-2 transition-transform duration-300 group-hover:scale-105">
+              <img src={game.image} alt={game.title} className="w-full h-full object-contain drop-shadow-sm" />
             </div>
 
             
             <div className="flex-1 text-center md:text-left flex flex-col justify-between h-full">
               <div>
-                <h2 className={`text-3xl md:text-4xl font-black ${game.textColor} mb-3 leading-tight`}>
+                <h2 className={`text-2xl md:text-3xl font-black ${game.textColor} mb-2 leading-tight`}>
                   {game.title}
                 </h2>
-                <p className={`font-bold text-lg mb-6 opacity-80 ${game.textColor}`}>
+                <p className={`font-bold text-base mb-4 opacity-80 ${game.textColor}`}>
                   {game.description}
                 </p>
               </div>
               
-              <button className={`bg-white px-8 py-4 rounded-2xl font-black text-xl shadow-sm ${game.textColor} group-hover:scale-105 transition-all duration-300 w-full md:w-fit flex justify-center items-center gap-2 cursor-pointer border border-white/50`}>
+              <button className={`bg-white px-6 py-3 rounded-xl font-black text-lg shadow-sm ${game.textColor} hover:bg-slate-50 transition-colors duration-300 w-full md:w-fit flex justify-center items-center gap-2 cursor-pointer border border-white/50`}>
                 Play Now <span>➔</span>
               </button>
             </div>

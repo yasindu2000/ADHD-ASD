@@ -166,6 +166,11 @@ function TakeQuiz() {
     return { action: "REVISE_LESSON", message: "You should review the lesson again.", buttonText: "Revise Lesson ➔", color: "#FB7185" };
   };
 
+  const toRoman = (num) => {
+    const roman = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX"];
+    return roman[num] || num;
+  };
+
 
   if (loading) return <div className="min-h-screen bg-white flex items-center justify-center text-xl font-bold text-slate-500 animate-pulse">Loading your Quiz... ⏳</div>;
   if (!quiz) return <div className="min-h-screen bg-white flex items-center justify-center text-rose-500 font-bold">Failed to load quiz.</div>;
@@ -184,6 +189,17 @@ function TakeQuiz() {
   const themeColor = getTheme();
   // We'll keep text white for buttons, or dark if it's yellow/amber
   const textColor = score >= 40 && score <= 70 ? "#334155" : "#FFFFFF";
+
+  const handleSpeak = (text) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    } else {
+      toast.error("Text-to-speech not supported in this browser.");
+    }
+  };
 
   return (
     <div className={`bg-white font-sans flex flex-col -mt-8 -mx-8 -mb-8 px-8 pt-8 ${isStarted && !isFinished ? 'h-[calc(100vh)] overflow-hidden pb-4' : 'min-h-screen pb-18'}`}>
@@ -216,7 +232,7 @@ function TakeQuiz() {
         {isStarted && !isFinished && (
           <div className="animate-in fade-in duration-300 flex flex-col h-full pb-4">
             <div className="flex justify-between items-center font-extrabold text-slate-400 mb-2 px-1 text-sm md:text-base tracking-widest uppercase shrink-0">
-              <span>Question {currentQuestionIndex + 1} of {quiz.questions.length}</span>
+              <span>Question {toRoman(currentQuestionIndex + 1)} of {toRoman(quiz.questions.length)}</span>
               
               {/* Visual Timer (Circular / Pie Chart style) */}
               <div className="flex flex-col items-center justify-center">
@@ -255,12 +271,19 @@ function TakeQuiz() {
               ></div>
             </div>
 
-            <div className="bg-sky-50 rounded-[2rem] p-5 md:p-6 mb-4 border border-sky-100 shadow-sm shrink-0">
+            <div className="bg-sky-50 rounded-[2rem] p-5 md:p-6 mb-4 border border-sky-100 shadow-sm shrink-0 flex justify-between items-start">
               <div className="mb-2">
                 <span className="text-xl md:text-2xl font-black text-slate-700 border-b-4 border-sky-300 pb-1 inline-block leading-snug">
-                  {currentQuestionIndex + 1}. {currentQuestion?.questionText || "Question loading..."}
+                  {toRoman(currentQuestionIndex + 1)}. {currentQuestion?.questionText || "Question loading..."}
                 </span>
               </div>
+              <button 
+                onClick={() => handleSpeak(currentQuestion?.questionText)}
+                className="w-12 h-12 shrink-0 ml-4 rounded-full bg-white border-2 border-sky-200 flex items-center justify-center text-sky-500 hover:bg-sky-100 hover:scale-105 transition-all cursor-pointer shadow-sm"
+                title="Read Question Aloud"
+              >
+                🔊
+              </button>
             </div>
 
             <div className="flex flex-col gap-2 overflow-y-auto px-2 pt-1 pb-2 -mx-2 flex-1 scrollbar-thin scrollbar-thumb-sky-200 scrollbar-track-transparent custom-scrollbar">

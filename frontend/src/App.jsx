@@ -24,6 +24,7 @@ import BreakTimer from "./pages/student/BreakTimer";
 import AddFeedback from "./pages/teacher/AddFeedback";
 import Principal from "./pages/Principal";
 import PrincipalDashboard from "./pages/principal/PrincipalDashboard";
+import Settings from "./pages/student/Settings";
 
 // 🌟 1. PROTECTED ROUTE 
 const ProtectedRoute = ({ children, allowedRole }) => {
@@ -122,6 +123,7 @@ function App() {
           <Route path="quiz/:quizId" element={<TakeQuiz/>} />
           <Route path="games" element={<Games />} />
           <Route path="feedback" element={<Feedback />} />
+          <Route path="settings" element={<Settings />} />
         </Route>
 
         {/* 🌟 PRINCIPAL ROUTES */}

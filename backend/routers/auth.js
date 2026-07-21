@@ -64,10 +64,42 @@ router.post("/login", async (req, res) => {
         email: user.email,
         role: user.role,
         grade: user.grade,     // 🌟 FIX: MEKA THAMAI ADU WELA THIBBE! Dan grade eka yanawa.
+        avatar: user.avatar,   // Added avatar
       },
     });
   } catch (error) {
     console.error("Login error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// UPDATE PROFILE ROUTE
+router.put("/update-profile/:id", async (req, res) => {
+  try {
+    const { avatar } = req.body;
+    const user = await User.findById(req.params.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (avatar) user.avatar = avatar;
+
+    await user.save();
+    
+    res.json({
+      message: "Profile updated successfully",
+      user: {
+        _id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+        grade: user.grade,
+        avatar: user.avatar
+      }
+    });
+  } catch (error) {
+    console.error("Update profile error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
