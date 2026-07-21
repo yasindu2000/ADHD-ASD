@@ -278,24 +278,49 @@ function AddLessons() {
   // ==========================================
   if (currentStep === 'subjects') {
     return (
-      <div className="max-w-5xl mx-auto py-10 px-4 font-sans min-h-screen">
+      <div className="max-w-6xl mx-auto py-12 px-4 font-sans min-h-screen">
         <div className="mb-8"><BackButton onClick={() => setCurrentStep('grades')} /></div>
-        <h1 className="text-3xl font-bold text-gray-800 mb-8 tracking-tight">{selectedGrade} Subjects</h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {subjects.map(sub => (
-            <div
-              key={sub.id}
-              onClick={() => { setSelectedSubject(sub); setCurrentStep('lessonList'); }}
-              className="bg-white flex flex-col rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer border border-gray-100 group"
-            >
-              <div className={`h-40 flex items-center justify-center text-6xl ${sub.topColor} group-hover:opacity-90 transition-opacity`}>
-                {sub.icon}
+        
+        <div className="text-center mb-16">
+          <span className="text-indigo-600 font-bold tracking-wider uppercase text-sm mb-2 block">Curriculum</span>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 tracking-tight mb-4">
+            {selectedGrade} Subjects
+          </h1>
+          <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+            Select a subject to view, manage, and create engaging lessons for your students.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {subjects.map(sub => {
+            let modernIcon, modernBg, modernText, modernIconBg;
+            if (sub.id === 'maths') {
+              modernIcon = <svg className="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>;
+              modernBg = "bg-white hover:bg-blue-50 border-blue-50 hover:border-blue-200"; modernText = "text-slate-800"; modernIconBg = "bg-blue-100 text-blue-600";
+            } else if (sub.id === 'english') {
+              modernIcon = <svg className="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
+              modernBg = "bg-white hover:bg-indigo-50 border-indigo-50 hover:border-indigo-200"; modernText = "text-slate-800"; modernIconBg = "bg-indigo-100 text-indigo-600";
+            } else if (sub.id === 'tamil') {
+              modernIcon = <svg className="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>;
+              modernBg = "bg-white hover:bg-orange-50 border-orange-50 hover:border-orange-200"; modernText = "text-slate-800"; modernIconBg = "bg-orange-100 text-orange-600";
+            } else {
+              modernIcon = <svg className="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>;
+              modernBg = "bg-white hover:bg-emerald-50 border-emerald-50 hover:border-emerald-200"; modernText = "text-slate-800"; modernIconBg = "bg-emerald-100 text-emerald-600";
+            }
+
+            return (
+              <div
+                key={sub.id}
+                onClick={() => { setSelectedSubject(sub); setCurrentStep('lessonList'); }}
+                className={`flex flex-col items-center justify-center p-8 rounded-3xl cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-2 border-2 transition-all duration-300 group ${modernBg}`}
+              >
+                <div className={`w-24 h-24 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-inner ${modernIconBg}`}>
+                  {modernIcon}
+                </div>
+                <h3 className={`text-2xl font-bold ${modernText}`}>{sub.title}</h3>
               </div>
-              <div className={`py-4 text-center ${sub.bottomColor}`}>
-                <h3 className="text-xl font-bold text-gray-800 tracking-tight">{sub.title}</h3>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     );
@@ -306,46 +331,55 @@ function AddLessons() {
   // ==========================================
   if (currentStep === 'lessonList') {
     return (
-      <div className="max-w-5xl mx-auto py-10 px-4 font-sans min-h-screen relative">
-        <div className="flex items-center justify-between mb-8">
+      <div className="max-w-7xl mx-auto py-12 px-4 font-sans min-h-screen relative">
+        <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-4">
           <BackButton onClick={() => setCurrentStep('subjects')} />
-          <h1 className="text-2xl font-bold text-gray-800 tracking-tight">Manage Lessons</h1>
-          <div className="w-24"></div> {/* Spacer for centering */}
+          <div className="text-center">
+            <span className="text-blue-600 font-bold tracking-wider uppercase text-xs mb-1 block">
+              {selectedGrade} / {selectedSubject?.title}
+            </span>
+            <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Manage Lessons</h1>
+          </div>
+          <button
+            onClick={openAddForm}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-xl shadow-lg shadow-blue-500/30 transition-all duration-300 hover:-translate-y-0.5"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            New Lesson
+          </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
           {existingLessons.map(lesson => (
             <div
               key={lesson.id}
               onClick={() => openViewLesson(lesson)}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 cursor-pointer transition-all duration-300 group flex flex-col"
+              className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 cursor-pointer transition-all duration-300 group flex flex-col"
             >
-              <div className="h-48 overflow-hidden relative">
+              <div className="h-32 overflow-hidden relative">
                 <img src={lesson.img} alt={lesson.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute bottom-2 right-2 bg-white/95 backdrop-blur-md text-slate-800 text-[10px] uppercase font-bold px-2.5 py-1 rounded-md shadow-sm border border-white/20">
+                  {lesson.parts?.length || 0} Parts
+                </div>
               </div>
-              <div className="p-5 flex-1 flex flex-col justify-between">
-                <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">{lesson.title}</h3>
-                <p className="text-sm text-gray-400 mt-3 font-medium">{lesson.date || "No Date"}</p>
+              <div className="p-4 flex-1 flex flex-col justify-between">
+                <h3 className="text-base font-bold text-slate-800 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">{lesson.title}</h3>
+                <p className="text-xs text-slate-400 mt-3 font-medium flex items-center gap-1.5">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                  {lesson.date || "No Date"}
+                </p>
               </div>
             </div>
           ))}
           {existingLessons.length === 0 && (
-            <div className="col-span-full flex flex-col items-center justify-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-              <span className="text-6xl mb-4">📚</span>
-              <p className="text-gray-500 text-lg font-medium">No lessons available yet.</p>
-              <p className="text-gray-400 text-sm mt-1">Click the + button to create the first lesson.</p>
+            <div className="col-span-full flex flex-col items-center justify-center py-20 bg-slate-50/50 rounded-3xl border border-dashed border-slate-200">
+              <span className="text-6xl mb-4 opacity-80">📚</span>
+              <p className="text-slate-500 text-lg font-bold">No lessons available yet.</p>
+              <p className="text-slate-400 text-sm mt-1">Click "New Lesson" to create the first lesson.</p>
             </div>
           )}
         </div>
-
-        <button
-          onClick={openAddForm}
-          className="fixed bottom-10 right-10 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center text-3xl shadow-lg hover:shadow-blue-500/50 hover:scale-110 transition-all duration-300 z-50"
-          title="Add New Lesson"
-        >
-          +
-        </button>
       </div>
     );
   }
