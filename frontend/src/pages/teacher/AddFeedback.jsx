@@ -7,6 +7,7 @@ function AddFeedback() {
   
   // Search & Modal States
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedGrade, setSelectedGrade] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
@@ -36,12 +37,25 @@ function AddFeedback() {
     fetchStudents();
   }, []);
 
-  // 2. Search Logic
+  // 2. Search & Filter Logic
+  const staticGrades = ['1', '2', '3', '4', '5'];
+  
   const filteredStudents = students.filter(student => {
-    if (!searchTerm) return true;
-    const searchString = (student.fullName || student.name || student.username || student.email || "").toLowerCase();
-    return searchString.includes(searchTerm.toLowerCase());
+    let matchesSearch = true;
+    if (searchTerm) {
+      const searchString = (student.fullName || student.name || student.username || student.email || "").toLowerCase();
+      matchesSearch = searchString.includes(searchTerm.toLowerCase());
+    }
+    
+    const matchesGrade = selectedGrade === '' || String(student.grade) === selectedGrade;
+    
+    return matchesSearch && matchesGrade;
   });
+
+  const resetFilters = () => {
+    setSearchTerm("");
+    setSelectedGrade("");
+  };
 
   // 3. Open Modal for a specific student
   const openFeedbackModal = (student) => {
@@ -104,25 +118,47 @@ function AddFeedback() {
           </div>
         </div>
 
-        {/* 🌟 SEARCH BAR */}
-        <div className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-200 mb-8 flex items-center gap-4 transition-all focus-within:shadow-md focus-within:border-blue-300">
-          <svg className="w-7 h-7 text-slate-400 ml-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-          <input 
-            type="text" 
-            placeholder="Search students by name..." 
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-transparent outline-none font-bold text-slate-800 text-lg placeholder-slate-400"
-          />
-          {searchTerm && (
-            <button 
-              onClick={() => setSearchTerm("")} 
-              className="text-slate-400 hover:text-blue-500 transition-colors mr-2 p-1 rounded-full hover:bg-blue-50"
-              title="Clear search"
+        {/* 🌟 SEARCH BAR AND FILTERS */}
+        <div className="flex flex-col md:flex-row gap-4 mb-8">
+          <div className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-200 flex items-center gap-4 transition-all focus-within:shadow-md focus-within:border-blue-300 flex-1">
+            <svg className="w-7 h-7 text-slate-400 ml-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input 
+              type="text" 
+              placeholder="Search students by name..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-transparent outline-none font-bold text-slate-800 text-lg placeholder-slate-400"
+            />
+            {searchTerm && (
+              <button 
+                onClick={() => setSearchTerm("")} 
+                className="text-slate-400 hover:text-blue-500 transition-colors mr-2 p-1 rounded-full hover:bg-blue-50"
+                title="Clear search"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+            )}
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <select
+              className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-200 focus:outline-none focus:border-blue-300 font-bold text-slate-700 min-w-[150px]"
+              value={selectedGrade}
+              onChange={(e) => setSelectedGrade(e.target.value)}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
+              <option value="">All Grades</option>
+              {staticGrades.map(grade => (
+                <option key={grade} value={grade}>Grade {grade}</option>
+              ))}
+            </select>
+            <button
+              onClick={resetFilters}
+              className="px-6 py-5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-[2rem] shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap border border-slate-200"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+              Reset
             </button>
-          )}
+          </div>
         </div>
 
         {/* 🌟 STUDENT LIST */}

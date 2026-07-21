@@ -37,6 +37,17 @@ router.get('/dashboard-stats', async (req, res) => {
         }
       });
 
+      // Collect all dates the student had activity
+      const activeDates = new Set();
+      if (student.createdAt) {
+        activeDates.add(new Date(student.createdAt).toISOString().split('T')[0]);
+      }
+      studentProgress.forEach(p => {
+        if (p.updatedAt) {
+          activeDates.add(p.updatedAt.toISOString().split('T')[0]);
+        }
+      });
+
       // Average score if they have completed quizzes
       const quizzesTaken = studentProgress.filter(p => p.isQuizCompleted).length;
       const averageScore = quizzesTaken > 0 ? Math.round(totalScore / quizzesTaken) : 0;
@@ -45,6 +56,8 @@ router.get('/dashboard-stats', async (req, res) => {
         _id: student._id,
         fullName: student.fullName,
         grade: student.grade,
+        createdAt: student.createdAt,
+        activeDates: Array.from(activeDates),
         totalScore,
         averageScore,
         completedLessons,

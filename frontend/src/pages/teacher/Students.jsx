@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 function Students() {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedGrade, setSelectedGrade] = useState('');
   
   // View Table States
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -54,6 +55,43 @@ function Students() {
     setProgressData([]);
   };
 
+  const downloadStudentProgressReport = () => {
+    if (!progressData || progressData.length === 0) {
+      toast.error("No progress data to download");
+      return;
+    }
+
+    const headers = ["Date", "Lesson Status", "Quiz Status", "Quiz Score", "Time Taken"];
+    const csvRows = [headers.join(",")];
+
+    progressData.forEach(row => {
+      const csvRow = [
+        `"${row.date}"`,
+        `"${row.lessonStatus}"`,
+        `"${row.quizStatus}"`,
+        `"${row.quizScore}"`,
+        `"${row.quizTime}"`
+      ];
+      csvRows.push(csvRow.join(","));
+    });
+
+    const csvContent = "data:text/csv;charset=utf-8," + csvRows.join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    const studentName = selectedStudent.fullName || selectedStudent.username || "Student";
+    link.setAttribute("download", `${studentName.replace(/\s+/g, '_')}_Progress_Report.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const staticGrades = ['1', '2', '3', '4', '5'];
+
+  const filteredStudents = students.filter(student => {
+    return selectedGrade === '' || String(student.grade) === selectedGrade;
+  });
+
   return (
     <div className="font-sans min-h-full">
       
@@ -73,14 +111,38 @@ function Students() {
           </div>
 
           <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-white p-10 min-h-[400px]">
+            
+            {/* FILTER BAR */}
+            {!selectedStudent && (
+              <div className="flex flex-wrap items-center gap-4 mb-8">
+                <select
+                  className="px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-slate-700 min-w-[150px] shadow-sm"
+                  value={selectedGrade}
+                  onChange={(e) => setSelectedGrade(e.target.value)}
+                >
+                  <option value="">All Grades</option>
+                  {staticGrades.map(grade => (
+                    <option key={grade} value={grade}>Grade {grade}</option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => setSelectedGrade('')}
+                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                  Reset Filter
+                </button>
+              </div>
+            )}
+
             {loading ? (
               <div className="flex flex-col items-center justify-center h-64 text-blue-500 gap-4">
                 <svg className="animate-spin h-10 w-10" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                 <p className="font-bold text-lg animate-pulse">Loading Students...</p>
               </div>
-            ) : students.length > 0 ? (
+            ) : filteredStudents.length > 0 ? (
               <div className="flex flex-col gap-6">
-                {students.map((student) => (
+                {filteredStudents.map((student) => (
                   <div 
                     key={student._id} 
                     className="flex items-center justify-between p-6 bg-slate-50/50 hover:bg-white rounded-[2rem] border border-slate-100 hover:border-blue-100 transition-all duration-300 group shadow-sm hover:shadow-md"
@@ -143,11 +205,18 @@ function Students() {
 
           <div className="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden relative">
             
-            <div className="p-8 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+            <div className="p-8 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between flex-wrap gap-4">
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
                 <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 Progress Tracking
               </h3>
+              <button
+                onClick={downloadStudentProgressReport}
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                Download Report
+              </button>
             </div>
 
             {loadingProgress ? (

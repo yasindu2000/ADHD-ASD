@@ -8,6 +8,10 @@ function PrincipalDashboard() {
     students: []
   });
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedGrade, setSelectedGrade] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
+  const [teacherSearchTerm, setTeacherSearchTerm] = useState('');
 
   useEffect(() => {
     fetchDashboardData();
@@ -46,6 +50,66 @@ function PrincipalDashboard() {
       </div>
     );
   }
+
+  const staticGrades = ['1', '2', '3', '4', '5'];
+
+  const filteredStudents = data.students.filter(student => {
+    const matchesSearch = student.fullName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesGrade = selectedGrade === '' || String(student.grade) === selectedGrade;
+    
+    let matchesDate = true;
+    if (selectedDate) {
+      if (student.activeDates && student.activeDates.includes(selectedDate)) {
+        matchesDate = true;
+      } else {
+        matchesDate = false;
+      }
+    }
+
+    return matchesSearch && matchesGrade && matchesDate;
+  });
+
+  const filteredTeachers = data.teachers.filter(teacher => {
+    const matchesSearch = teacher.fullName.toLowerCase().includes(teacherSearchTerm.toLowerCase()) || 
+                          teacher.email.toLowerCase().includes(teacherSearchTerm.toLowerCase());
+    return matchesSearch;
+  });
+
+  const downloadStudentReport = () => {
+    if (filteredStudents.length === 0) {
+      toast.error("No students to download");
+      return;
+    }
+
+    const headers = ["Student Name", "Grade", "Lessons Completed", "Quizzes Taken", "Avg Score (%)"];
+    const csvRows = [headers.join(",")];
+
+    filteredStudents.forEach(student => {
+      const row = [
+        `"${student.fullName}"`,
+        `"${student.grade || 'No Grade'}"`,
+        student.completedLessons,
+        student.quizzesTaken,
+        student.averageScore
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const csvContent = "data:text/csv;charset=utf-8," + csvRows.join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Student_Performance_Report.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const resetStudentFilters = () => {
+    setSearchTerm('');
+    setSelectedGrade('');
+    setSelectedDate('');
+  };
 
   return (
     <div className="font-sans">
@@ -87,12 +151,54 @@ function PrincipalDashboard() {
         
         {/* STUDENTS PERFORMANCE TABLE */}
         <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
             <h2 className="text-2xl font-black text-slate-800">Student Performance (Marks)</h2>
-            <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
-              {data.students.length} Students
+            <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold uppercase whitespace-nowrap">
+              {filteredStudents.length} Students
             </span>
           </div>
+
+          {/* FILTER & SEARCH */}
+          <div className="flex flex-wrap items-center gap-4 mb-6">
+            <input
+              type="text"
+              placeholder="Search students..."
+              className="px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent flex-1 min-w-[200px] text-slate-700"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <select
+              className="px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white text-slate-700 min-w-[120px]"
+              value={selectedGrade}
+              onChange={(e) => setSelectedGrade(e.target.value)}
+            >
+              <option value="">All Grades</option>
+              {staticGrades.map(grade => (
+                <option key={grade} value={grade}>Grade {grade}</option>
+              ))}
+            </select>
+            <input
+              type="date"
+              className="px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white text-slate-700 min-w-[150px]"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            />
+            <button
+              onClick={downloadStudentReport}
+              className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              Download CSV
+            </button>
+            <button
+              onClick={resetStudentFilters}
+              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+              Reset
+            </button>
+          </div>
+
 
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -105,7 +211,7 @@ function PrincipalDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
-                {data.students.map((student) => (
+                {filteredStudents.map((student) => (
                   <tr key={student._id} className="hover:bg-slate-50 transition-colors group">
                     <td className="py-4">
                       <div className="font-bold text-slate-700">{student.fullName}</div>
@@ -128,7 +234,7 @@ function PrincipalDashboard() {
                     </td>
                   </tr>
                 ))}
-                {data.students.length === 0 && (
+                {filteredStudents.length === 0 && (
                   <tr>
                     <td colSpan="4" className="py-8 text-center text-slate-400 font-bold">
                       No students found.
@@ -142,11 +248,22 @@ function PrincipalDashboard() {
 
         {/* TEACHERS LIST TABLE */}
         <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
             <h2 className="text-2xl font-black text-slate-800">Teacher Directory</h2>
-            <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
-              {data.teachers.length} Teachers
+            <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold uppercase whitespace-nowrap">
+              {filteredTeachers.length} Teachers
             </span>
+          </div>
+
+          {/* TEACHER SEARCH */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <input
+              type="text"
+              placeholder="Search teachers by name or email..."
+              className="px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent flex-1 text-slate-700"
+              value={teacherSearchTerm}
+              onChange={(e) => setTeacherSearchTerm(e.target.value)}
+            />
           </div>
 
           <div className="overflow-x-auto">
@@ -159,7 +276,7 @@ function PrincipalDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
-                {data.teachers.map((teacher) => (
+                {filteredTeachers.map((teacher) => (
                   <tr key={teacher._id} className="hover:bg-slate-50 transition-colors group">
                     <td className="py-4 font-bold text-slate-700">
                       <div className="flex items-center gap-3">
@@ -177,7 +294,7 @@ function PrincipalDashboard() {
                     </td>
                   </tr>
                 ))}
-                {data.teachers.length === 0 && (
+                {filteredTeachers.length === 0 && (
                   <tr>
                     <td colSpan="3" className="py-8 text-center text-slate-400 font-bold">
                       No teachers found.
