@@ -8,3 +8,10 @@
 body {
   font-family: 'Nunito', sans-serif;
 }
+
+/* Dyslexia Mode Overlay */
+.dyslexia-mode, .dyslexia-mode * {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', 'Lexend', sans-serif !important;
+  letter-spacing: 0.05em !important;
+  word-spacing: 0.1em !important;
+}

@@ -1,9 +1,25 @@
+import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import toast from 'react-hot-toast';
 
 function Student() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Dyslexia Mode State
+  const [isDyslexiaMode, setIsDyslexiaMode] = useState(() => {
+    return localStorage.getItem("dyslexiaMode") === "true";
+  });
+
+  // Apply or remove the dyslexia class on the body
+  useEffect(() => {
+    if (isDyslexiaMode) {
+      document.body.classList.add("dyslexia-mode");
+    } else {
+      document.body.classList.remove("dyslexia-mode");
+    }
+    localStorage.setItem("dyslexiaMode", isDyslexiaMode);
+  }, [isDyslexiaMode]);
 
   // Helper to check if a link is active
   const isActive = (path) => location.pathname.includes(path);
@@ -60,6 +76,47 @@ function Student() {
           />
         </nav>
 
+        {/* Accessibility Toggles */}
+        <div className="mt-auto mb-6 pt-6 border-t-2 border-[#B3E5F5]/50">
+          <div 
+            onClick={() => setIsDyslexiaMode(!isDyslexiaMode)}
+            className={`relative overflow-hidden flex flex-col gap-3 p-4 rounded-2xl cursor-pointer transition-all duration-300 ${
+              isDyslexiaMode 
+                ? "bg-gradient-to-br from-[#0EA5E9] to-[#0284C7] shadow-lg shadow-sky-500/30 text-white translate-x-1" 
+                : "bg-white/80 hover:bg-white text-gray-700 shadow-sm border-2 border-transparent hover:border-[#0EA5E9]/20"
+            }`}
+            title="Toggle Dyslexia-friendly font"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-xl transition-colors ${
+                  isDyslexiaMode ? "bg-white/20 text-white font-[OpenDyslexic]" : "bg-[#E0F2FE] text-[#0EA5E9] font-sans"
+                }`}>
+                  Aa
+                </div>
+                <div className="flex flex-col">
+                  <span className={`font-extrabold text-sm ${isDyslexiaMode ? "text-white" : "text-gray-800"}`}>Dyslexia Font</span>
+                  <span className={`text-[10px] font-bold uppercase tracking-wider ${isDyslexiaMode ? "text-sky-100" : "text-gray-400"}`}>
+                    {isDyslexiaMode ? "Enabled" : "Disabled"}
+                  </span>
+                </div>
+              </div>
+              
+              <div className={`w-12 h-7 flex items-center rounded-full p-1 shadow-inner duration-300 ease-in-out ${isDyslexiaMode ? 'bg-white/30' : 'bg-gray-200'}`}>
+                <div className={`bg-white w-5 h-5 rounded-full shadow-sm transform duration-300 ease-in-out flex items-center justify-center ${isDyslexiaMode ? 'translate-x-5' : 'translate-x-0'}`}>
+                  {isDyslexiaMode && <svg className="w-3 h-3 text-[#0EA5E9]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7" /></svg>}
+                </div>
+              </div>
+            </div>
+            
+            {isDyslexiaMode && (
+              <div className="text-xs font-bold tracking-wide text-sky-50 bg-black/10 p-2.5 rounded-lg mt-1 font-sans">
+                Reading Mode Active
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Updated Logout Button */}
         <button 
           onClick={handleLogout}
@@ -85,11 +142,10 @@ function Student() {
 const NavItem = ({ icon, label, active, onClick }) => (
   <div
     onClick={onClick}
-    className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all ${
-      active
+    className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all ${active
         ? "bg-[#0EA5E9] text-white shadow-md"
         : "text-gray-700 hover:bg-[#B3E5F5]"
-    }`}
+      }`}
   >
     <span className="text-xl">{icon}</span>
     <span className="text-lg font-extrabold">{label}</span>
