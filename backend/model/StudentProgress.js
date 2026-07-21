@@ -14,6 +14,9 @@ const studentProgressSchema = new mongoose.Schema({
   completedParts: [{
     type: Number // Iwara karapu part index tika (e.g., [0, 1, 2])
   }],
+  lessonViews: [{
+    date: { type: Date, default: Date.now }
+  }],
   isQuizCompleted: { 
     type: Boolean, 
     default: false 
@@ -21,7 +24,11 @@ const studentProgressSchema = new mongoose.Schema({
   quizScore: { type: Number, default: 0 },         // Percentage (e.g., 80)
   correctAnswers: { type: Number, default: 0 },    // (e.g., 4)
   incorrectAnswers: { type: Number, default: 0 },  // (e.g., 1)
-  timeTaken: { type: String, default: "0.00" }     // (e.g., "2.30")
+  timeTaken: { type: String, default: "0.00" },     // (e.g., "2.30")
+  quizAttempts: [{
+    score: Number,
+    date: { type: Date, default: Date.now }
+  }]
 }, { timestamps: true });
 
 // Eka lamayekuta eka padamakata thiyenna puluwan eka progress record ekai

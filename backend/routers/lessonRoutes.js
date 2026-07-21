@@ -67,6 +67,7 @@ router.post('/progress', async (req, res) => {
       if (!progress.completedParts.includes(partIndex)) {
         progress.completedParts.push(partIndex);
       }
+      progress.lessonViews.push({ date: new Date() });
     }
 
     await progress.save();
@@ -118,11 +119,14 @@ router.post('/quiz-score', async (req, res) => {
     const progress = await StudentProgress.findOneAndUpdate(
       { studentId, lessonId },
       { 
-        isQuizCompleted: true, 
-        quizScore: score,
-        correctAnswers: correct,
-        incorrectAnswers: incorrect,
-        timeTaken: timeTaken 
+        $set: {
+          isQuizCompleted: true, 
+          quizScore: score,
+          correctAnswers: correct,
+          incorrectAnswers: incorrect,
+          timeTaken: timeTaken 
+        },
+        $push: { quizAttempts: { score: score, date: new Date() } }
       },
       { new: true, upsert: true }
     );

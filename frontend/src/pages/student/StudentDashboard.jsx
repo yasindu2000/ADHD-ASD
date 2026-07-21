@@ -86,15 +86,31 @@ function StudentDashboard() {
               tQuizzes += 1;
               tCorrect += (p.correctAnswers || 0);
 
-              const quizDate = new Date(p.updatedAt || Date.now()); 
-              if (quizDate >= mondayDate) {
-                const dayIndex = quizDate.getDay(); 
-                if (dayIndex >= 1 && dayIndex <= 5) {
-                  const arrIndex = dayIndex - 1;
-                  streak[arrIndex] = true; 
-                  
-                  weeklyDataTemplate[arrIndex].Score += (p.quizScore || 0);
-                  weeklyDataTemplate[arrIndex].count += 1;
+              if (p.quizAttempts && p.quizAttempts.length > 0) {
+                p.quizAttempts.forEach(attempt => {
+                  const quizDate = new Date(attempt.date);
+                  if (quizDate >= mondayDate) {
+                    const dayIndex = quizDate.getDay(); 
+                    if (dayIndex >= 1 && dayIndex <= 5) {
+                      const arrIndex = dayIndex - 1;
+                      streak[arrIndex] = true; 
+                      
+                      weeklyDataTemplate[arrIndex].Score += (attempt.score || 0);
+                      weeklyDataTemplate[arrIndex].count += 1;
+                    }
+                  }
+                });
+              } else {
+                const quizDate = new Date(p.updatedAt || Date.now()); 
+                if (quizDate >= mondayDate) {
+                  const dayIndex = quizDate.getDay(); 
+                  if (dayIndex >= 1 && dayIndex <= 5) {
+                    const arrIndex = dayIndex - 1;
+                    streak[arrIndex] = true; 
+                    
+                    weeklyDataTemplate[arrIndex].Score += (p.quizScore || 0);
+                    weeklyDataTemplate[arrIndex].count += 1;
+                  }
                 }
               }
             }

@@ -31,14 +31,40 @@ router.get('/dashboard-stats', async (req, res) => {
         }) || [];
 
         thisWeekProgress.forEach(prog => {
-            const dateObj = new Date(prog.updatedAt);
-            const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' }); // 'Mon', 'Tue'..
+            // LESSON VIEWS
+            if (prog.lessonViews && prog.lessonViews.length > 0) {
+               prog.lessonViews.forEach(view => {
+                  const dateObj = new Date(view.date);
+                  if (dateObj >= startOfWeek) {
+                      const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+                      lessonViewsMap[dayName] = (lessonViewsMap[dayName] || 0) + 1;
+                  }
+               });
+            } else {
+               const dateObj = new Date(prog.updatedAt);
+               if (dateObj >= startOfWeek) {
+                   const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+                   lessonViewsMap[dayName] = (lessonViewsMap[dayName] || 0) + 1;
+               }
+            }
 
-            lessonViewsMap[dayName] = (lessonViewsMap[dayName] || 0) + 1;
-
-            if (prog.isQuizCompleted && prog.quizScore !== undefined) {
-                quizScoresMap[dayName] = (quizScoresMap[dayName] || 0) + prog.quizScore;
-                quizCountsMap[dayName] = (quizCountsMap[dayName] || 0) + 1;
+            // QUIZ SCORES
+            if (prog.quizAttempts && prog.quizAttempts.length > 0) {
+               prog.quizAttempts.forEach(attempt => {
+                  const dateObj = new Date(attempt.date);
+                  if (dateObj >= startOfWeek) {
+                      const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+                      quizScoresMap[dayName] = (quizScoresMap[dayName] || 0) + attempt.score;
+                      quizCountsMap[dayName] = (quizCountsMap[dayName] || 0) + 1;
+                  }
+               });
+            } else if (prog.isQuizCompleted && prog.quizScore !== undefined) {
+               const dateObj = new Date(prog.updatedAt);
+               if (dateObj >= startOfWeek) {
+                   const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+                   quizScoresMap[dayName] = (quizScoresMap[dayName] || 0) + prog.quizScore;
+                   quizCountsMap[dayName] = (quizCountsMap[dayName] || 0) + 1;
+               }
             }
         });
     } catch (e) {
