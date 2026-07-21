@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 function Students() {
   const [students, setStudents] = useState([]);
@@ -10,6 +12,7 @@ function Students() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [progressData, setProgressData] = useState([]);
   const [loadingProgress, setLoadingProgress] = useState(false);
+  const [filterDate, setFilterDate] = useState(''); // 🌟 Date Filter State
 
   
   useEffect(() => {
@@ -56,34 +59,100 @@ function Students() {
   };
 
   const downloadStudentProgressReport = () => {
-    if (!progressData || progressData.length === 0) {
-      toast.error("No progress data to download");
+    const dataToDownload = filterDate ? progressData.filter(row => row.date === filterDate) : progressData;
+
+    if (!dataToDownload || dataToDownload.length === 0) {
+      toast.error("No activity data to download");
       return;
     }
 
-    const headers = ["Date", "Lesson Status", "Quiz Status", "Quiz Score", "Time Taken"];
+    const headers = ["Date", "Time", "Activity Type", "Lesson Title", "Status", "Score", "Duration"];
     const csvRows = [headers.join(",")];
 
-    progressData.forEach(row => {
+    dataToDownload.forEach(row => {
       const csvRow = [
         `"${row.date}"`,
-        `"${row.lessonStatus}"`,
-        `"${row.quizStatus}"`,
-        `"${row.quizScore}"`,
-        `"${row.quizTime}"`
+        `"${row.time}"`,
+        `"${row.type}"`,
+        `"${row.title}"`,
+        `"${row.status}"`,
+        `"${row.score}"`,
+        `"${row.timeTaken}"`
       ];
       csvRows.push(csvRow.join(","));
     });
 
-    const csvContent = "data:text/csv;charset=utf-8," + csvRows.join("\n");
-    const encodedUri = encodeURI(csvContent);
+    const csvString = csvRows.join("\n");
+    const blob = new Blob(["\uFEFF" + csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", url);
+    
     const studentName = selectedStudent.fullName || selectedStudent.username || "Student";
-    link.setAttribute("download", `${studentName.replace(/\s+/g, '_')}_Progress_Report.csv`);
+    const fileName = filterDate 
+       ? `${studentName.replace(/\s+/g, '_')}_Activity_${filterDate}.csv`
+       : `${studentName.replace(/\s+/g, '_')}_Activity_Log.csv`;
+       
+    link.setAttribute("download", fileName);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadPDFReport = () => {
+    const dataToDownload = filterDate ? progressData.filter(row => row.date === filterDate) : progressData;
+
+    if (!dataToDownload || dataToDownload.length === 0) {
+      toast.error("No activity data to download");
+      return;
+    }
+
+    const doc = new jsPDF();
+    const studentName = selectedStudent.fullName || selectedStudent.username || "Student";
+    
+    doc.setFontSize(22);
+    doc.setTextColor(30, 58, 138); // blue-900
+    doc.text(`Daily Activity Log`, 14, 22);
+    
+    doc.setFontSize(14);
+    doc.setTextColor(71, 85, 105); // slate-600
+    doc.text(`Student: ${studentName}`, 14, 32);
+
+    if (filterDate) {
+      doc.setFontSize(12);
+      doc.text(`Filtered Date: ${filterDate}`, 14, 40);
+    }
+
+    const headers = [["Date", "Time", "Activity Type", "Lesson Title", "Status", "Score", "Duration"]];
+    const data = dataToDownload.map(row => [
+      row.date,
+      row.time,
+      row.type,
+      row.title,
+      row.status,
+      row.score,
+      row.timeTaken
+    ]);
+
+    autoTable(doc, {
+      startY: filterDate ? 46 : 40,
+      head: headers,
+      body: data,
+      theme: 'striped',
+      headStyles: { fillColor: [59, 130, 246] }, // blue-500
+      styles: { fontSize: 10, cellPadding: 3 },
+      columnStyles: {
+        3: { cellWidth: 40 } // Give Lesson Title column more width
+      }
+    });
+
+    const fileName = filterDate 
+       ? `${studentName.replace(/\s+/g, '_')}_Activity_${filterDate}.pdf`
+       : `${studentName.replace(/\s+/g, '_')}_Activity_Log.pdf`;
+       
+    doc.save(fileName);
   };
 
   const staticGrades = ['1', '2', '3', '4', '5'];
@@ -208,15 +277,41 @@ function Students() {
             <div className="p-8 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between flex-wrap gap-4">
               <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
                 <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                Progress Tracking
+                Daily Activity Log
               </h3>
-              <button
-                onClick={downloadStudentProgressReport}
-                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                Download Report
-              </button>
+              
+              <div className="flex items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200">
+                   <label className="font-bold text-slate-500 text-sm">Filter Date:</label>
+                   <input 
+                      type="date" 
+                      value={filterDate}
+                      onChange={(e) => setFilterDate(e.target.value)}
+                      className="outline-none text-slate-700 font-bold bg-transparent cursor-pointer"
+                   />
+                   {filterDate && (
+                      <button onClick={() => setFilterDate('')} className="text-rose-500 hover:text-rose-700 font-bold ml-2">✕</button>
+                   )}
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={downloadStudentProgressReport}
+                    className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+                    title="Download CSV"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    CSV
+                  </button>
+                  <button
+                    onClick={downloadPDFReport}
+                    className="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+                    title="Download PDF"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    PDF
+                  </button>
+                </div>
+              </div>
             </div>
 
             {loadingProgress ? (
@@ -229,61 +324,75 @@ function Students() {
                 <table className="w-full text-center border-collapse whitespace-nowrap">
                   <thead>
                     <tr className="bg-slate-50/80 border-b border-slate-200">
-                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider text-left pl-8">Date</th>
-                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider">Lessons</th>
-                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider">Quiz</th>
-                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider">Quiz Score</th>
-                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider text-right pr-8">Time Taken</th>
+                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider text-left pl-8">Date & Time</th>
+                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider">Activity Type</th>
+                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider text-left">Lesson Title</th>
+                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider">Status</th>
+                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider">Score</th>
+                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider text-right pr-8">Duration</th>
                     </tr>
                   </thead>
                   
                   <tbody className="divide-y divide-slate-100">
-                    {progressData.length > 0 ? progressData.map((row, index) => (
-                      <tr key={row.id || index} className="hover:bg-slate-50/80 transition-colors group">
-                        <td className="py-6 px-6 font-bold text-slate-800 text-left pl-8">
-                          {row.date}
-                        </td>
-                        
-                        <td className="py-6 px-6">
-                          <span className={`px-4 py-2 rounded-xl font-bold text-sm tracking-wide shadow-sm inline-flex items-center justify-center gap-1.5
-                            ${row.lessonStatus === 'Completed' ? 'bg-emerald-50 text-emerald-600 ring-1 ring-emerald-500/20' : 'bg-rose-50 text-rose-600 ring-1 ring-rose-500/20'}`}
-                          >
-                            {row.lessonStatus === 'Completed' ? <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg> : null}
-                            {row.lessonStatus}
-                          </span>
-                        </td>
-                        
-                        <td className="py-6 px-6">
-                          <span className={`px-4 py-2 rounded-xl font-bold text-sm tracking-wide shadow-sm inline-flex items-center justify-center gap-1.5
-                            ${row.quizStatus === 'Completed' ? 'bg-emerald-50 text-emerald-600 ring-1 ring-emerald-500/20' : 'bg-rose-50 text-rose-600 ring-1 ring-rose-500/20'}`}
-                          >
-                            {row.quizStatus === 'Completed' ? <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg> : null}
-                            {row.quizStatus}
-                          </span>
-                        </td>
-                        
-                        <td className="py-6 px-6 font-black text-slate-700 text-lg">
-                          {row.quizScore}
-                        </td>
-                        
-                        <td className="py-6 px-6 font-bold text-slate-500 text-right pr-8 flex items-center justify-end gap-2">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                          {row.quizTime}
-                        </td>
-                      </tr>
-                    )) : (
-                      <tr>
-                        <td colSpan="5" className="py-24 text-center">
-                          <div className="flex flex-col items-center justify-center text-slate-400">
-                            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    {(() => {
+                      const displayedData = filterDate ? progressData.filter(row => row.date === filterDate) : progressData;
+                      return displayedData.length > 0 ? displayedData.map((row, index) => (
+                        <tr key={row.id || index} className="hover:bg-slate-50/80 transition-colors group">
+                          <td className="py-4 px-6 text-left pl-8">
+                            <div className="flex flex-col">
+                              <span className="font-bold text-slate-800">{row.date}</span>
+                              <span className="text-xs text-slate-400 font-extrabold">{row.time}</span>
                             </div>
-                            <p className="font-bold text-lg text-slate-500">No progress records found for this student yet.</p>
-                            <p className="text-sm mt-1">Data will appear here once they complete lessons or quizzes.</p>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
+                          </td>
+                          
+                          <td className="py-4 px-6">
+                            <span className={`px-4 py-2 rounded-xl font-bold text-sm tracking-wide shadow-sm inline-flex items-center justify-center gap-1.5
+                              ${row.type === 'Quiz Attempt' ? 'bg-amber-50 text-amber-600 ring-1 ring-amber-500/20' : 'bg-blue-50 text-blue-600 ring-1 ring-blue-500/20'}`}
+                            >
+                              {row.type}
+                            </span>
+                          </td>
+                          
+                          <td className="py-4 px-6 font-bold text-slate-700 text-lg text-left truncate max-w-[200px]" title={row.title}>
+                            {row.title}
+                          </td>
+                          
+                          <td className="py-4 px-6">
+                            <span className={`px-4 py-2 rounded-xl font-bold text-sm tracking-wide shadow-sm inline-flex items-center justify-center gap-1.5
+                              ${row.status === 'Completed' ? 'bg-emerald-50 text-emerald-600 ring-1 ring-emerald-500/20' : 'bg-sky-50 text-sky-600 ring-1 ring-sky-500/20'}`}
+                            >
+                              {row.status === 'Completed' ? <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg> : null}
+                              {row.status}
+                            </span>
+                          </td>
+                          
+                          <td className="py-4 px-6 font-black text-slate-700 text-lg">
+                            {row.score}
+                          </td>
+                          
+                          <td className="py-4 px-6 font-bold text-slate-500 text-right pr-8">
+                            <div className="flex items-center justify-end gap-2">
+                              {row.timeTaken !== '-' && <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
+                              {row.timeTaken}
+                            </div>
+                          </td>
+                        </tr>
+                      )) : (
+                        <tr>
+                          <td colSpan="6" className="py-24 text-center">
+                            <div className="flex flex-col items-center justify-center text-slate-400">
+                              <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                              </div>
+                              <p className="font-bold text-lg text-slate-500">
+                                {filterDate ? "No activities found for this date." : "No activities found for this student yet."}
+                              </p>
+                              <p className="text-sm mt-1">Data will appear here once they complete lessons or quizzes.</p>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })()}
                   </tbody>
                 </table>
               </div>

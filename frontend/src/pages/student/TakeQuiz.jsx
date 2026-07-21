@@ -14,6 +14,7 @@ function TakeQuiz() {
   const [isFinished, setIsFinished] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [checkedQuestions, setCheckedQuestions] = useState({}); // 🌟 Track checked state per question
   const [score, setScore] = useState(0);
   const [stats, setStats] = useState({ correct: 0, incorrect: 0, timeSpent: "0.00" });
 
@@ -76,6 +77,12 @@ function TakeQuiz() {
       ...selectedAnswers,
       [currentQuestionIndex]: optionIndex
     });
+  };
+
+  const handleCheckAnswer = () => {
+    if (selectedAnswers[currentQuestionIndex] !== undefined) {
+      setCheckedQuestions({ ...checkedQuestions, [currentQuestionIndex]: true });
+    }
   };
 
   const handleNext = () => {
@@ -259,20 +266,57 @@ function TakeQuiz() {
             <div className="flex flex-col gap-2 overflow-y-auto px-2 pt-1 pb-2 -mx-2 flex-1 scrollbar-thin scrollbar-thumb-sky-200 scrollbar-track-transparent custom-scrollbar">
               {currentQuestion.options.map((option, index) => {
                 const isSelected = selectedAnswers[currentQuestionIndex] === index;
+                const isChecked = checkedQuestions[currentQuestionIndex];
+                const isCorrectOption = index === currentQuestion.correctAnswer;
+                
+                // Determine styling based on whether it's checked or not
+                let optionStyle = 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300';
+                
+                if (!isChecked) {
+                   if (isSelected) optionStyle = 'bg-sky-50 border-sky-400 text-sky-800 shadow-sm';
+                } else {
+                   if (isCorrectOption) {
+                      optionStyle = 'bg-emerald-100 border-emerald-500 text-emerald-800 shadow-sm shadow-emerald-200/50 scale-[1.02] z-10';
+                   } else if (isSelected && !isCorrectOption) {
+                      optionStyle = 'bg-rose-50 border-rose-300 text-rose-700 opacity-80';
+                   } else {
+                      optionStyle = 'bg-slate-50 border-slate-200 text-slate-400 opacity-50'; // Dim others
+                   }
+                }
+
                 return (
                   <button
                     key={index}
-                    onClick={() => handleSelectOption(index)}
-                    className={`w-full text-left p-4 border-2 transition-all duration-300 flex items-center text-lg font-bold rounded-2xl cursor-pointer shrink-0
-                      ${isSelected ? 'bg-emerald-100 border-emerald-300 text-emerald-800 shadow-sm' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300'}
+                    onClick={() => !isChecked && handleSelectOption(index)}
+                    disabled={isChecked}
+                    className={`w-full text-left p-4 border-2 transition-all duration-300 flex items-center text-lg font-bold rounded-2xl shrink-0
+                      ${!isChecked ? 'cursor-pointer' : 'cursor-default'}
+                      ${optionStyle}
                     `}
                   >
-                    <span className="w-10 shrink-0 opacity-70">{optionLetters[index]}</span>
+                    <span className="w-10 shrink-0 opacity-70 flex items-center">
+                       {isChecked && isCorrectOption ? <span className="text-emerald-600 text-xl font-black mr-2">✓</span> : null}
+                       {isChecked && isSelected && !isCorrectOption ? <span className="text-rose-500 text-xl font-black mr-2">✗</span> : null}
+                       {!isChecked && optionLetters[index]}
+                    </span>
                     <span>{option}</span>
                   </button>
                 );
               })}
             </div>
+
+            {/* Immediate Feedback Message */}
+            {checkedQuestions[currentQuestionIndex] && (
+               <div className={`mt-4 px-4 py-3 rounded-2xl text-center font-bold animate-in slide-in-from-bottom-2 duration-300 flex items-center justify-center gap-2
+                 ${selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-600'}
+               `}>
+                 {selectedAnswers[currentQuestionIndex] === currentQuestion.correctAnswer ? (
+                    <><span className="text-2xl animate-bounce">🌟</span> Outstanding! That's correct.</>
+                 ) : (
+                    <><span className="text-xl">💡</span> Good try! The correct answer is highlighted in green.</>
+                 )}
+               </div>
+            )}
 
             <div className="flex justify-between items-center mt-4 pt-4 border-t border-slate-100 shrink-0">
               <button 
@@ -282,23 +326,30 @@ function TakeQuiz() {
                 <span>⬅</span> Previous
               </button>
 
-              {currentQuestionIndex === quiz.questions.length - 1 ? (
+              {!checkedQuestions[currentQuestionIndex] ? (
+                // 1. CHECK ANSWER BUTTON
                 <button 
-                  onClick={handleSubmitQuiz} 
+                  onClick={handleCheckAnswer}
                   disabled={selectedAnswers[currentQuestionIndex] === undefined}
-                  className={`px-8 py-3 font-bold text-white rounded-xl shadow-sm flex items-center gap-2 transition-all border border-white/50
-                    ${selectedAnswers[currentQuestionIndex] !== undefined ? 'bg-sky-500 hover:bg-sky-600 hover:scale-105 cursor-pointer' : 'bg-slate-300 cursor-not-allowed opacity-70'}
+                  className={`px-8 py-3 font-black text-white rounded-xl shadow-sm flex items-center gap-2 transition-all border border-white/50
+                    ${selectedAnswers[currentQuestionIndex] !== undefined ? 'bg-indigo-500 hover:bg-indigo-600 hover:scale-105 cursor-pointer shadow-indigo-200 shadow-lg' : 'bg-slate-300 cursor-not-allowed opacity-70'}
                   `}
                 >
-                  Submit <span>➔</span>
+                  Check Answer <span>✨</span>
+                </button>
+              ) : currentQuestionIndex === quiz.questions.length - 1 ? (
+                // 2. SUBMIT BUTTON
+                <button 
+                  onClick={handleSubmitQuiz} 
+                  className="px-8 py-3 font-bold text-white bg-sky-500 hover:bg-sky-600 hover:scale-105 cursor-pointer rounded-xl shadow-sm flex items-center gap-2 transition-all border border-white/50"
+                >
+                  Complete Quiz <span>➔</span>
                 </button>
               ) : (
+                // 3. NEXT BUTTON
                 <button 
                   onClick={handleNext} 
-                  disabled={selectedAnswers[currentQuestionIndex] === undefined}
-                  className={`px-8 py-3 font-bold text-white rounded-xl shadow-sm flex items-center gap-2 transition-all border border-white/50
-                    ${selectedAnswers[currentQuestionIndex] !== undefined ? 'bg-sky-500 hover:bg-sky-600 hover:scale-105 cursor-pointer' : 'bg-slate-300 cursor-not-allowed opacity-70'}
-                  `}
+                  className="px-8 py-3 font-bold text-white bg-sky-500 hover:bg-sky-600 hover:scale-105 cursor-pointer rounded-xl shadow-sm flex items-center gap-2 transition-all border border-white/50"
                 >
                   Next <span>➔</span>
                 </button>

@@ -160,22 +160,72 @@ router.get('/student-progress/:id', async (req, res) => {
       .populate('lessonId', 'title')
       .sort({ updatedAt: -1 });
 
-    // Frontend Table එකට ඕන විදියට Data ටික Format කරනවා
-    const formattedProgress = progress.map(p => {
-      const dateObj = new Date(p.updatedAt);
-      return {
-        id: p._id,
-        // Screenshot එකේ වගේ Date එක හදනවා (උදා: 2026/5/3)
-        date: `${dateObj.getFullYear()}/${dateObj.getMonth() + 1}/${dateObj.getDate()}`,
-        // පාඩම සම්පූර්ණද නැද්ද බලනවා
-        lessonStatus: p.completedParts && p.completedParts.length > 0 ? 'Completed' : 'Not Completed',
-        quizStatus: p.isQuizCompleted ? 'Completed' : 'Not Completed',
-        quizScore: p.quizScore ? `${p.quizScore}%` : '0%',
-        quizTime: p.timeTaken ? `${p.timeTaken} min` : '0 min'
-      };
+    // 🌟 FIX: Activity Log Format (Extract every single view and quiz attempt)
+    let activities = [];
+
+    progress.forEach(p => {
+       const lessonTitle = p.lessonId?.title || "Unknown Lesson";
+       
+       if (p.lessonViews && p.lessonViews.length > 0) {
+           p.lessonViews.forEach((view, idx) => {
+               const dateObj = new Date(view.date);
+               
+               // Check if this is the last view and if the lesson has any completed parts
+               const isLastView = idx === p.lessonViews.length - 1;
+               const isCompleted = p.completedParts && p.completedParts.length > 0;
+
+               activities.push({
+                   id: p._id.toString() + '_view_' + idx,
+                   rawDate: dateObj,
+                   date: `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`,
+                   time: dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                   type: 'Lesson View',
+                   title: lessonTitle,
+                   status: (isLastView && isCompleted) ? 'Completed' : 'Viewed',
+                   score: '-',
+                   timeTaken: '-'
+               });
+           });
+       } else {
+           // Fallback: If they have a progress document but no logged views, use createdAt
+           const dateObj = new Date(p.createdAt || p.updatedAt);
+           const isCompleted = p.completedParts && p.completedParts.length > 0;
+           
+           activities.push({
+               id: p._id.toString() + '_view_fallback',
+               rawDate: dateObj,
+               date: `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`,
+               time: dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+               type: 'Lesson View',
+               title: lessonTitle,
+               status: isCompleted ? 'Completed' : 'Started',
+               score: '-',
+               timeTaken: '-'
+           });
+       }
+
+       if (p.quizAttempts && p.quizAttempts.length > 0) {
+           p.quizAttempts.forEach((attempt, idx) => {
+               const dateObj = new Date(attempt.date);
+               activities.push({
+                   id: p._id.toString() + '_quiz_' + idx,
+                   rawDate: dateObj,
+                   date: `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`,
+                   time: dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                   type: 'Quiz Attempt',
+                   title: lessonTitle,
+                   status: 'Attempted',
+                   score: attempt.score !== undefined ? `${attempt.score}%` : '0%',
+                   timeTaken: p.timeTaken ? `${p.timeTaken} min` : '-'
+               });
+           });
+       }
     });
 
-    res.status(200).json({ success: true, progress: formattedProgress });
+    // Sort all activities from newest to oldest
+    activities.sort((a, b) => b.rawDate - a.rawDate);
+
+    res.status(200).json({ success: true, progress: activities });
   } catch (error) {
     console.error("Error fetching student progress:", error);
     res.status(500).json({ success: false, error: error.message });
