@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import confetti from 'canvas-confetti';
 
 function TakeQuiz() {
   const { quizId } = useParams();
@@ -25,6 +26,9 @@ function TakeQuiz() {
   // 🌟 AI States
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiFeedback, setAiFeedback] = useState(null);
+
+  // 🌟 Gamification States
+  const [rewardData, setRewardData] = useState(null);
 
   // 1. Fetch Quiz Data
   useEffect(() => {
@@ -124,7 +128,7 @@ function TakeQuiz() {
     // Save to Database
     if (studentId) {
       try {
-        await fetch('http://localhost:5000/api/lessons/quiz-score', {
+        const res = await fetch('http://localhost:5000/api/lessons/quiz-score', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -132,6 +136,20 @@ function TakeQuiz() {
             correct: correctCount, incorrect: incorrectCount, timeTaken: formattedTimeSpent
           })
         });
+        const data = await res.json();
+        
+        if (data.success && data.userUpdate) {
+          setRewardData(data.userUpdate);
+          
+          if (finalScore >= 70 || data.userUpdate.newBadgeEarned) {
+            confetti({
+              particleCount: 150,
+              spread: 70,
+              origin: { y: 0.6 },
+              colors: ['#38bdf8', '#fbbf24', '#34d399', '#818cf8']
+            });
+          }
+        }
       } catch (error) { console.error("Error saving score:", error); }
     }
 
@@ -415,7 +433,7 @@ function TakeQuiz() {
               <div className="w-full bg-white flex flex-col items-center relative -mt-32 max-w-4xl mx-auto">
 
                 {/* 🌟 Dynamic Progress Circle */}
-                <div className="bg-white p-3 rounded-full shadow-lg mb-10 z-10 border border-slate-100">
+                <div className="bg-white p-3 rounded-full shadow-lg mb-8 z-10 border border-slate-100">
                   <div className="relative w-48 h-48 flex items-center justify-center bg-white rounded-full">
                     <svg className="w-full h-full transform -rotate-90">
                       <circle cx="96" cy="96" r="80" fill="none" stroke="#F1F5F9" strokeWidth="16" />
@@ -432,6 +450,30 @@ function TakeQuiz() {
                     </div>
                   </div>
                 </div>
+
+                {/* 🌟 Gamification Rewards Display */}
+                {rewardData && (
+                  <div className="flex gap-4 mb-8">
+                    <div className="bg-sky-50 border border-sky-100 px-6 py-3 rounded-2xl flex items-center gap-3">
+                      <span className="text-2xl">🏆</span>
+                      <div>
+                        <div className="text-xs font-bold text-sky-600 uppercase">Points Earned</div>
+                        <div className="text-xl font-black text-sky-900">+{score} pts</div>
+                      </div>
+                    </div>
+                    {rewardData.newBadgeEarned && (
+                      <div className="bg-amber-50 border border-amber-200 px-6 py-3 rounded-2xl flex items-center gap-3 animate-in fade-in zoom-in slide-in-from-bottom-4 duration-700">
+                        <svg className="w-8 h-8 text-amber-500 drop-shadow-sm" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <div>
+                          <div className="text-xs font-bold text-amber-600 uppercase">New Badge!</div>
+                          <div className="text-xl font-black text-amber-900">
+                            {rewardData.newBadgeEarned === 'perfect_score' ? 'Perfect Scholar' : 'Quick Thinker'}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* 🌟 AI Feedback Message */}
                 {aiFeedback?.message && (

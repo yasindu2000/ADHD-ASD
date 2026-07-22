@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Lesson = require('../model/Lesson');
 const StudentProgress = require('../model/StudentProgress'); 
+const User = require('../model/User');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // ==========================================
@@ -130,7 +131,47 @@ router.post('/quiz-score', async (req, res) => {
       },
       { new: true, upsert: true }
     );
-    res.status(200).json({ success: true, progress });
+
+    // Gamification Logic: Update points, levels, and badges
+    let user = await User.findById(studentId);
+    let newBadgeEarned = null;
+
+    if (user) {
+      user.totalPoints += score;
+      
+      // Daily Badge Reset Logic
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const lastBadge = user.lastBadgeDate ? new Date(user.lastBadgeDate) : new Date(0);
+      lastBadge.setHours(0, 0, 0, 0);
+      
+      if (lastBadge < today) {
+        user.badges = []; // It's a new day, clear old badges
+      }
+      user.lastBadgeDate = new Date(); // Update to now
+
+      // Level calculation: 1 level per 100 points
+      const newLevel = Math.floor(user.totalPoints / 100) + 1;
+      if (newLevel > user.level) {
+        user.level = newLevel;
+      }
+
+      // Badge calculation: Perfect Score (100)
+      if (score === 100 && !user.badges.includes('perfect_score')) {
+        user.badges.push('perfect_score');
+        newBadgeEarned = 'perfect_score';
+      }
+      
+      // Badge calculation: Quick Thinker (< 1 minute)
+      if (parseFloat(timeTaken) < 1.0 && !user.badges.includes('quick_thinker')) {
+        user.badges.push('quick_thinker');
+        if (!newBadgeEarned) newBadgeEarned = 'quick_thinker'; // Just to notify one at least
+      }
+
+      await user.save();
+    }
+
+    res.status(200).json({ success: true, progress, userUpdate: { newBadgeEarned, level: user?.level, points: user?.totalPoints } });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -244,12 +285,52 @@ router.get('/:id', async (req, res) => {
 // GET STUDENT DASHBOARD STATS
 router.get('/dashboard-stats/:studentId', async (req, res) => {
   try {
+    // Gamification data (User)
+    const user = await User.findById(req.params.studentId).select('level totalPoints badges avatar fullName lastBadgeDate grade');
+
+    // Daily Badge Reset Logic for Dashboard display
+    let currentBadges = user?.badges || [];
+    if (user) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const lastBadge = user.lastBadgeDate ? new Date(user.lastBadgeDate) : new Date(0);
+      lastBadge.setHours(0, 0, 0, 0);
+
+      if (lastBadge < today) {
+        currentBadges = []; // Visually clear them if it's a new day
+        user.badges = [];
+        user.lastBadgeDate = new Date(); // Or just let quiz-score update it later
+        await user.save();
+      }
+    }
+
     // Lamayage progress okkoma gannawa, eka ekka Lesson eke title ekath gannawa (populate)
     const progressData = await StudentProgress.find({ studentId: req.params.studentId })
       .populate('lessonId', 'title subjectName')
       .sort({ updatedAt: 1 }); // Parana eke idan aluth ekata sort karanawa graph eke pennanna
 
-    res.status(200).json({ success: true, progress: progressData });
+    // Find lessons the student has already completed (assuming quiz completed means lesson completed)
+    const completedLessonIds = progressData
+      .filter(p => p.isQuizCompleted === true)
+      .map(p => p.lessonId?._id)
+      .filter(id => id != null);
+
+    let latestLessonQuery = { _id: { $nin: completedLessonIds } };
+    if (user && user.grade) {
+       latestLessonQuery.grade = { $regex: new RegExp(`0?${user.grade}`, 'i') };
+    }
+    const latestLessons = await Lesson.find(latestLessonQuery).sort({ createdAt: -1 }).limit(3);
+
+    res.status(200).json({ 
+      success: true, 
+      progress: progressData,
+      latestLessons: latestLessons,
+      gamification: {
+        level: user?.level || 1,
+        totalPoints: user?.totalPoints || 0,
+        badges: currentBadges
+      }
+    });
   } catch (error) {
     console.error("Error fetching dashboard stats:", error);
     res.status(500).json({ success: false, error: error.message });

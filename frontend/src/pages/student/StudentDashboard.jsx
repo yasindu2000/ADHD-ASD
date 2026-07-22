@@ -19,7 +19,13 @@ function StudentDashboard() {
       { day: 'Mon', score: 0 }, { day: 'Tue', score: 0 },
       { day: 'Wed', score: 0 }, { day: 'Thu', score: 0 }, { day: 'Fri', score: 0 }
     ],
-    nextLesson: null
+    nextLessons: []
+  });
+
+  const [gamification, setGamification] = useState({
+    level: 1,
+    totalPoints: 0,
+    badges: []
   });
 
   const today = new Date();
@@ -63,8 +69,25 @@ function StudentDashboard() {
         const response = await fetch(`http://localhost:5000/api/lessons/dashboard-stats/${studentId}`);
         const data = await response.json();
 
-        if (data.success && data.progress) {
-          let tCorrect = 0;
+        if (data.success) {
+          // Gamification data
+          if (data.gamification) {
+            setGamification(data.gamification);
+          }
+          
+          // Latest lessons logic
+          if (data.latestLessons && data.latestLessons.length > 0) {
+             setStats(prev => ({
+                ...prev,
+                nextLessons: data.latestLessons.map(l => ({
+                   id: l._id,
+                   title: l.title,
+                }))
+             }));
+          }
+
+          if (data.progress) {
+            let tCorrect = 0;
           let tQuizzes = 0;
           let streak = [false, false, false, false, false];
 
@@ -82,17 +105,9 @@ function StudentDashboard() {
             { name: 'Fri', Score: 0, count: 0 }
           ];
 
-          let recentLessonObj = null;
+          let recentLessonObj = null; // No longer needed for Next Mission, keeping logic simple
 
           data.progress.forEach(p => {
-            if (p.lessonId && !recentLessonObj) {
-              recentLessonObj = {
-                id: p.lessonId._id,
-                title: p.lessonId.title,
-                partsDone: p.completedParts?.length || 0
-              };
-            }
-
             if (p.isQuizCompleted) {
               tQuizzes += 1;
               tCorrect += (p.correctAnswers || 0);
@@ -132,16 +147,17 @@ function StudentDashboard() {
             score: day.count > 0 ? Math.round(day.Score / day.count) : 0
           }));
 
-          setStats({
+          setStats(prev => ({
+            ...prev,
             totalStars: tCorrect,
             totalTrophies: tQuizzes,
             weeklyStreak: streak,
-            weeklyScores: finalScores,
-            nextLesson: recentLessonObj
-          });
+            weeklyScores: finalScores
+          }));
         }
-      } catch (error) {
-        console.error("Error fetching stats:", error);
+      }
+    } catch (error) {
+      console.error("Error fetching stats:", error);
       } finally {
         setLoading(false);
       }
@@ -216,34 +232,38 @@ function StudentDashboard() {
         <div className="md:col-span-7 flex flex-col gap-8">
 
           {/* FOCUS ZONE */}
-          <div className="bg-sky-50 rounded-[2rem] p-8 shadow-md border border-sky-100 relative overflow-hidden flex-1">
+          <div className="bg-sky-50 rounded-[1.5rem] p-6 shadow-md border border-sky-100 relative overflow-hidden flex-1">
             <div className="absolute -right-10 -bottom-10 opacity-20">
               <svg className="w-64 h-64 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
             </div>
             <div className="relative z-10">
-              <h2 className="text-sky-800 font-bold text-xl mb-2 opacity-90">YOUR NEXT MISSION</h2>
+              <h2 className="text-sky-800 font-bold text-lg mb-4 opacity-90">YOUR NEXT MISSIONS</h2>
 
-              {stats.nextLesson ? (
-                <>
-                  <h3 className="text-4xl font-black text-slate-800 mb-6 leading-tight">
-                    {stats.nextLesson.title}
-                  </h3>
-                  <button
-                    onClick={() => navigate(`/lesson-view/${stats.nextLesson.id}`)}
-                    className="bg-white text-sky-700 border border-sky-100 px-8 py-4 rounded-2xl font-black text-xl shadow-lg hover:scale-105 transition-transform flex items-center gap-3 w-fit"
-                  >
-                    <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path></svg>
-                    Continue Learning
-                  </button>
-                </>
+              {stats.nextLessons.length > 0 ? (
+                <div className="flex flex-col gap-3">
+                  {stats.nextLessons.map((lesson, idx) => (
+                    <div key={idx} className="bg-white/80 backdrop-blur-sm border border-sky-100 rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+                      <h3 className="text-xl font-black text-slate-800 flex-1 pr-4 truncate">
+                        {lesson.title}
+                      </h3>
+                      <button
+                        onClick={() => navigate(`/lesson-view/${lesson.id}`)}
+                        className="bg-sky-500 text-white px-5 py-2 rounded-xl font-bold text-sm shadow hover:bg-sky-600 transition-colors flex items-center gap-2 whitespace-nowrap"
+                      >
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd"></path></svg>
+                        Start
+                      </button>
+                    </div>
+                  ))}
+                </div>
               ) : (
                 <>
-                  <h3 className="text-4xl font-black text-slate-800 mb-6 leading-tight">
+                  <h3 className="text-3xl font-black text-slate-800 mb-5 leading-tight mt-2">
                     Start a New Adventure!
                   </h3>
                   <button
                     onClick={() => navigate('/lessons')}
-                    className="bg-white text-sky-700 border border-sky-100 px-8 py-4 rounded-2xl font-black text-xl shadow-lg hover:scale-105 transition-transform flex items-center gap-3 w-fit"
+                    className="bg-white text-sky-700 border border-sky-100 px-6 py-3 rounded-2xl font-black text-lg shadow-lg hover:scale-105 transition-transform flex items-center gap-3 w-fit"
                   >
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                     Open Library
@@ -285,23 +305,64 @@ function StudentDashboard() {
         {/* RIGHT COLUMN (Rewards + Weekly Streak) */}
         <div className="md:col-span-5 flex flex-col gap-8">
 
-          {/* MY ACHIEVEMENTS */}
-          <div className="bg-white rounded-[2rem] p-8 shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
-            <h3 className="text-xl font-bold text-slate-600 uppercase tracking-widest mb-6">My Rewards</h3>
+          {/* PREMIUM GAMIFICATION & REWARDS */}
+          <div className="bg-white rounded-[1.5rem] p-6 shadow-sm border border-slate-100 flex flex-col w-full">
+            <h3 className="text-lg font-bold text-slate-700 mb-5 flex items-center gap-2">
+              <svg className="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z" clipRule="evenodd"></path></svg>
+              My Journey
+            </h3>
 
-            <div className="flex gap-4 w-full mb-6">
-              <div className="flex-1 bg-[#FEF3C7] rounded-3xl p-6 border-2 border-[#FDE68A] flex flex-col items-center justify-center">
-                <svg className="w-12 h-12 text-amber-500 mb-2" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                <div className="text-3xl font-black text-amber-700">{stats.totalStars}</div>
-                <div className="text-sm font-bold text-amber-800 mt-1">Stars</div>
+            {/* Level & Progress */}
+            <div className="bg-gradient-to-br from-sky-50 to-indigo-50 rounded-2xl p-5 mb-5 border border-sky-100 relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-3 opacity-10">
+                <svg className="w-20 h-20 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
               </div>
-              <div className="flex-1 bg-[#D1FAE5] rounded-3xl p-6 border-2 border-[#A7F3D0] flex flex-col items-center justify-center">
-                <svg className="w-12 h-12 text-emerald-500 mb-2" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1z" clipRule="evenodd"></path></svg>
-                <div className="text-3xl font-black text-emerald-700">{stats.totalTrophies}</div>
-                <div className="text-sm font-bold text-emerald-800 mt-1">Trophies</div>
+              <div className="relative z-10 flex justify-between items-end mb-2">
+                <div>
+                  <div className="text-[11px] font-bold text-indigo-500 uppercase tracking-widest mb-1">Current Level</div>
+                  <div className="text-3xl font-black text-indigo-900 drop-shadow-sm">Level {gamification.level}</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-[11px] font-bold text-sky-600 uppercase tracking-widest mb-1">Total Points</div>
+                  <div className="text-xl font-black text-sky-800">{gamification.totalPoints} pts</div>
+                </div>
+              </div>
+              
+              {/* Progress Bar */}
+              <div className="w-full bg-white rounded-full h-3 mt-4 overflow-hidden relative shadow-inner border border-sky-100">
+                <div 
+                  className="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 h-3 rounded-full transition-all duration-1000 ease-out relative"
+                  style={{ width: `${(gamification.totalPoints % 100)}%` }}
+                >
+                  <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
+                </div>
+              </div>
+              <div className="text-[11px] font-bold text-indigo-400 mt-2 text-right">{100 - (gamification.totalPoints % 100)} pts to next level</div>
+            </div>
+
+            {/* SVG Badges Section */}
+            <div>
+              <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">My Badges</h4>
+              <div className="grid grid-cols-2 gap-3">
+                
+                {/* Perfect Scholar Badge */}
+                <div className={`p-3 rounded-2xl border-2 flex flex-col items-center justify-center text-center transition-all duration-300 ${gamification.badges.includes('perfect_score') ? 'border-amber-200 bg-amber-50/50 shadow-sm scale-100 hover:scale-105' : 'border-slate-100 bg-slate-50 opacity-60 grayscale'}`}>
+                  <div className={`w-12 h-12 mb-2 rounded-full flex items-center justify-center ${gamification.badges.includes('perfect_score') ? 'bg-amber-100 shadow-inner' : 'bg-slate-200'}`}>
+                    <svg className={`w-7 h-7 ${gamification.badges.includes('perfect_score') ? 'text-amber-500 drop-shadow-sm' : 'text-slate-400'}`} fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  </div>
+                  <div className="font-bold text-slate-700 text-xs leading-tight">Perfect<br/>Scholar</div>
+                </div>
+
+                {/* Quick Thinker Badge */}
+                <div className={`p-3 rounded-2xl border-2 flex flex-col items-center justify-center text-center transition-all duration-300 ${gamification.badges.includes('quick_thinker') ? 'border-indigo-200 bg-indigo-50/50 shadow-sm scale-100 hover:scale-105' : 'border-slate-100 bg-slate-50 opacity-60 grayscale'}`}>
+                  <div className={`w-12 h-12 mb-2 rounded-full flex items-center justify-center ${gamification.badges.includes('quick_thinker') ? 'bg-indigo-100 shadow-inner' : 'bg-slate-200'}`}>
+                    <svg className={`w-7 h-7 ${gamification.badges.includes('quick_thinker') ? 'text-indigo-500 drop-shadow-sm' : 'text-slate-400'}`} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                  </div>
+                  <div className="font-bold text-slate-700 text-xs leading-tight">Quick<br/>Thinker</div>
+                </div>
+
               </div>
             </div>
-            <p className="text-slate-600 font-bold text-sm">You earn stars for correct answers!</p>
           </div>
 
           {/* WEEKLY STREAK */}
