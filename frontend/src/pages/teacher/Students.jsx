@@ -172,20 +172,20 @@ function Students() {
               <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             </div>
             <div>
-              <h2 className="text-4xl md:text-5xl font-black text-black tracking-tight drop-shadow-sm">
+              <h2 className="text-4xl md:text-5xl font-black text-black dark:text-slate-100 tracking-tight drop-shadow-sm dark:shadow-none ">
                 My Students
               </h2>
-              <p className="text-slate-500 font-bold mt-2 text-lg">Manage your students and view their progress.</p>
+              <p className="text-slate-500 dark:text-slate-400 font-bold mt-2 text-lg">Manage your students and view their progress.</p>
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-white p-10 min-h-[400px]">
+          <div className="bg-white dark:bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl dark:shadow-none shadow-slate-200/50 border border-white p-10 min-h-[400px]">
             
             {/* FILTER BAR */}
             {!selectedStudent && (
               <div className="flex flex-wrap items-center gap-4 mb-8">
                 <select
-                  className="px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-slate-700 min-w-[150px] shadow-sm"
+                  className="px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 min-w-[150px] shadow-sm dark:shadow-none "
                   value={selectedGrade}
                   onChange={(e) => setSelectedGrade(e.target.value)}
                 >
@@ -196,7 +196,7 @@ function Students() {
                 </select>
                 <button
                   onClick={() => setSelectedGrade('')}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+                  className="px-4 py-2 bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 text-slate-600 dark:text-slate-300 font-bold rounded-xl shadow-sm dark:shadow-none transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                   Reset Filter
@@ -214,21 +214,21 @@ function Students() {
                 {filteredStudents.map((student) => (
                   <div 
                     key={student._id} 
-                    className="flex items-center justify-between p-6 bg-slate-50/50 hover:bg-white rounded-[2rem] border border-slate-100 hover:border-blue-100 transition-all duration-300 group shadow-sm hover:shadow-md"
+                    className="flex items-center justify-between p-6 bg-slate-50/50 hover:bg-white dark:hover:bg-slate-700 dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700/50 hover:border-blue-100 transition-all duration-300 group shadow-sm dark:shadow-none hover:shadow-md dark:shadow-none "
                   >
                     <div className="flex items-center gap-6">
                       <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-600 flex items-center justify-center font-black text-3xl shadow-inner group-hover:scale-105 transition-transform duration-300 border border-white">
                         {(student.fullName || student.username || 'S')[0].toUpperCase()}
                       </div>
                       <div>
-                        <h4 className="font-bold text-slate-800 text-2xl tracking-tight group-hover:text-blue-600 transition-colors">{student.fullName || student.username || "Student Name"}</h4>
-                        <p className="text-slate-500 font-bold text-sm tracking-widest uppercase mt-1">ID: {student._id.substring(0,8)}</p>
+                        <h4 className="font-bold text-slate-800 dark:text-slate-100 text-2xl tracking-tight group-hover:text-blue-600 transition-colors">{student.fullName || student.username || "Student Name"}</h4>
+                        <p className="text-slate-500 dark:text-slate-400 font-bold text-sm tracking-widest uppercase mt-1">ID: {student._id.substring(0,8)}</p>
                       </div>
                     </div>
                     
                     <button 
                       onClick={() => handleViewStudent(student)}
-                      className="bg-white text-blue-600 border border-blue-100 hover:bg-blue-600 hover:text-white hover:border-blue-600 font-bold px-8 py-3.5 rounded-2xl shadow-sm hover:shadow-blue-500/30 transition-all flex items-center gap-2 group/btn"
+                      className="bg-white dark:bg-slate-800 text-blue-600 border border-blue-100 hover:bg-blue-600 hover:text-white hover:border-blue-600 font-bold px-8 py-3.5 rounded-2xl shadow-sm dark:shadow-none hover:shadow-blue-500/30 transition-all flex items-center gap-2 group/btn"
                     >
                       View Profile
                       <svg className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"></path></svg>
@@ -241,7 +241,7 @@ function Students() {
                  <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mb-6 shadow-inner">
                     <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                  </div>
-                 <p className="font-black text-slate-600 text-2xl mb-2">No students found.</p>
+                 <p className="font-black text-slate-600 dark:text-slate-300 text-2xl mb-2">No students found.</p>
                  <p className="font-semibold text-slate-400">Students will appear here once they register.</p>
               </div>
             )}
@@ -254,40 +254,40 @@ function Students() {
           
           <button 
             onClick={handleBack}
-            className="flex items-center gap-2 text-sm font-extrabold text-slate-500 hover:text-blue-600 transition-all mb-8 uppercase tracking-widest bg-white hover:bg-blue-50 border border-slate-200 hover:border-blue-200 w-fit px-5 py-2.5 rounded-xl shadow-sm hover:shadow-md"
+            className="flex items-center gap-2 text-sm font-extrabold text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-all mb-8 uppercase tracking-widest bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 border border-slate-200 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-500/50 w-fit px-5 py-2.5 rounded-xl shadow-sm dark:shadow-none hover:shadow-md dark:shadow-none "
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> 
             Back to Students
           </button>
 
-          <div className="flex items-center gap-6 mb-10 bg-white/50 backdrop-blur-sm p-6 rounded-[2.5rem] border border-slate-100 shadow-sm">
+          <div className="flex items-center gap-6 mb-10 bg-white dark:bg-slate-800/50 backdrop-blur-sm p-6 rounded-[2.5rem] border border-slate-100 dark:border-slate-700/50 shadow-sm dark:shadow-none ">
             <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-black text-4xl shadow-inner border-4 border-white">
               {(selectedStudent.fullName || selectedStudent.username || 'S')[0].toUpperCase()}
             </div>
             <div>
               <p className="text-sm font-extrabold uppercase tracking-widest text-blue-500 mb-1">Student Profile</p>
-              <h2 className="text-4xl md:text-5xl font-black text-slate-800 tracking-tight">
+              <h2 className="text-4xl md:text-5xl font-black text-slate-800 dark:text-slate-100 tracking-tight">
                 {selectedStudent.fullName || selectedStudent.username || "Student Name"}
               </h2>
             </div>
           </div>
 
-          <div className="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden relative">
+          <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-xl dark:shadow-none shadow-slate-200/50 border border-slate-100 dark:border-slate-700/50 overflow-hidden relative">
             
-            <div className="p-8 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between flex-wrap gap-4">
-              <h3 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+            <div className="p-8 border-b border-slate-100 dark:border-slate-700/50 bg-slate-50/50 flex items-center justify-between flex-wrap gap-4">
+              <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center gap-3">
                 <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 Daily Activity Log
               </h3>
               
               <div className="flex items-center gap-4 flex-wrap">
-                <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200">
-                   <label className="font-bold text-slate-500 text-sm">Filter Date:</label>
+                <div className="flex items-center gap-2 bg-white dark:bg-slate-800 px-4 py-2 rounded-xl shadow-sm dark:shadow-none border border-slate-200 dark:border-slate-700 ">
+                   <label className="font-bold text-slate-500 dark:text-slate-400 text-sm">Filter Date:</label>
                    <input 
                       type="date" 
                       value={filterDate}
                       onChange={(e) => setFilterDate(e.target.value)}
-                      className="outline-none text-slate-700 font-bold bg-transparent cursor-pointer"
+                      className="outline-none text-slate-700 dark:text-slate-200 font-bold bg-transparent cursor-pointer"
                    />
                    {filterDate && (
                       <button onClick={() => setFilterDate('')} className="text-rose-500 hover:text-rose-700 font-bold ml-2">✕</button>
@@ -296,7 +296,7 @@ function Students() {
                 <div className="flex gap-2">
                   <button
                     onClick={downloadStudentProgressReport}
-                    className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+                    className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm dark:shadow-none transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
                     title="Download CSV"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -304,7 +304,7 @@ function Students() {
                   </button>
                   <button
                     onClick={downloadPDFReport}
-                    className="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
+                    className="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl shadow-sm dark:shadow-none transition-colors flex items-center justify-center gap-2 whitespace-nowrap"
                     title="Download PDF"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
@@ -323,13 +323,13 @@ function Students() {
               <div className="overflow-x-auto">
                 <table className="w-full text-center border-collapse whitespace-nowrap">
                   <thead>
-                    <tr className="bg-slate-50/80 border-b border-slate-200">
-                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider text-left pl-8">Date & Time</th>
-                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider">Activity Type</th>
-                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider text-left">Lesson Title</th>
-                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider">Status</th>
-                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider">Score</th>
-                      <th className="py-5 px-6 font-extrabold text-slate-500 text-sm uppercase tracking-wider text-right pr-8">Duration</th>
+                    <tr className="bg-slate-50/80 border-b border-slate-200 dark:border-slate-700 ">
+                      <th className="py-5 px-6 font-extrabold text-slate-500 dark:text-slate-400 text-sm uppercase tracking-wider text-left pl-8">Date & Time</th>
+                      <th className="py-5 px-6 font-extrabold text-slate-500 dark:text-slate-400 text-sm uppercase tracking-wider">Activity Type</th>
+                      <th className="py-5 px-6 font-extrabold text-slate-500 dark:text-slate-400 text-sm uppercase tracking-wider text-left">Lesson Title</th>
+                      <th className="py-5 px-6 font-extrabold text-slate-500 dark:text-slate-400 text-sm uppercase tracking-wider">Status</th>
+                      <th className="py-5 px-6 font-extrabold text-slate-500 dark:text-slate-400 text-sm uppercase tracking-wider">Score</th>
+                      <th className="py-5 px-6 font-extrabold text-slate-500 dark:text-slate-400 text-sm uppercase tracking-wider text-right pr-8">Duration</th>
                     </tr>
                   </thead>
                   
@@ -337,28 +337,28 @@ function Students() {
                     {(() => {
                       const displayedData = filterDate ? progressData.filter(row => row.date === filterDate) : progressData;
                       return displayedData.length > 0 ? displayedData.map((row, index) => (
-                        <tr key={row.id || index} className="hover:bg-slate-50/80 transition-colors group">
+                        <tr key={row.id || index} className="hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-colors group">
                           <td className="py-4 px-6 text-left pl-8">
                             <div className="flex flex-col">
-                              <span className="font-bold text-slate-800">{row.date}</span>
+                              <span className="font-bold text-slate-800 dark:text-slate-100 ">{row.date}</span>
                               <span className="text-xs text-slate-400 font-extrabold">{row.time}</span>
                             </div>
                           </td>
                           
                           <td className="py-4 px-6">
-                            <span className={`px-4 py-2 rounded-xl font-bold text-sm tracking-wide shadow-sm inline-flex items-center justify-center gap-1.5
+                            <span className={`px-4 py-2 rounded-xl font-bold text-sm tracking-wide shadow-sm dark:shadow-none inline-flex items-center justify-center gap-1.5
                               ${row.type === 'Quiz Attempt' ? 'bg-amber-50 text-amber-600 ring-1 ring-amber-500/20' : 'bg-blue-50 text-blue-600 ring-1 ring-blue-500/20'}`}
                             >
                               {row.type}
                             </span>
                           </td>
                           
-                          <td className="py-4 px-6 font-bold text-slate-700 text-lg text-left truncate max-w-[200px]" title={row.title}>
+                          <td className="py-4 px-6 font-bold text-slate-700 dark:text-slate-200 text-lg text-left truncate max-w-[200px]" title={row.title}>
                             {row.title}
                           </td>
                           
                           <td className="py-4 px-6">
-                            <span className={`px-4 py-2 rounded-xl font-bold text-sm tracking-wide shadow-sm inline-flex items-center justify-center gap-1.5
+                            <span className={`px-4 py-2 rounded-xl font-bold text-sm tracking-wide shadow-sm dark:shadow-none inline-flex items-center justify-center gap-1.5
                               ${row.status === 'Completed' ? 'bg-emerald-50 text-emerald-600 ring-1 ring-emerald-500/20' : 'bg-sky-50 text-sky-600 ring-1 ring-sky-500/20'}`}
                             >
                               {row.status === 'Completed' ? <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg> : null}
@@ -366,11 +366,11 @@ function Students() {
                             </span>
                           </td>
                           
-                          <td className="py-4 px-6 font-black text-slate-700 text-lg">
+                          <td className="py-4 px-6 font-black text-slate-700 dark:text-slate-200 text-lg">
                             {row.score}
                           </td>
                           
-                          <td className="py-4 px-6 font-bold text-slate-500 text-right pr-8">
+                          <td className="py-4 px-6 font-bold text-slate-500 dark:text-slate-400 text-right pr-8">
                             <div className="flex items-center justify-end gap-2">
                               {row.timeTaken !== '-' && <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>}
                               {row.timeTaken}
@@ -381,10 +381,10 @@ function Students() {
                         <tr>
                           <td colSpan="6" className="py-24 text-center">
                             <div className="flex flex-col items-center justify-center text-slate-400">
-                              <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                              <div className="w-16 h-16 bg-slate-50 dark:bg-slate-900/50 rounded-full flex items-center justify-center mb-4">
                                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                               </div>
-                              <p className="font-bold text-lg text-slate-500">
+                              <p className="font-bold text-lg text-slate-500 dark:text-slate-400 ">
                                 {filterDate ? "No activities found for this date." : "No activities found for this student yet."}
                               </p>
                               <p className="text-sm mt-1">Data will appear here once they complete lessons or quizzes.</p>

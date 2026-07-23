@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
+import { useSensory } from '../../context/SensoryContext';
 
 function TeacherDashboard() {
   const navigate = useNavigate();
+  const { theme, setTheme, playUiSound } = useSensory();
   const [teacherName, setTeacherName] = useState('Teacher');
   const [loading, setLoading] = useState(true);
 
@@ -57,10 +59,10 @@ function TeacherDashboard() {
     fetchDashboardData();
   }, []);
 
-  if (loading) return <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center font-bold text-[#64748B] text-2xl animate-pulse">Syncing Classroom Data... 🔄</div>;
+  if (loading) return <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-900 flex items-center justify-center font-bold text-[#64748B] dark:text-slate-400 text-2xl animate-pulse">Syncing Classroom Data... 🔄</div>;
 
   return (
-    <div className="min-h-screen bg-[#F0F5FA] font-sans pb-12 pt-2 selection:bg-indigo-200">
+    <div className="min-h-screen bg-[#F0F5FA] dark:bg-slate-900 font-sans pb-12 pt-2 selection:bg-indigo-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* 🌟 1. PREMIUM HEADER */}
@@ -70,8 +72,8 @@ function TeacherDashboard() {
 
         <div className="mb-10 flex flex-col md:flex-row md:items-center justify-between gap-6" style={{ fontFamily: "'Outfit', sans-serif" }}>
           <div>
-            <h2 className="text-4xl md:text-5xl font-semibold text-slate-800 tracking-tight drop-shadow-sm flex items-center">
-              Hello, <span className="text-black ml-3">{teacherName}</span>!
+            <h2 className="text-4xl md:text-5xl font-semibold text-slate-800 dark:text-slate-200 tracking-tight drop-shadow-sm flex items-center">
+              Hello, <span className="text-black dark:text-white ml-3">{teacherName}</span>!
               <svg className="w-10 h-10 md:w-12 md:h-12 inline-block text-amber-400 ml-3 hover:rotate-12 transition-transform duration-300" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"></path>
               </svg>
@@ -82,13 +84,31 @@ function TeacherDashboard() {
               <span className="text-emerald-500 font-semibold flex items-center gap-1"><span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span> Live Updates</span>
             </p>
           </div>
-          <div className="flex flex-col items-end justify-center">
-            <div className="text-4xl font-light text-transparent bg-clip-text bg-gradient-to-r from-slate-700 to-slate-900 tracking-wider drop-shadow-sm">
+          <div className="flex flex-col items-end justify-center gap-4">
+            <div className="text-4xl font-light text-transparent bg-clip-text bg-gradient-to-r from-slate-700 to-slate-900 dark:from-slate-200 dark:to-slate-400 tracking-wider drop-shadow-sm">
               {currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).split(' ')[0]}
               <span className="text-2xl ml-1.5 font-medium">{currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }).split(' ')[1]}</span>
             </div>
-            <div className="text-xs font-bold text-indigo-400 uppercase tracking-[0.3em] mt-1.5">
-              Live Time
+            <div className="flex items-center gap-4">
+              <div className="text-xs font-bold text-indigo-400 uppercase tracking-[0.3em] mt-1.5">
+                Live Time
+              </div>
+              <div className="flex bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 rounded-full p-1 gap-1">
+                <button 
+                  onClick={() => { setTheme('light'); playUiSound && playUiSound(); }} 
+                  className={`p-2 rounded-full transition-all flex items-center justify-center ${theme === 'light' ? 'bg-amber-100 text-amber-600 shadow-sm' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`}
+                  title="Light Theme"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </button>
+                <button 
+                  onClick={() => { setTheme('dark'); playUiSound && playUiSound(); }} 
+                  className={`p-2 rounded-full transition-all flex items-center justify-center ${theme === 'dark' ? 'bg-indigo-100 text-indigo-700 shadow-sm' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700'}`}
+                  title="Dark Theme"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -101,7 +121,7 @@ function TeacherDashboard() {
               <h3 className="text-5xl font-black text-slate-800">{stats.totalStudents}</h3>
             </div>
             <div className="w-20 h-20 rounded-[1.5rem] bg-white/50 backdrop-blur-md flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300 border border-white/60 shadow-sm">
-              <svg className="w-10 h-10 text-indigo-600 drop-shadow-sm" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="w-10 h-10 text-indigo-600 dark:text-indigo-400 drop-shadow-sm" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"></path>
               </svg>
             </div>
@@ -113,7 +133,7 @@ function TeacherDashboard() {
               <h3 className="text-5xl font-black text-slate-800">{stats.totalLessons}</h3>
             </div>
             <div className="w-20 h-20 rounded-[1.5rem] bg-white/50 backdrop-blur-md flex items-center justify-center group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300 border border-white/60 shadow-sm">
-              <svg className="w-10 h-10 text-teal-600 drop-shadow-sm" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="w-10 h-10 text-teal-600 dark:text-teal-400 drop-shadow-sm" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zM21 18.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"></path>
               </svg>
             </div>
@@ -136,17 +156,17 @@ function TeacherDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
 
           {/* Chart 1: Bar Chart */}
-          <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100">
+          <div className="bg-white dark:bg-slate-800 p-8 md:p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-100 dark:border-slate-700">
             <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-extrabold text-slate-800 flex items-center gap-3">
-                <span className="bg-indigo-50 text-indigo-600 p-2.5 rounded-2xl shadow-sm border border-indigo-100 flex items-center justify-center">
+              <h3 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3">
+                <span className="bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 p-2.5 rounded-2xl shadow-sm border border-indigo-100 dark:border-indigo-700/50 flex items-center justify-center">
                   <svg className="w-6 h-6" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path>
                   </svg>
                 </span>
                 Lesson Views
               </h3>
-              <span className="text-xs font-bold text-indigo-600 bg-indigo-50 border border-indigo-100 px-4 py-1.5 rounded-full uppercase tracking-widest shadow-sm">This Week</span>
+              <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-700/50 px-4 py-1.5 rounded-full uppercase tracking-widest shadow-sm">This Week</span>
             </div>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
@@ -154,7 +174,7 @@ function TeacherDashboard() {
                   <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="#E2E8F0" opacity={0.5} />
                   <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontWeight: 'bold' }} dy={10} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontWeight: 'bold' }} />
-                  <Tooltip cursor={{ fill: '#F1F5F9' }} contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderRadius: '16px', fontWeight: 'bold', border: '1px solid #E2E8F0', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }} />
+                  <Tooltip cursor={{ fill: theme === 'dark' ? '#334155' : '#F1F5F9' }} contentStyle={{ backgroundColor: theme === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)', color: theme === 'dark' ? '#F8FAFC' : '#1E293B', borderRadius: '16px', fontWeight: 'bold', border: theme === 'dark' ? '1px solid #334155' : '1px solid #E2E8F0', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }} />
                   <Bar dataKey="views" fill="url(#colorViews)" radius={[12, 12, 0, 0]} barSize={40} />
                   <defs>
                     <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1">
@@ -168,9 +188,9 @@ function TeacherDashboard() {
           </div>
 
           {/* Chart 2: Line Chart */}
-          <div className="bg-white p-8 md:p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100">
+          <div className="bg-white dark:bg-slate-800 p-8 md:p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-100 dark:border-slate-700">
             <div className="flex justify-between items-center mb-8">
-              <h3 className="text-2xl font-extrabold text-slate-800 flex items-center gap-3">
+              <h3 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3">
                 <span className="bg-emerald-50 text-emerald-600 p-2.5 rounded-2xl shadow-sm border border-emerald-100 flex items-center justify-center">
                   <svg className="w-6 h-6" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"></path>
@@ -186,7 +206,7 @@ function TeacherDashboard() {
                   <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="#E2E8F0" opacity={0.5} />
                   <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontWeight: 'bold' }} dy={10} />
                   <YAxis domain={[0, 100]} axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontWeight: 'bold' }} />
-                  <Tooltip contentStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', borderRadius: '16px', fontWeight: 'bold', border: '1px solid #E2E8F0', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }} />
+                  <Tooltip contentStyle={{ backgroundColor: theme === 'dark' ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)', color: theme === 'dark' ? '#F8FAFC' : '#1E293B', borderRadius: '16px', fontWeight: 'bold', border: theme === 'dark' ? '1px solid #334155' : '1px solid #E2E8F0', boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)' }} />
                   <Line type="monotone" dataKey="score" stroke="#10B981" strokeWidth={6} dot={{ r: 6, fill: "#fff", strokeWidth: 3, stroke: "#10B981" }} activeDot={{ r: 10, strokeWidth: 0, fill: "#059669" }} />
                 </LineChart>
               </ResponsiveContainer>
@@ -194,11 +214,11 @@ function TeacherDashboard() {
           </div>
         </div>
 
-        {/* 🌟 4. RECENT ACTIVITY (Modern List) */}
-        <div className="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/40 border border-slate-100 overflow-hidden">
-          <div className="p-8 md:px-10 md:py-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-            <h3 className="text-2xl font-extrabold text-slate-800 flex items-center gap-4">
-              <span className="bg-orange-50 text-orange-500 p-2.5 rounded-2xl shadow-sm border border-orange-100 flex items-center justify-center">
+        {/* 🌟 4. RECENT ACTIVITY LIST (Neumorphic Style) */}
+        <div className="bg-white dark:bg-slate-800 p-8 md:p-10 rounded-[2.5rem] shadow-xl shadow-slate-200/40 dark:shadow-none border border-slate-100 dark:border-slate-700">
+          <div className="flex justify-between items-center mb-8">
+            <h3 className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-3">
+              <span className="bg-orange-50 dark:bg-orange-900/30 text-orange-500 dark:text-orange-400 p-2.5 rounded-2xl shadow-sm border border-orange-100 dark:border-orange-800 flex items-center justify-center">
                 <svg className="w-6 h-6" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"></path>
                 </svg>
@@ -208,68 +228,66 @@ function TeacherDashboard() {
             {activities.length > 5 && (
               <button 
                 onClick={() => setShowAllActivities(!showAllActivities)}
-                className="text-xs font-bold text-slate-500 bg-white hover:bg-slate-50 hover:text-indigo-600 transition-colors border border-slate-200 px-4 py-1.5 rounded-full uppercase tracking-widest shadow-sm cursor-pointer"
+                className="text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors border border-slate-200 dark:border-slate-600 px-4 py-1.5 rounded-full uppercase tracking-widest shadow-sm cursor-pointer"
               >
                 {showAllActivities ? 'Show Less' : 'View All'}
               </button>
             )}
           </div>
 
-          <div className="p-6 md:p-8">
+          <div className="space-y-4">
             {activities.length > 0 ? (
-              <div className="flex flex-col gap-4">
-                {(showAllActivities ? activities : activities.slice(0, 5)).map((act, idx) => (
-                  <div key={idx} className="flex items-center justify-between p-5 bg-white hover:bg-slate-50/80 rounded-2xl transition-all duration-300 border border-slate-50 hover:border-slate-200 hover:shadow-md group">
-                    <div className="flex items-center gap-5">
-                      <div className={`w-14 h-14 rounded-2xl ${act.color || 'bg-blue-50 text-blue-600'} flex items-center justify-center text-2xl border border-white shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-transform`}>
-                        {(() => {
-                          const actionText = (act.action || '').toLowerCase();
-                          const iconText = act.icon || '';
-                          
-                          if (iconText.includes('🎮') || actionText.includes('game')) {
-                            return (
-                              <svg className="w-7 h-7 drop-shadow-sm" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M21.58 16.09l-1.09-7.66C20.18 6.27 18.4 5 16.32 5H7.68C5.6 5 3.82 6.27 3.51 8.43l-1.09 7.66C2.2 17.63 3.39 19 4.94 19c.68 0 1.32-.27 1.8-.75L9 16h6l2.25 2.25c.48.48 1.13.75 1.8.75 1.56 0 2.75-1.37 2.53-2.91zM8 11H6v2H5v-2H3v-1h2V8h1v2h2v1zm7.5 3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 8 18.5 8s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path>
-                              </svg>
-                            );
-                          }
-                          if (iconText.includes('📚') || iconText.includes('📖') || actionText.includes('lesson')) {
-                            return (
-                              <svg className="w-7 h-7 drop-shadow-sm" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.3 4.75 1.05.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.25-.75-2-1zM21 18.5c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V8c1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"></path>
-                              </svg>
-                            );
-                          }
-                          if (iconText.includes('🏆') || iconText.includes('🏅') || actionText.includes('quiz')) {
-                            return (
-                              <svg className="w-7 h-7 drop-shadow-sm" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"></path>
-                              </svg>
-                            );
-                          }
+              (showAllActivities ? activities : activities.slice(0, 5)).map((act, idx) => (
+                <div key={idx} className="flex items-center justify-between p-5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/80 dark:hover:bg-slate-700/50 rounded-2xl transition-all duration-300 border border-slate-50 dark:border-slate-700 hover:border-slate-200 dark:hover:border-slate-600 hover:shadow-md dark:hover:shadow-none group">
+                  <div className="flex items-center gap-5">
+                    <div className={`w-14 h-14 rounded-2xl ${act.color || 'bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'} flex items-center justify-center text-2xl border border-white dark:border-slate-600 shadow-sm group-hover:scale-110 group-hover:rotate-6 transition-transform`}>
+                      {(() => {
+                        const actionText = (act.action || '').toLowerCase();
+                        const iconText = act.icon || '';
+                        
+                        if (iconText.includes('🎮') || actionText.includes('game')) {
                           return (
                             <svg className="w-7 h-7 drop-shadow-sm" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path>
+                              <path d="M21.58 16.09l-1.09-7.66C20.18 6.27 18.4 5 16.32 5H7.68C5.6 5 3.82 6.27 3.51 8.43l-1.09 7.66C2.2 17.63 3.39 19 4.94 19c.68 0 1.32-.27 1.8-.75L9 16h6l2.25 2.25c.48.48 1.13.75 1.8.75 1.56 0 2.75-1.37 2.53-2.91zM8 11H6v2H5v-2H3v-1h2V8h1v2h2v1zm7.5 3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 8 18.5 8s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path>
                             </svg>
                           );
-                        })()}
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-slate-800 text-lg group-hover:text-indigo-600 transition-colors">{act.name}</h4>
-                        <p className="text-slate-500 text-sm font-medium mt-0.5">{act.action}</p>
-                        {act.date && (
-                          <p className="text-slate-400 text-xs font-bold mt-1">
-                            {new Date(act.date).toLocaleDateString()} {new Date(act.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                          </p>
-                        )}
-                      </div>
+                        }
+                        if (iconText.includes('📚') || iconText.includes('📖') || actionText.includes('lesson')) {
+                          return (
+                            <svg className="w-7 h-7 drop-shadow-sm" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.2 0 2.4.15 3.5.5v11.5z"></path>
+                            </svg>
+                          );
+                        }
+                        if (iconText.includes('🏆') || iconText.includes('🏅') || actionText.includes('quiz')) {
+                          return (
+                            <svg className="w-7 h-7 drop-shadow-sm" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"></path>
+                            </svg>
+                          );
+                        }
+                        return (
+                          <svg className="w-7 h-7 drop-shadow-sm" focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path>
+                          </svg>
+                        );
+                      })()}
                     </div>
-                    <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-indigo-500 bg-indigo-50 p-2 rounded-xl text-sm font-bold">Review</span>
+                    <div>
+                      <h4 className="font-bold text-slate-800 dark:text-slate-100 text-lg group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{act.name}</h4>
+                      <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mt-0.5">{act.action}</p>
+                      {act.date && (
+                        <p className="text-slate-400 dark:text-slate-500 text-xs font-bold mt-1">
+                          {new Date(act.date).toLocaleDateString()} {new Date(act.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </p>
+                      )}
                     </div>
                   </div>
-                ))}
-              </div>
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-indigo-500 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 p-2 rounded-xl text-sm font-bold">Review</span>
+                  </div>
+                </div>
+              ))
             ) : (
               <div className="py-16 flex flex-col items-center justify-center text-center">
                 <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center border border-slate-100 shadow-inner mb-6">

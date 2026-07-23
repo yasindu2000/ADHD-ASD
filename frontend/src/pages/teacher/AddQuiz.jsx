@@ -125,7 +125,7 @@ function AddQuiz() {
 
   // --- UI COMPONENTS ---
   const BackButton = ({ onClick }) => (
-    <button onClick={onClick} className="flex items-center gap-2 text-gray-500 hover:text-blue-600 font-semibold transition-colors bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 hover:shadow-md w-fit">
+    <button onClick={onClick} className="flex items-center gap-2 text-gray-500 dark:text-slate-400 hover:text-blue-600 font-semibold transition-colors bg-white dark:bg-slate-800 px-4 py-2 rounded-xl shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700/50 hover:shadow-md dark:shadow-none w-fit">
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
       Back
     </button>
@@ -135,10 +135,10 @@ function AddQuiz() {
     <div className="max-w-4xl mx-auto py-10 px-4 font-sans min-h-screen">
       <div className="mb-8"><BackButton onClick={() => navigate(-1)} /></div>
 
-      <div className="bg-white rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-100">
+      <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-xl dark:shadow-none shadow-gray-200/50 border border-gray-100 dark:border-slate-700/50">
         
-        <div className="flex justify-between items-center mb-8 border-b border-gray-100 pb-4">
-          <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
+        <div className="flex justify-between items-center mb-8 border-b border-gray-100 dark:border-slate-700/50 pb-4">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">
             {quizId ? 'Edit Quiz Details' : 'Create New Quiz'}
           </h1>
           {quizId && (
@@ -150,27 +150,27 @@ function AddQuiz() {
         </div>
 
         {/* General Settings */}
-        <div className="bg-gray-50 rounded-2xl p-6 mb-10 border border-gray-200">
+        <div className="bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-6 mb-10 border border-gray-200 dark:border-slate-700 ">
           <h3 className="text-lg font-semibold text-gray-700 mb-4">General Settings</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-600 mb-2">Quiz Title</label>
-              <input type="text" value={quizTitle} onChange={e => setQuizTitle(e.target.value)} placeholder="e.g., Mathematics Mid-Term Evaluation" className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm" />
+              <input type="text" value={quizTitle} onChange={e => setQuizTitle(e.target.value)} placeholder="e.g., Mathematics Mid-Term Evaluation" className="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all shadow-sm dark:shadow-none " />
             </div>
             <div>
               <label className="block text-sm font-semibold text-gray-600 mb-2">Date</label>
-              <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm" />
+              <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all shadow-sm dark:shadow-none " />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-600 mb-2">Questions Limit</label>
-                <select value={noOfQuestions} onChange={e => setNoOfQuestions(e.target.value)} className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm cursor-pointer">
+                <select value={noOfQuestions} onChange={e => setNoOfQuestions(e.target.value)} className="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all shadow-sm dark:shadow-none cursor-pointer">
                   {[5, 10, 15, 20].map(n => <option key={n} value={n}>{n}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-sm font-semibold text-gray-600 mb-2">Duration</label>
-                <select value={duration} onChange={e => setDuration(e.target.value)} className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm cursor-pointer">
+                <select value={duration} onChange={e => setDuration(e.target.value)} className="w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all shadow-sm dark:shadow-none cursor-pointer">
                   <option value="5 mins">5 mins</option>
                   <option value="10 mins">10 mins</option>
                   <option value="15 mins">15 mins</option>
@@ -184,19 +184,19 @@ function AddQuiz() {
 
         {/* Questions Loop */}
         <div className="space-y-6">
-          <h3 className="text-xl font-bold text-gray-800 border-b border-gray-100 pb-2">Questions Setup</h3>
+          <h3 className="text-xl font-bold text-gray-800 dark:text-slate-200 border-b border-gray-100 dark:border-slate-700/50 pb-2">Questions Setup</h3>
           
           {questions.map((q, qIdx) => (
-            <div key={qIdx} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm relative group hover:border-blue-200 transition-all">
+            <div key={qIdx} className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-gray-200 dark:border-slate-700 shadow-sm dark:shadow-none relative group hover:border-blue-200 dark:hover:border-blue-500/50 transition-all">
               
               {questions.length > 1 && (
-                <button onClick={() => handleRemoveQuestion(qIdx)} className="absolute top-6 right-6 text-gray-400 hover:text-red-500 transition-colors bg-gray-50 rounded-full p-2 border border-gray-200 hover:bg-red-50" title="Remove Question">
+                <button onClick={() => handleRemoveQuestion(qIdx)} className="absolute top-6 right-6 text-gray-400 dark:text-slate-300 hover:text-red-500 transition-colors bg-gray-50 dark:bg-slate-900/50 rounded-full p-2 border border-gray-200 dark:border-slate-700 hover:bg-red-50" title="Remove Question">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
               )}
 
               <div className="flex items-center gap-3 mb-6">
-                <span className="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center font-bold">{qIdx + 1}</span>
+                <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 w-8 h-8 rounded-full flex items-center justify-center font-bold">{qIdx + 1}</span>
                 <div className="flex-1 mr-12">
                   <input 
                     type="text" 
@@ -207,18 +207,18 @@ function AddQuiz() {
                       newQ[qIdx].questionText = e.target.value;
                       setQuestions(newQ);
                     }}
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium" 
+                    className="w-full bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all font-medium" 
                   />
                 </div>
               </div>
 
               <div className="pl-11 space-y-3">
-                <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Answer Options (Select the correct one)</label>
+                <label className="block text-xs font-semibold text-gray-400 dark:text-slate-300 uppercase tracking-wider mb-2">Answer Options (Select the correct one)</label>
                 
                 {q.options.map((opt, optIdx) => {
                   const isCorrect = q.correctAnswer === optIdx;
                   return (
-                    <div key={optIdx} className={`flex items-center gap-3 p-2 rounded-xl border transition-all ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-transparent border-transparent hover:bg-gray-50'}`}>
+                    <div key={optIdx} className={`flex items-center gap-3 p-2 rounded-xl border transition-all ${isCorrect ? 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800/50' : 'bg-transparent border-transparent hover:bg-gray-50 dark:hover:bg-slate-800/50'}`}>
                       <div className="relative flex items-center justify-center">
                         <input 
                           type="radio" 
@@ -229,12 +229,12 @@ function AddQuiz() {
                             newQ[qIdx].correctAnswer = optIdx;
                             setQuestions(newQ);
                           }}
-                          className="w-5 h-5 text-green-600 cursor-pointer focus:ring-green-500 border-gray-300"
+                          className="w-5 h-5 text-green-600 cursor-pointer focus:ring-green-500 border-gray-300 dark:border-slate-600"
                         />
                       </div>
                       
                       <div className="flex-1 flex items-center">
-                        <span className="text-sm font-bold text-gray-400 w-6">{String.fromCharCode(65 + optIdx)}.</span>
+                        <span className="text-sm font-bold text-gray-400 dark:text-slate-300 w-6">{String.fromCharCode(65 + optIdx)}.</span>
                         <input 
                           type="text" 
                           placeholder={`Option ${optIdx + 1}`}
@@ -244,18 +244,18 @@ function AddQuiz() {
                             newQ[qIdx].options[optIdx] = e.target.value;
                             setQuestions(newQ);
                           }}
-                          className={`flex-1 border ${isCorrect ? 'border-green-300 bg-white' : 'border-gray-200 bg-gray-50'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all`}
+                          className={`flex-1 text-slate-800 dark:text-slate-100 border ${isCorrect ? 'border-green-300 bg-white dark:bg-slate-800' : 'border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50'} rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all`}
                         />
                       </div>
 
-                      <button onClick={() => handleRemoveOption(qIdx, optIdx)} disabled={q.options.length <= 2} className={`p-2 rounded-lg transition-colors ${q.options.length <= 2 ? 'text-gray-200 cursor-not-allowed' : 'text-gray-400 hover:text-red-500 hover:bg-red-50'}`} title="Remove Option">
+                      <button onClick={() => handleRemoveOption(qIdx, optIdx)} disabled={q.options.length <= 2} className={`p-2 rounded-lg transition-colors ${q.options.length <= 2 ? 'text-gray-200 cursor-not-allowed' : 'text-gray-400 dark:text-slate-300 hover:text-red-500 hover:bg-red-50'}`} title="Remove Option">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                       </button>
                     </div>
                   );
                 })}
 
-                <button onClick={() => handleAddOption(qIdx)} className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 mt-2 p-2 rounded-lg hover:bg-blue-50 transition-colors">
+                <button onClick={() => handleAddOption(qIdx)} className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1 mt-2 p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg>
                   Add Another Option
                 </button>
@@ -263,7 +263,7 @@ function AddQuiz() {
             </div>
           ))}
 
-          <button onClick={handleAddQuestion} className="w-full bg-blue-50 hover:bg-blue-100 border border-dashed border-blue-300 text-blue-600 font-bold py-4 rounded-2xl transition-colors flex items-center justify-center gap-2 mt-4 shadow-sm">
+          <button onClick={handleAddQuestion} className="w-full bg-blue-50 hover:bg-blue-100 border border-dashed border-blue-300 text-blue-600 font-bold py-4 rounded-2xl transition-colors flex items-center justify-center gap-2 mt-4 shadow-sm dark:shadow-none ">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
             Add New Question
           </button>
@@ -275,7 +275,7 @@ function AddQuiz() {
         <div className="flex justify-end">
           <button 
             onClick={handlePublish} 
-            className={`${quizId ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30' : 'bg-green-600 hover:bg-green-700 shadow-green-500/30'} text-white font-bold py-4 px-12 rounded-2xl shadow-lg transition-all duration-300 hover:-translate-y-1 text-lg flex items-center gap-2`}
+            className={`${quizId ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30' : 'bg-green-600 hover:bg-green-700 shadow-green-500/30'} text-white font-bold py-4 px-12 rounded-2xl shadow-lg dark:shadow-none transition-all duration-300 hover:-translate-y-1 text-lg flex items-center gap-2`}
           >
             {quizId ? (
               <><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Update Quiz</>

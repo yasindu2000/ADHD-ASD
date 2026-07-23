@@ -228,7 +228,7 @@ function AddLessons() {
 
   // --- UI COMPONENTS ---
   const BackButton = ({ onClick }) => (
-    <button onClick={onClick} className="flex items-center gap-2 text-gray-500 hover:text-blue-600 font-semibold transition-colors bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-100 hover:shadow-md w-fit">
+    <button onClick={onClick} className="flex items-center gap-2 text-gray-500 dark:text-slate-400 hover:text-blue-600 font-semibold transition-colors bg-white dark:bg-slate-800 px-4 py-2 rounded-xl shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700/50 hover:shadow-md dark:shadow-none w-fit">
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
       Back
     </button>
@@ -241,10 +241,10 @@ function AddLessons() {
     return (
       <div className="max-w-5xl mx-auto py-12 px-4 font-sans min-h-screen">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 tracking-tight drop-shadow-sm mb-4">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight drop-shadow-sm dark:shadow-none mb-4">
             Select Grade Level
           </h1>
-          <p className="text-lg text-slate-500 font-medium max-w-2xl mx-auto">
+          <p className="text-lg text-slate-500 dark:text-slate-400 font-medium max-w-2xl mx-auto">
             Choose a grade to view, edit, or add new lessons and materials.
           </p>
         </div>
@@ -253,16 +253,16 @@ function AddLessons() {
             <div
               key={grade.id}
               onClick={() => { setSelectedGrade(grade.title); setCurrentStep('subjects'); }}
-              className={`${grade.bg} rounded-[2.5rem] p-8 cursor-pointer shadow-xl hover:-translate-y-2 transition-all duration-300 flex items-center justify-between border group relative overflow-hidden`}
+              className={`${grade.bg} rounded-[2.5rem] p-8 cursor-pointer shadow-xl dark:shadow-none hover:-translate-y-2 transition-all duration-300 flex items-center justify-between border group relative overflow-hidden`}
             >
-              <div className="absolute -right-6 -top-6 w-32 h-32 bg-white/40 blur-2xl rounded-full group-hover:scale-150 transition-transform duration-500"></div>
+              <div className="absolute -right-6 -top-6 w-32 h-32 bg-white/40 dark:bg-slate-100/10 blur-2xl rounded-full group-hover:scale-150 transition-transform duration-500"></div>
 
               <div className="relative z-10">
-                <p className="text-sm font-extrabold uppercase tracking-[0.2em] opacity-70 mb-1 drop-shadow-sm">Classroom</p>
+                <p className="text-sm font-extrabold uppercase tracking-[0.2em] opacity-70 mb-1 drop-shadow-sm dark:shadow-none ">Classroom</p>
                 <h2 className="text-4xl font-black tracking-tight">{grade.title}</h2>
               </div>
-              <div className="relative z-10 w-16 h-16 bg-white/50 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-sm border border-white/60 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                <svg className={`w-8 h-8 ${grade.iconColor} drop-shadow-sm`} focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
+              <div className="relative z-10 w-16 h-16 bg-white dark:bg-slate-800/50 rounded-2xl flex items-center justify-center backdrop-blur-md shadow-sm dark:shadow-none border border-white/60 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                <svg className={`w-8 h-8 ${grade.iconColor} drop-shadow-sm dark:shadow-none `} focusable="false" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"></path>
                 </svg>
               </div>
@@ -283,10 +283,10 @@ function AddLessons() {
         
         <div className="text-center mb-16">
           <span className="text-indigo-600 font-bold tracking-wider uppercase text-sm mb-2 block">Curriculum</span>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 tracking-tight mb-4">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight mb-4">
             {selectedGrade} Subjects
           </h1>
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+          <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
             Select a subject to view, manage, and create engaging lessons for your students.
           </p>
         </div>
@@ -296,23 +296,23 @@ function AddLessons() {
             let modernIcon, modernBg, modernText, modernIconBg;
             if (sub.id === 'maths') {
               modernIcon = <svg className="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>;
-              modernBg = "bg-white hover:bg-blue-50 border-blue-50 hover:border-blue-200"; modernText = "text-slate-800"; modernIconBg = "bg-blue-100 text-blue-600";
+              modernBg = "bg-white dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 border-blue-50 dark:border-slate-700 hover:border-blue-200 dark:hover:border-blue-500/50"; modernText = "text-slate-800 dark:text-slate-100 "; modernIconBg = "bg-blue-100 text-blue-600";
             } else if (sub.id === 'english') {
               modernIcon = <svg className="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>;
-              modernBg = "bg-white hover:bg-indigo-50 border-indigo-50 hover:border-indigo-200"; modernText = "text-slate-800"; modernIconBg = "bg-indigo-100 text-indigo-600";
+              modernBg = "bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 border-indigo-50 dark:border-slate-700 hover:border-indigo-200 dark:hover:border-indigo-500/50"; modernText = "text-slate-800 dark:text-slate-100 "; modernIconBg = "bg-indigo-100 text-indigo-600";
             } else if (sub.id === 'tamil') {
               modernIcon = <svg className="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m5 8 6 6"/><path d="m4 14 6-6 2-3"/><path d="M2 5h12"/><path d="M7 2h1"/><path d="m22 22-5-10-5 10"/><path d="M14 18h6"/></svg>;
-              modernBg = "bg-white hover:bg-orange-50 border-orange-50 hover:border-orange-200"; modernText = "text-slate-800"; modernIconBg = "bg-orange-100 text-orange-600";
+              modernBg = "bg-white dark:bg-slate-800 hover:bg-orange-50 dark:hover:bg-orange-900/30 border-orange-50 dark:border-slate-700 hover:border-orange-200 dark:hover:border-orange-500/50"; modernText = "text-slate-800 dark:text-slate-100 "; modernIconBg = "bg-orange-100 text-orange-600";
             } else {
               modernIcon = <svg className="w-10 h-10" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>;
-              modernBg = "bg-white hover:bg-emerald-50 border-emerald-50 hover:border-emerald-200"; modernText = "text-slate-800"; modernIconBg = "bg-emerald-100 text-emerald-600";
+              modernBg = "bg-white dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 border-emerald-50 dark:border-slate-700 hover:border-emerald-200 dark:hover:border-emerald-500/50"; modernText = "text-slate-800 dark:text-slate-100 "; modernIconBg = "bg-emerald-100 text-emerald-600";
             }
 
             return (
               <div
                 key={sub.id}
                 onClick={() => { setSelectedSubject(sub); setCurrentStep('lessonList'); }}
-                className={`flex flex-col items-center justify-center p-8 rounded-3xl cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-2 border-2 transition-all duration-300 group ${modernBg}`}
+                className={`flex flex-col items-center justify-center p-8 rounded-3xl cursor-pointer shadow-lg dark:shadow-none hover:shadow-2xl hover:-translate-y-2 border-2 transition-all duration-300 group ${modernBg}`}
               >
                 <div className={`w-24 h-24 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-inner ${modernIconBg}`}>
                   {modernIcon}
@@ -338,11 +338,11 @@ function AddLessons() {
             <span className="text-blue-600 font-bold tracking-wider uppercase text-xs mb-1 block">
               {selectedGrade} / {selectedSubject?.title}
             </span>
-            <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">Manage Lessons</h1>
+            <h1 className="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Manage Lessons</h1>
           </div>
           <button
             onClick={openAddForm}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-xl shadow-lg shadow-blue-500/30 transition-all duration-300 hover:-translate-y-0.5"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-xl shadow-lg dark:shadow-none shadow-blue-500/30 transition-all duration-300 hover:-translate-y-0.5"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
             New Lesson
@@ -354,17 +354,17 @@ function AddLessons() {
             <div
               key={lesson.id}
               onClick={() => openViewLesson(lesson)}
-              className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1 cursor-pointer transition-all duration-300 group flex flex-col"
+              className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm dark:shadow-none border border-slate-100 dark:border-slate-700/50 hover:shadow-xl dark:shadow-none hover:-translate-y-1 cursor-pointer transition-all duration-300 group flex flex-col"
             >
               <div className="h-32 overflow-hidden relative">
                 <img src={lesson.img} alt={lesson.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="absolute bottom-2 right-2 bg-white/95 backdrop-blur-md text-slate-800 text-[10px] uppercase font-bold px-2.5 py-1 rounded-md shadow-sm border border-white/20">
+                <div className="absolute bottom-2 right-2 bg-white dark:bg-slate-800/95 backdrop-blur-md text-slate-800 dark:text-slate-100 text-[10px] uppercase font-bold px-2.5 py-1 rounded-md shadow-sm dark:shadow-none border border-white/20">
                   {lesson.parts?.length || 0} Parts
                 </div>
               </div>
               <div className="p-4 flex-1 flex flex-col justify-between">
-                <h3 className="text-base font-bold text-slate-800 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">{lesson.title}</h3>
+                <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">{lesson.title}</h3>
                 <p className="text-xs text-slate-400 mt-3 font-medium flex items-center gap-1.5">
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                   {lesson.date || "No Date"}
@@ -373,9 +373,9 @@ function AddLessons() {
             </div>
           ))}
           {existingLessons.length === 0 && (
-            <div className="col-span-full flex flex-col items-center justify-center py-20 bg-slate-50/50 rounded-3xl border border-dashed border-slate-200">
+            <div className="col-span-full flex flex-col items-center justify-center py-20 bg-slate-50/50 rounded-3xl border border-dashed border-slate-200 dark:border-slate-700 ">
               <span className="text-6xl mb-4 opacity-80">📚</span>
-              <p className="text-slate-500 text-lg font-bold">No lessons available yet.</p>
+              <p className="text-slate-500 dark:text-slate-400 text-lg font-bold">No lessons available yet.</p>
               <p className="text-slate-400 text-sm mt-1">Click "New Lesson" to create the first lesson.</p>
             </div>
           )}
@@ -392,46 +392,46 @@ function AddLessons() {
       <div className="max-w-4xl mx-auto py-10 px-4 font-sans min-h-screen">
         <div className="mb-8"><BackButton onClick={() => setCurrentStep('lessonList')} /></div>
 
-        <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 relative">
+        <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-lg dark:shadow-none border border-gray-100 dark:border-slate-700/50 relative">
           {/* Top Actions */}
           <div className="absolute top-6 right-6 flex gap-3">
-            <button onClick={openEditForm} className="w-10 h-10 bg-gray-50 hover:bg-blue-50 text-blue-600 rounded-full flex items-center justify-center transition-colors shadow-sm border border-gray-100" title="Edit">
+            <button onClick={openEditForm} className="w-10 h-10 bg-gray-50 dark:bg-slate-900/50 hover:bg-blue-50 dark:hover:bg-blue-900/30 text-blue-600 rounded-full flex items-center justify-center transition-colors shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700/50" title="Edit">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
             </button>
-            <button onClick={handleDeleteLesson} className="w-10 h-10 bg-gray-50 hover:bg-red-50 text-red-500 rounded-full flex items-center justify-center transition-colors shadow-sm border border-gray-100" title="Delete">
+            <button onClick={handleDeleteLesson} className="w-10 h-10 bg-gray-50 dark:bg-slate-900/50 hover:bg-red-50 text-red-500 rounded-full flex items-center justify-center transition-colors shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700/50" title="Delete">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
             </button>
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight pr-24">{selectedLesson.title}</h1>
-          <p className="text-gray-400 font-medium mb-8 text-sm flex items-center gap-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-2 tracking-tight pr-24">{selectedLesson.title}</h1>
+          <p className="text-gray-400 dark:text-slate-500 font-medium mb-8 text-sm flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
             {selectedLesson.date || "No Date Assigned"}
           </p>
 
           <div className="space-y-4">
             {selectedLesson.parts.map((part, index) => (
-              <div key={index} className="bg-gray-50 rounded-2xl p-4 flex items-center gap-5 border border-gray-100 hover:border-gray-200 transition-colors">
+              <div key={index} className="bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-4 flex items-center gap-5 border border-gray-100 dark:border-slate-700/50 hover:border-gray-200 dark:border-slate-700 transition-colors">
                 {/* Video Preview */}
                 <div className="w-32 h-20 bg-gray-900 rounded-xl flex items-center justify-center relative overflow-hidden shrink-0 shadow-inner">
                   {part.videoUrl ? (
                     <>
                       <video className="w-full h-full object-cover opacity-50"><source src={part.videoUrl} type="video/mp4" /></video>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center pl-1 border border-white/50">
+                        <div className="w-8 h-8 bg-white dark:bg-slate-800/20 backdrop-blur-sm rounded-full flex items-center justify-center pl-1 border border-white/50">
                           <span className="text-white text-xs">▶</span>
                         </div>
                       </div>
                     </>
                   ) : (
-                    <span className="text-gray-400 text-xs font-medium">No Video</span>
+                    <span className="text-gray-400 dark:text-slate-500 text-xs font-medium">No Video</span>
                   )}
                 </div>
 
                 <div className="flex-1">
-                  <h4 className="font-semibold text-lg text-gray-800">{part.title || `Part ${index + 1}`}</h4>
+                  <h4 className="font-semibold text-lg text-gray-800 dark:text-slate-200 ">{part.title || `Part ${index + 1}`}</h4>
                   <div className="flex items-center gap-3 mt-1.5">
-                    <span className="text-sm font-medium text-gray-500 bg-white px-2 py-0.5 rounded-md border border-gray-200 shadow-sm">
+                    <span className="text-sm font-medium text-gray-500 dark:text-slate-400 bg-white dark:bg-slate-800 px-2 py-0.5 rounded-md border border-gray-200 dark:border-slate-700 shadow-sm dark:shadow-none ">
                       🕒 {part.duration}
                     </span>
                     {part.videoUrl && (
@@ -450,7 +450,7 @@ function AddLessons() {
         <div className="flex justify-center mt-8">
           <button
             onClick={() => navigate(`/teacher/add-quiz/${selectedLesson.id || selectedLesson._id}`)}
-            className={`${hasQuiz ? 'bg-green-600 hover:bg-green-700 shadow-green-500/30' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30'} text-white font-semibold py-3.5 px-8 rounded-xl shadow-lg transition-all duration-300 hover:-translate-y-1 flex items-center gap-2`}
+            className={`${hasQuiz ? 'bg-green-600 hover:bg-green-700 shadow-green-500/30' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/30'} text-white font-semibold py-3.5 px-8 rounded-xl shadow-lg dark:shadow-none transition-all duration-300 hover:-translate-y-1 flex items-center gap-2`}
           >
             {hasQuiz ? (
               <><svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg> View / Edit Quiz</>
@@ -470,8 +470,8 @@ function AddLessons() {
     <div className="max-w-4xl mx-auto py-10 px-4 font-sans min-h-screen">
       <div className="mb-8"><BackButton onClick={() => currentStep === 'editForm' ? setCurrentStep('viewLesson') : setCurrentStep('lessonList')} /></div>
 
-      <div className="bg-white rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-100">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 tracking-tight border-b border-gray-100 pb-4">
+      <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-xl dark:shadow-none shadow-gray-200/50 border border-gray-100 dark:border-slate-700/50">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-8 tracking-tight border-b border-gray-100 dark:border-slate-700/50 pb-4">
           {currentStep === 'editForm' ? 'Edit Lesson' : 'Create New Lesson'}
         </h1>
 
@@ -484,21 +484,21 @@ function AddLessons() {
             <div className="grid grid-cols-1 gap-5">
               <div>
                 <label className="block text-sm font-semibold text-gray-600 mb-2">Lesson Title</label>
-                <input type="text" value={lessonTitle} onChange={e => setLessonTitle(e.target.value)} placeholder="e.g., Introduction to Algebra" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all" />
+                <input type="text" value={lessonTitle} onChange={e => setLessonTitle(e.target.value)} placeholder="e.g., Introduction to Algebra" className="w-full bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:bg-white dark:bg-slate-800 dark:focus:bg-slate-800 dark:bg-slate-800 transition-all" />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-sm font-semibold text-gray-600 mb-2">Cover Image</label>
-                  <label className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-500 cursor-pointer flex justify-between items-center hover:bg-gray-100 transition-colors focus-within:ring-2 focus-within:ring-blue-500 overflow-hidden">
+                  <label className="w-full bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-gray-500 dark:text-slate-400 cursor-pointer flex justify-between items-center hover:bg-gray-100 transition-colors focus-within:ring-2 focus-within:ring-blue-500 overflow-hidden">
                     <span className="truncate mr-2">{coverImage ? coverImage.name : "Select an image..."}</span>
-                    <svg className="w-5 h-5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <svg className="w-5 h-5 text-gray-400 dark:text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                     <input type="file" accept="image/*" onChange={e => setCoverImage(e.target.files[0])} className="hidden" />
                   </label>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-600 mb-2">Published Date</label>
-                  <input type="date" value={lessonDate} onChange={e => setLessonDate(e.target.value)} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all" />
+                  <input type="date" value={lessonDate} onChange={e => setLessonDate(e.target.value)} className="w-full bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:bg-white dark:bg-slate-800 dark:focus:bg-slate-800 dark:bg-slate-800 transition-all" />
                 </div>
               </div>
             </div>
@@ -511,29 +511,29 @@ function AddLessons() {
             <h3 className="text-lg font-semibold text-gray-700">Lesson Parts</h3>
 
             {lessonParts.map((part, index) => (
-              <div key={part.id} className="bg-gray-50 rounded-2xl p-6 border border-gray-200 relative group transition-all hover:border-blue-200 hover:shadow-sm">
+              <div key={part.id} className="bg-gray-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-gray-200 dark:border-slate-700 relative group transition-all hover:border-blue-200 dark:hover:border-blue-500/50 hover:shadow-sm dark:shadow-none ">
 
                 {lessonParts.length > 1 && (
-                  <button type="button" onClick={() => handleDeletePart(part.id)} className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors bg-white rounded-full p-1.5 shadow-sm border border-gray-100" title="Remove Part">
+                  <button type="button" onClick={() => handleDeletePart(part.id)} className="absolute top-4 right-4 text-gray-400 dark:text-slate-500 hover:text-red-500 transition-colors bg-white dark:bg-slate-800 rounded-full p-1.5 shadow-sm dark:shadow-none border border-gray-100 dark:border-slate-700/50" title="Remove Part">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                   </button>
                 )}
 
-                <h4 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <h4 className="font-bold text-gray-800 dark:text-slate-200 mb-4 flex items-center gap-2">
                   <span className="bg-blue-100 text-blue-600 w-6 h-6 rounded-full flex items-center justify-center text-xs">{index + 1}</span>
                   Video Segment
                 </h4>
 
                 <div className="grid grid-cols-1 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Part Title</label>
-                    <input type="text" value={part.title} onChange={e => handlePartChange(part.id, 'title', e.target.value)} placeholder="e.g., Chapter 1: Basics" className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
+                    <label className="block text-xs font-semibold text-gray-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Part Title</label>
+                    <input type="text" value={part.title} onChange={e => handlePartChange(part.id, 'title', e.target.value)} placeholder="e.g., Chapter 1: Basics" className="w-full bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-xl px-4 py-2.5 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all" />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Duration</label>
-                      <select value={part.duration} onChange={e => handlePartChange(part.id, 'duration', e.target.value)} className="w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer">
+                      <label className="block text-xs font-semibold text-gray-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Duration</label>
+                      <select value={part.duration} onChange={e => handlePartChange(part.id, 'duration', e.target.value)} className="w-full bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-xl px-4 py-2.5 text-gray-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-all cursor-pointer">
                         <option value="5 mins">5 mins</option>
                         <option value="10 mins">10 mins</option>
                         <option value="15 mins">15 mins</option>
@@ -541,12 +541,12 @@ function AddLessons() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wider">Video File</label>
-                      <label className={`w-full bg-white border border-gray-300 rounded-xl px-4 py-2.5 text-sm cursor-pointer flex justify-between items-center transition-all ${part.videoFile ? 'border-green-400 bg-green-50 text-green-700' : 'text-gray-500 hover:bg-gray-50 hover:border-gray-400'}`}>
+                      <label className="block text-xs font-semibold text-gray-500 dark:text-slate-400 mb-1.5 uppercase tracking-wider">Video File</label>
+                      <label className={`w-full bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-600 rounded-xl px-4 py-2.5 text-sm cursor-pointer flex justify-between items-center transition-all ${part.videoFile ? 'border-green-400 bg-green-50 text-green-700' : 'text-gray-500 dark:text-slate-400 hover:bg-gray-50 dark:bg-slate-900/50 hover:border-gray-400'}`}>
                         <span className="truncate mr-2 font-medium">
                           {part.videoFile ? "File Selected ✓" : "Upload Video..."}
                         </span>
-                        <svg className={`w-5 h-5 shrink-0 ${part.videoFile ? 'text-green-500' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        <svg className={`w-5 h-5 shrink-0 ${part.videoFile ? 'text-green-500' : 'text-gray-400 dark:text-slate-500 '}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
                         <input type="file" accept="video/*" onChange={e => handlePartChange(part.id, 'videoFile', e.target.files[0])} className="hidden" />
                       </label>
                     </div>
@@ -562,7 +562,7 @@ function AddLessons() {
           </div>
 
           <div className="pt-6">
-            <button type="submit" disabled={isProcessing} className={`w-full font-bold py-4 rounded-xl text-white shadow-lg text-lg transition-all hover:-translate-y-0.5 ${isProcessing ? 'opacity-70 cursor-not-allowed' : ''} ${currentStep === 'editForm' ? 'bg-blue-600 hover:bg-blue-700 hover:shadow-blue-500/30' : 'bg-green-600 hover:bg-green-700 hover:shadow-green-500/30'}`}>
+            <button type="submit" disabled={isProcessing} className={`w-full font-bold py-4 rounded-xl text-white shadow-lg dark:shadow-none text-lg transition-all hover:-translate-y-0.5 ${isProcessing ? 'opacity-70 cursor-not-allowed' : ''} ${currentStep === 'editForm' ? 'bg-blue-600 hover:bg-blue-700 hover:shadow-blue-500/30' : 'bg-green-600 hover:bg-green-700 hover:shadow-green-500/30'}`}>
               {isProcessing ? (
                 <span className="flex items-center justify-center gap-2">
                   <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>

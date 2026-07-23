@@ -111,28 +111,28 @@ function AddFeedback() {
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
           </div>
           <div>
-            <h2 className="text-4xl md:text-5xl font-black text-black tracking-tight drop-shadow-sm">
+            <h2 className="text-4xl md:text-5xl font-black text-black dark:text-slate-100 tracking-tight drop-shadow-sm dark:shadow-none ">
               Student Feedback
             </h2>
-            <p className="text-slate-500 font-bold mt-2 text-lg">Select a student from the list or search their name to add feedback.</p>
+            <p className="text-slate-500 dark:text-slate-400 font-bold mt-2 text-lg">Select a student from the list or search their name to add feedback.</p>
           </div>
         </div>
 
         {/* 🌟 SEARCH BAR AND FILTERS */}
         <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <div className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-200 flex items-center gap-4 transition-all focus-within:shadow-md focus-within:border-blue-300 flex-1">
+          <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] shadow-sm dark:shadow-none border border-slate-200 dark:border-slate-700 flex items-center gap-4 transition-all focus-within:shadow-md dark:shadow-none focus-within:border-blue-300 flex-1">
             <svg className="w-7 h-7 text-slate-400 ml-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             <input 
               type="text" 
               placeholder="Search students by name..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-transparent outline-none font-bold text-slate-800 text-lg placeholder-slate-400"
+              className="w-full bg-transparent outline-none font-bold text-slate-800 dark:text-slate-100 text-lg placeholder-slate-400"
             />
             {searchTerm && (
               <button 
                 onClick={() => setSearchTerm("")} 
-                className="text-slate-400 hover:text-blue-500 transition-colors mr-2 p-1 rounded-full hover:bg-blue-50"
+                className="text-slate-400 hover:text-blue-500 transition-colors mr-2 p-1 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/30"
                 title="Clear search"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -142,7 +142,7 @@ function AddFeedback() {
           
           <div className="flex items-center gap-4">
             <select
-              className="bg-white p-5 rounded-[2rem] shadow-sm border border-slate-200 focus:outline-none focus:border-blue-300 font-bold text-slate-700 min-w-[150px]"
+              className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] shadow-sm dark:shadow-none border border-slate-200 dark:border-slate-700 focus:outline-none focus:border-blue-300 font-bold text-slate-700 dark:text-slate-200 min-w-[150px]"
               value={selectedGrade}
               onChange={(e) => setSelectedGrade(e.target.value)}
             >
@@ -153,7 +153,7 @@ function AddFeedback() {
             </select>
             <button
               onClick={resetFilters}
-              className="px-6 py-5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-[2rem] shadow-sm transition-colors flex items-center justify-center gap-2 whitespace-nowrap border border-slate-200"
+              className="px-6 py-5 bg-slate-100 dark:bg-slate-700/50 hover:bg-slate-200 dark:hover:bg-slate-600/50 text-slate-600 dark:text-slate-300 font-bold rounded-[2rem] shadow-sm dark:shadow-none transition-colors flex items-center justify-center gap-2 whitespace-nowrap border border-slate-200 dark:border-slate-700 "
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
               Reset
@@ -162,9 +162,9 @@ function AddFeedback() {
         </div>
 
         {/* 🌟 STUDENT LIST */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-white p-10 min-h-[400px]">
+        <div className="bg-white dark:bg-slate-800/80 backdrop-blur-xl rounded-[2.5rem] shadow-xl dark:shadow-none shadow-slate-200/50 border border-white p-10 min-h-[400px]">
           
-          <h3 className="text-2xl font-black text-slate-800 mb-8 flex items-center gap-3">
+          <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 mb-8 flex items-center gap-3">
             <svg className="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
             All Students ({filteredStudents.length})
           </h3>
@@ -179,22 +179,22 @@ function AddFeedback() {
               {filteredStudents.map((student) => (
                 <div 
                   key={student._id} 
-                  className="flex items-center justify-between p-6 bg-slate-50/50 hover:bg-white rounded-[2rem] border border-slate-100 hover:border-blue-100 transition-all duration-300 group shadow-sm hover:shadow-md"
+                  className="flex items-center justify-between p-6 bg-slate-50/50 hover:bg-white dark:hover:bg-slate-700 dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700/50 hover:border-blue-100 transition-all duration-300 group shadow-sm dark:shadow-none hover:shadow-md dark:shadow-none "
                 >
                   <div className="flex items-center gap-5 overflow-hidden">
                     <div className="w-16 h-16 shrink-0 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100 text-blue-600 flex items-center justify-center font-black text-3xl shadow-inner group-hover:scale-105 transition-transform duration-300 border border-white">
                       {(student.fullName || student.username || 'S')[0].toUpperCase()}
                     </div>
                     <div className="truncate pr-4">
-                      <h4 className="font-bold text-slate-800 text-xl truncate group-hover:text-blue-600 transition-colors">{student.fullName || student.username || "Student"}</h4>
-                      <p className="text-slate-500 font-bold text-xs uppercase tracking-widest mt-1">ID: {student._id.substring(0,8)}</p>
+                      <h4 className="font-bold text-slate-800 dark:text-slate-100 text-xl truncate group-hover:text-blue-600 transition-colors">{student.fullName || student.username || "Student"}</h4>
+                      <p className="text-slate-500 dark:text-slate-400 font-bold text-xs uppercase tracking-widest mt-1">ID: {student._id.substring(0,8)}</p>
                     </div>
                   </div>
                   
                   {/* ADD FEEDBACK BUTTON */}
                   <button 
                     onClick={() => openFeedbackModal(student)}
-                    className="shrink-0 bg-white text-blue-600 border border-blue-100 hover:bg-blue-600 hover:border-blue-600 hover:text-white font-bold px-6 py-3.5 rounded-2xl shadow-sm transition-all flex items-center gap-2 group/btn"
+                    className="shrink-0 bg-white dark:bg-slate-800 text-blue-600 border border-blue-100 hover:bg-blue-600 hover:border-blue-600 hover:text-white font-bold px-6 py-3.5 rounded-2xl shadow-sm dark:shadow-none transition-all flex items-center gap-2 group/btn"
                   >
                     <svg className="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
                     <span className="hidden sm:inline">Add</span>
@@ -207,7 +207,7 @@ function AddFeedback() {
               <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-slate-300 mb-6 shadow-inner">
                 <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
               </div>
-              <p className="font-bold text-slate-600 text-xl">No students found matching "{searchTerm}"</p>
+              <p className="font-bold text-slate-600 dark:text-slate-300 text-xl">No students found matching "{searchTerm}"</p>
               <button onClick={() => setSearchTerm("")} className="mt-4 text-blue-500 font-bold hover:underline">Clear Search</button>
             </div>
           )}
@@ -217,16 +217,16 @@ function AddFeedback() {
       {/* 🌟 FEEDBACK MODAL (Pop-up) */}
       {isModalOpen && selectedStudent && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-xl overflow-hidden animate-in zoom-in duration-300 border-4 border-white">
+          <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl w-full max-w-xl overflow-hidden animate-in zoom-in duration-300 border-4 border-white">
             
             {/* Modal Header */}
-            <div className="bg-gradient-to-r from-slate-50 to-blue-50 p-8 flex justify-between items-center border-b border-slate-100">
+            <div className="bg-gradient-to-r from-slate-50 to-blue-50 dark:from-slate-800 dark:to-slate-900 dark:from-slate-800 dark:to-slate-900 p-8 flex justify-between items-center border-b border-slate-100 dark:border-slate-700/50 ">
               <div className="flex items-center gap-5">
                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white flex items-center justify-center font-black text-3xl shadow-inner">
                     {(selectedStudent.fullName || 'S')[0].toUpperCase()}
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black text-slate-800 leading-tight">
+                    <h3 className="text-2xl font-black text-slate-800 dark:text-slate-100 leading-tight">
                       Feedback
                     </h3>
                     <p className="text-blue-600 font-bold text-sm tracking-wide uppercase mt-1">For {selectedStudent.fullName || 'Student'}</p>
@@ -234,37 +234,37 @@ function AddFeedback() {
               </div>
               <button 
                 onClick={() => setIsModalOpen(false)} 
-                className="text-slate-400 hover:text-red-500 transition-colors w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-white border border-transparent hover:border-slate-100 hover:shadow-sm"
+                className="text-slate-400 hover:text-red-500 transition-colors w-12 h-12 flex items-center justify-center rounded-2xl hover:bg-white dark:hover:bg-slate-700 dark:bg-slate-800 border border-transparent hover:border-slate-100 dark:border-slate-700/50 hover:shadow-sm dark:shadow-none "
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
               </button>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="p-8 flex flex-col gap-8 bg-white">
+            <form onSubmit={handleSubmit} className="p-8 flex flex-col gap-8 bg-white dark:bg-slate-800 ">
               
               {/* Date Selector */}
               <div>
-                <label className="block text-slate-500 font-extrabold text-xs uppercase tracking-widest mb-3">Feedback Date</label>
+                <label className="block text-slate-500 dark:text-slate-400 font-extrabold text-xs uppercase tracking-widest mb-3">Feedback Date</label>
                 <input 
                   type="date" 
                   required
                   value={formData.date}
                   onChange={(e) => setFormData({...formData, date: e.target.value})}
-                  className="w-full bg-slate-50/50 border border-slate-200 rounded-2xl p-4 font-bold text-slate-800 outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm cursor-pointer"
+                  className="w-full bg-slate-50/50 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 font-bold text-slate-800 dark:text-slate-100 outline-none focus:ring-4 focus:ring-blue-500 dark:focus:ring-blue-400/20 focus:border-blue-50 dark:border-slate-7000 transition-all shadow-sm dark:shadow-none cursor-pointer"
                 />
               </div>
 
               {/* Star Rating */}
               <div>
-                <label className="block text-slate-500 font-extrabold text-xs uppercase tracking-widest mb-3">Performance Rating</label>
-                <div className="flex gap-3 bg-slate-50/50 w-fit p-4 rounded-2xl border border-slate-200 shadow-sm">
+                <label className="block text-slate-500 dark:text-slate-400 font-extrabold text-xs uppercase tracking-widest mb-3">Performance Rating</label>
+                <div className="flex gap-3 bg-slate-50/50 w-fit p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm dark:shadow-none ">
                   {[1, 2, 3, 4, 5].map(star => (
                     <button
                       key={star}
                       type="button"
                       onClick={() => setFormData({...formData, stars: star})}
-                      className={`transition-all duration-300 hover:scale-110 drop-shadow-sm focus:outline-none
+                      className={`transition-all duration-300 hover:scale-110 drop-shadow-sm dark:shadow-none focus:outline-none
                         ${formData.stars >= star ? 'text-amber-400' : 'text-slate-200'}`}
                     >
                       <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
@@ -275,20 +275,20 @@ function AddFeedback() {
 
               {/* Message */}
               <div>
-                <label className="block text-slate-500 font-extrabold text-xs uppercase tracking-widest mb-3">Encouraging Message</label>
+                <label className="block text-slate-500 dark:text-slate-400 font-extrabold text-xs uppercase tracking-widest mb-3">Encouraging Message</label>
                 <textarea 
                   required
                   value={formData.message}
                   onChange={(e) => setFormData({...formData, message: e.target.value})}
                   placeholder="Write an encouraging message here..."
-                  className="w-full bg-slate-50/50 border border-slate-200 rounded-2xl p-5 font-bold text-slate-800 outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all h-36 resize-none shadow-sm placeholder-slate-400"
+                  className="w-full bg-slate-50/50 border border-slate-200 dark:border-slate-700 rounded-2xl p-5 font-bold text-slate-800 dark:text-slate-100 outline-none focus:ring-4 focus:ring-blue-500 dark:focus:ring-blue-400/20 focus:border-blue-50 dark:border-slate-7000 transition-all h-36 resize-none shadow-sm dark:shadow-none placeholder-slate-400"
                 ></textarea>
               </div>
 
               {/* Submit Button */}
               <button 
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black text-xl py-4 rounded-2xl shadow-lg shadow-blue-200 hover:shadow-xl active:scale-95 transition-all mt-4 flex items-center justify-center gap-3"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black text-xl py-4 rounded-2xl shadow-lg dark:shadow-none shadow-blue-200 hover:shadow-xl dark:shadow-none active:scale-95 transition-all mt-4 flex items-center justify-center gap-3"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>
                 Save Feedback

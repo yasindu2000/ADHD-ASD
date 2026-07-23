@@ -22,16 +22,16 @@ function Teacher() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#F0F5FA]"> {/* Match dashboard background color */}
+    <div className="flex min-h-screen bg-[#F0F5FA] dark:bg-slate-900"> {/* Match dashboard background color */}
 
       {/* LEFT SIDEBAR - Fixed */}
-      <aside className="w-90 bg-blue-100 p-6 hidden md:flex flex-col shadow-lg fixed h-full border-r border-blue-200">
+      <aside className="w-90 bg-blue-100 dark:bg-slate-800 p-6 hidden md:flex flex-col shadow-lg dark:shadow-none fixed h-full border-r border-blue-200 dark:border-slate-700">
         <div className="flex items-center gap-3 mb-10">
-          <div className="w-12 h-12 bg-white rounded-full border-2 border-blue-500 flex items-center justify-center font-bold text-blue-700">
+          <div className="w-12 h-12 bg-white dark:bg-slate-700 rounded-full border-2 border-blue-500 dark:border-blue-400 flex items-center justify-center font-bold text-blue-700 dark:text-blue-400">
             {/* Note: Ensure the path to your image is correct */}
             <img src="../../public/portal.png" alt="" className="" />
           </div>
-          <h2 className="text-2xl font-extrabold tracking-wider  text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-indigo-500 drop-shadow-sm">
+          <h2 className="text-2xl font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-gray-800 to-indigo-500 dark:from-slate-200 dark:to-indigo-300 drop-shadow-sm">
             TEACHER PORTAL
           </h2>
         </div>
@@ -67,7 +67,7 @@ function Teacher() {
         {/* Updated Logout Button */}
         <button
           onClick={handleLogout}
-          className="flex items-center gap-3 text-left text-2xl cursor-pointer uppercase p-3 text-gray-600 font-bold tracking-wide hover:text-red-500 transition-colors mt-auto"
+          className="flex items-center gap-3 text-left text-2xl cursor-pointer uppercase p-3 text-gray-600 dark:text-slate-400 font-bold tracking-wide hover:text-red-500 dark:hover:text-red-400 transition-colors mt-auto"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-7 h-7">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
@@ -88,7 +88,7 @@ function Teacher() {
 const NavItem = ({ icon, label, active, onClick }) => (
   <div
     onClick={onClick}
-    className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all ${active ? 'bg-blue-500 text-white shadow-md shadow-blue-300' : 'text-slate-700 hover:bg-blue-200 hover:text-blue-900'
+    className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all ${active ? 'bg-blue-500 text-white shadow-md shadow-blue-300 dark:shadow-none' : 'text-slate-700 dark:text-slate-300 hover:bg-blue-200 dark:hover:bg-slate-700/50 hover:text-blue-900 dark:hover:text-blue-300'
       }`}
   >
     <span className="text-xl">{icon}</span>
