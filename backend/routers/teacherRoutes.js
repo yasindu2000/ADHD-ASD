@@ -41,7 +41,7 @@ router.get('/dashboard-stats', async (req, res) => {
                   }
                });
             } else {
-               const dateObj = new Date(prog.updatedAt);
+               const dateObj = new Date(prog.createdAt || prog.updatedAt);
                if (dateObj >= startOfWeek) {
                    const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
                    lessonViewsMap[dayName] = (lessonViewsMap[dayName] || 0) + 1;

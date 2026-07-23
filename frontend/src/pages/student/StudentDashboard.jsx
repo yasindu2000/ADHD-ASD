@@ -74,90 +74,90 @@ function StudentDashboard() {
           if (data.gamification) {
             setGamification(data.gamification);
           }
-          
+
           // Latest lessons logic
           if (data.latestLessons && data.latestLessons.length > 0) {
-             setStats(prev => ({
-                ...prev,
-                nextLessons: data.latestLessons.map(l => ({
-                   id: l._id,
-                   title: l.title,
-                }))
-             }));
+            setStats(prev => ({
+              ...prev,
+              nextLessons: data.latestLessons.map(l => ({
+                id: l._id,
+                title: l.title,
+              }))
+            }));
           }
 
           if (data.progress) {
             let tCorrect = 0;
-          let tQuizzes = 0;
-          let streak = [false, false, false, false, false];
+            let tQuizzes = 0;
+            let streak = [false, false, false, false, false];
 
-          const now = new Date();
-          const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay();
-          const mondayDate = new Date(now);
-          mondayDate.setHours(0, 0, 0, 0);
-          mondayDate.setDate(now.getDate() - dayOfWeek + 1);
+            const now = new Date();
+            const dayOfWeek = now.getDay() === 0 ? 7 : now.getDay();
+            const mondayDate = new Date(now);
+            mondayDate.setHours(0, 0, 0, 0);
+            mondayDate.setDate(now.getDate() - dayOfWeek + 1);
 
-          const weeklyDataTemplate = [
-            { name: 'Mon', Score: 0, count: 0 },
-            { name: 'Tue', Score: 0, count: 0 },
-            { name: 'Wed', Score: 0, count: 0 },
-            { name: 'Thu', Score: 0, count: 0 },
-            { name: 'Fri', Score: 0, count: 0 }
-          ];
+            const weeklyDataTemplate = [
+              { name: 'Mon', Score: 0, count: 0 },
+              { name: 'Tue', Score: 0, count: 0 },
+              { name: 'Wed', Score: 0, count: 0 },
+              { name: 'Thu', Score: 0, count: 0 },
+              { name: 'Fri', Score: 0, count: 0 }
+            ];
 
-          let recentLessonObj = null; // No longer needed for Next Mission, keeping logic simple
+            let recentLessonObj = null; // No longer needed for Next Mission, keeping logic simple
 
-          data.progress.forEach(p => {
-            if (p.isQuizCompleted) {
-              tQuizzes += 1;
-              tCorrect += (p.correctAnswers || 0);
+            data.progress.forEach(p => {
+              if (p.isQuizCompleted) {
+                tQuizzes += 1;
+                tCorrect += (p.correctAnswers || 0);
 
-              if (p.quizAttempts && p.quizAttempts.length > 0) {
-                p.quizAttempts.forEach(attempt => {
-                  const quizDate = new Date(attempt.date);
+                if (p.quizAttempts && p.quizAttempts.length > 0) {
+                  p.quizAttempts.forEach(attempt => {
+                    const quizDate = new Date(attempt.date);
+                    if (quizDate >= mondayDate) {
+                      const dayIndex = quizDate.getDay();
+                      if (dayIndex >= 1 && dayIndex <= 5) {
+                        const arrIndex = dayIndex - 1;
+                        streak[arrIndex] = true;
+
+                        weeklyDataTemplate[arrIndex].Score += (attempt.score || 0);
+                        weeklyDataTemplate[arrIndex].count += 1;
+                      }
+                    }
+                  });
+                } else {
+                  const quizDate = new Date(p.updatedAt || Date.now());
                   if (quizDate >= mondayDate) {
                     const dayIndex = quizDate.getDay();
                     if (dayIndex >= 1 && dayIndex <= 5) {
                       const arrIndex = dayIndex - 1;
                       streak[arrIndex] = true;
 
-                      weeklyDataTemplate[arrIndex].Score += (attempt.score || 0);
+                      weeklyDataTemplate[arrIndex].Score += (p.quizScore || 0);
                       weeklyDataTemplate[arrIndex].count += 1;
                     }
                   }
-                });
-              } else {
-                const quizDate = new Date(p.updatedAt || Date.now());
-                if (quizDate >= mondayDate) {
-                  const dayIndex = quizDate.getDay();
-                  if (dayIndex >= 1 && dayIndex <= 5) {
-                    const arrIndex = dayIndex - 1;
-                    streak[arrIndex] = true;
-
-                    weeklyDataTemplate[arrIndex].Score += (p.quizScore || 0);
-                    weeklyDataTemplate[arrIndex].count += 1;
-                  }
                 }
               }
-            }
-          });
+            });
 
-          const finalScores = weeklyDataTemplate.map(day => ({
-            day: day.name,
-            score: day.count > 0 ? Math.round(day.Score / day.count) : 0
-          }));
+            const finalScores = weeklyDataTemplate.map(day => ({
+              day: day.name,
+              score: day.count > 0 ? Math.round(day.Score / day.count) : 0
+            }));
 
-          setStats(prev => ({
-            ...prev,
-            totalStars: tCorrect,
-            totalTrophies: tQuizzes,
-            weeklyStreak: streak,
-            weeklyScores: finalScores
-          }));
+            setStats(prev => ({
+              ...prev,
+              totalStars: tCorrect,
+              totalTrophies: tQuizzes,
+              weeklyStreak: streak,
+              weeklyScores: finalScores
+            }));
+          }
         }
-      }
-    } catch (error) {
-      console.error("Error fetching stats:", error);
+      } catch (error) {
+        console.error("Error fetching stats:", error);
       } finally {
         setLoading(false);
       }
@@ -315,7 +315,7 @@ function StudentDashboard() {
             {/* Level & Progress */}
             <div className="bg-gradient-to-br from-sky-50 to-indigo-50 rounded-2xl p-5 mb-5 border border-sky-100 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-3 opacity-10">
-                <svg className="w-20 h-20 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                <svg className="w-20 h-20 text-indigo-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" /></svg>
               </div>
               <div className="relative z-10 flex justify-between items-end mb-2">
                 <div>
@@ -327,10 +327,10 @@ function StudentDashboard() {
                   <div className="text-xl font-black text-sky-800">{gamification.totalPoints} pts</div>
                 </div>
               </div>
-              
+
               {/* Progress Bar */}
               <div className="w-full bg-white rounded-full h-3 mt-4 overflow-hidden relative shadow-inner border border-sky-100">
-                <div 
+                <div
                   className="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-500 h-3 rounded-full transition-all duration-1000 ease-out relative"
                   style={{ width: `${(gamification.totalPoints % 100)}%` }}
                 >
@@ -344,21 +344,21 @@ function StudentDashboard() {
             <div>
               <h4 className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">My Badges</h4>
               <div className="grid grid-cols-2 gap-3">
-                
+
                 {/* Perfect Scholar Badge */}
                 <div className={`p-3 rounded-2xl border-2 flex flex-col items-center justify-center text-center transition-all duration-300 ${gamification.badges.includes('perfect_score') ? 'border-amber-200 bg-amber-50/50 shadow-sm scale-100 hover:scale-105' : 'border-slate-100 bg-slate-50 opacity-60 grayscale'}`}>
                   <div className={`w-12 h-12 mb-2 rounded-full flex items-center justify-center ${gamification.badges.includes('perfect_score') ? 'bg-amber-100 shadow-inner' : 'bg-slate-200'}`}>
-                    <svg className={`w-7 h-7 ${gamification.badges.includes('perfect_score') ? 'text-amber-500 drop-shadow-sm' : 'text-slate-400'}`} fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    <svg className={`w-7 h-7 ${gamification.badges.includes('perfect_score') ? 'text-amber-500 drop-shadow-sm' : 'text-slate-400'}`} fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
                   </div>
-                  <div className="font-bold text-slate-700 text-xs leading-tight">Perfect<br/>Scholar</div>
+                  <div className="font-bold text-slate-700 text-xs leading-tight">Perfect<br />Scholar</div>
                 </div>
 
                 {/* Quick Thinker Badge */}
                 <div className={`p-3 rounded-2xl border-2 flex flex-col items-center justify-center text-center transition-all duration-300 ${gamification.badges.includes('quick_thinker') ? 'border-indigo-200 bg-indigo-50/50 shadow-sm scale-100 hover:scale-105' : 'border-slate-100 bg-slate-50 opacity-60 grayscale'}`}>
                   <div className={`w-12 h-12 mb-2 rounded-full flex items-center justify-center ${gamification.badges.includes('quick_thinker') ? 'bg-indigo-100 shadow-inner' : 'bg-slate-200'}`}>
-                    <svg className={`w-7 h-7 ${gamification.badges.includes('quick_thinker') ? 'text-indigo-500 drop-shadow-sm' : 'text-slate-400'}`} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    <svg className={`w-7 h-7 ${gamification.badges.includes('quick_thinker') ? 'text-indigo-500 drop-shadow-sm' : 'text-slate-400'}`} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                   </div>
-                  <div className="font-bold text-slate-700 text-xs leading-tight">Quick<br/>Thinker</div>
+                  <div className="font-bold text-slate-700 text-xs leading-tight">Quick<br />Thinker</div>
                 </div>
 
               </div>

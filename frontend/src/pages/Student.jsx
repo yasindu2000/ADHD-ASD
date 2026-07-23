@@ -68,7 +68,7 @@ function Student() {
         </nav>
 
         {/* Updated Logout Button */}
-        <button 
+        <button
           onClick={handleLogout}
           className="flex items-center gap-3 text-left text-2xl cursor-pointer uppercase p-3 text-gray-600 font-bold tracking-wide hover:text-red-500 transition-colors mt-auto"
         >
@@ -93,8 +93,8 @@ const NavItem = ({ icon, label, active, onClick }) => (
   <div
     onClick={onClick}
     className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all ${active
-        ? "bg-[#0EA5E9] text-white shadow-md"
-        : "text-gray-700 hover:bg-[#B3E5F5]"
+      ? "bg-[#0EA5E9] text-white shadow-md"
+      : "text-gray-700 hover:bg-[#B3E5F5]"
       }`}
   >
     <span className="text-xl">{icon}</span>

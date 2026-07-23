@@ -62,7 +62,8 @@ router.post('/progress', async (req, res) => {
       progress = new StudentProgress({
         studentId,
         lessonId,
-        completedParts: [partIndex]
+        completedParts: [partIndex],
+        lessonViews: [{ date: new Date() }]
       });
     } else {
       if (!progress.completedParts.includes(partIndex)) {
